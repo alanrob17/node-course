@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>12 - API Authentication and Security</title>
+<link href="assets/css/bootstrap.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="assets/css/starter-template.css" rel="stylesheet">
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&amp;skin=sunburst"></script>
+<style type="text/css">
+h2 {
+	margin-top: 60px;
+}
+
+h4, h3 {
+	padding-top: 40px!;		
+}
+
+p {
+	font-size: 1.2em;
+}
+h4 {
+	font-size: 1.4em;
+}
+
+img, pre.prettyprint {
+	margin-top: 1.5em;
+	margin-bottom: 1.5em;
+}
+h1, h2, h3, h4, h5, h6 {
+    color:#007bff;
+
+}
+blockquote {
+    border-left: 4px solid #999;
+    padding-left: 1rem;
+    page-break-inside: avoid;
+}
+</style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Udemy - The Complete Node.js Developer Course</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">12 - API Authentication and Security <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container">
+    <div class="starter-template">
+
+<h2 id="api-authentication-and-security">API Authentication and Security</h2>
+<h3 id="securely-storing-passwords-part-i">Securely Storing Passwords: Part I</h3>
+<p>We are going to learn how to securely store user passwords by hashing and salting the password before storing it in the database.</p>
+<h4 id="hashing-passwords">Hashing Passwords</h4>
+<p>Storing plain text passwords is a bad idea. Most folks reuse passwords for multiple accounts online. That means if your database gets compromised, the hacker can reuse those credentials on other sites such as credit cards or bank accounts. We don't want to leave our users open to further attacks.</p>
+<p>The solution is to hash passwords using a secure one-way hashing algorithm. Users passwords will stay hidden and secure, even if the database is compromised.</p>
+<h4 id="hashing-passwords-with-bcrypt">Hashing Passwords with Bcrypt</h4>
+<p>First up, install the library.</p>
+<pre class="prettyprint">npm i bcryptjs
+</pre>
+<p>The <strong>hash</strong> method can be used to hash the plain text password. The example below hashes the password “Red12345!”.</p>
+<pre class="prettyprint">    const password = 'Red12345!';
+
+    // The hashed password is what would be stored in the database
+    const hashedPassword = await bcrypt.hash(password, 8);
+</pre>
+<p>The <strong>compare</strong> method is used to compare a plain text password against a previously hashed password. This would be useful when logging in. The user logging in provides the plain text password for their account. The application fetches the hashed password from the database for that user. compare is then called to confirm it's a match.</p>
+<pre class="prettyprint">    const isMatch = await bcrypt.compare('red12345!', hashedPassword);
+    console.log(isMatch);
+</pre>
+<p>My example code.</p>
+<pre class="prettyprint">    const bcrypt = require('bcryptjs');
+
+    const myFunction = async () =&gt; {
+        const password = &quot;Red12345%&quot;;
+
+        const hashPassword = await bcrypt.hash(password, 8);
+
+        console.log(password);
+        console.log(hashPassword);
+    }
+
+    myFunction();
+</pre>
+<p>Results:</p>
+<blockquote>
+<p>Red12345%<br>
+$2a$08$9pHmqFNVD37bB1H2gDKzPOePz9W6tGuOtnLVrpLXjY0j/.jAtsIna</p>
+</blockquote>
+<p>Hashing algorithms are by design not reversible. This means that there is no decryption method.</p>
+<p>All we can do is compare a hashed password in the database against the password entered in the input field.</p>
+<pre class="prettyprint">    const bcrypt = require('bcryptjs');
+
+    const myFunction = async () =&gt; {
+        const password = &quot;Red12345%&quot;;
+
+        const hashPassword = await bcrypt.hash(password, 8);
+
+        console.log(password);
+        console.log(hashPassword);
+
+        const isMatch = await bcrypt.compare('Red12345%', hashPassword);
+
+        if (isMatch) {
+            console.log('Passwords matched!');
+        } else {
+            console.log('Passwords didn\'t match!!!!');
+        }
+    }
+
+    myFunction();
+</pre>
+<blockquote>
+<p>Passwords matched!</p>
+</blockquote>
+<h3 id="securely-storing-passwords-part-ii">Securely Storing Passwords: Part II</h3>
+<p>We are now going to learn how to use Mongoose middleware. Middleware will allow you to automatically hash a user's password before the user is saved to the database.</p>
+<h4 id="mongoose-middleware">Mongoose Middleware</h4>
+<p>Middleware allows you to register some code to run before or after a lifecycle event for your model. As an example, you could use middleware to register some code to run just after a user is deleted. You could also use middleware to register some code to run just before the user is saved. This can be used to hash passwords just before saving users to
+the database.</p>
+<p>The example below calls <strong>pre</strong> with the <code>'save'</code> lifecycle event. This registers a function to run just before users are saved. The function itself checks if the password has been altered. If the password has been altered, the plain text password is overwritten with a hashed version.</p>
+<pre class="prettyprint">    userSchema.pre('save', async function (next) {
+        const user = this;
+
+        if (user.isModified('password')) {
+            user.password = await bcrypt.hash(user.password, 8);
+        }
+
+        next();
+    });
+</pre>
+<p>In our example we are going to change the User code so that we can store a hashed password into our database.</p>
+<p>We have to make changes to our user model and our user router.</p>
+<h5 id="srcmodelsuserjs">/src/models/user.js</h5>
+<pre class="prettyprint">    const mongoose = require('mongoose');
+    const validator = require('validator');
+    const bcrypt = require('bcryptjs');
+
+    const userSchema = new mongoose.Schema({
+        name: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        age: {
+            type: Number,
+            default: 0,
+            validate(value) {
+                if (value &lt; 0) {
+                    throw new Error('Age must be a positive number!');
+                }
+            }
+        },
+        email: {
+            type: String,
+            required: true,
+            trim: true,
+            lowercase: true,
+            validate(value) {
+                if (!validator.isEmail(value)) {
+                    throw new Error('Failed to provide a valid email address!');
+                }
+            }
+        },
+        password: {
+            type: String,
+            required: true,
+            trim: true,
+            validate(value) {
+                if (!validator.isLength(value, {min: 6, max: undefined})) {
+                    throw new Error('password must be more than 6 characters!');
+                } else if (validator.contains(value.toLowerCase(), 'password')) {
+                    throw new Error('Invalid password!');
+                }
+            }
+        }
+    });
+
+    userSchema.pre('save', async function (next) {
+        const user = this;
+
+        if (user.isModified('password')) {
+            user.password = await bcrypt.hash(user.password, 8);
+        }
+
+        next();
+    });
+
+    const User = mongoose.model('User', userSchema);
+
+    module.exports = User;
+</pre>
+<p>By adding the <code>userSchema.pre()</code> we are adding in Middleware. Every time a user record is added or modified the <code>userSchema.pre()</code> middleware method will run and allow us to encrypt the user's password.</p>
+<h5 id="srcroutersuserjs---update-route">/src/routers/user.js - update route</h5>
+<pre class="prettyprint">    router.patch('/users/:id', async (req, res) =&gt; {
+        const updates = Object.keys(req.body); 
+        const allowedUpdates = ['name', 'email', 'password', 'age'];
+
+        const isValidOperation = updates.every((update) =&gt; allowedUpdates.includes(update));
+
+        if (!isValidOperation) {
+            return res.status(400).send({error: 'Invalid updates.'});
+        }
+
+        try {
+            const user = await User.findById(req.params.id);
+
+
+            updates.forEach((update) =&gt; user[update] = req.body[update]);
+            await user.save();
+
+            if (!user) {
+                return res.status(404).send();
+            }
+
+            res.send(user);
+        } catch (e) {
+            res.status(400).send(e);
+        }
+    });
+
+    router.delete('/users/:id', async (req, res) =&gt; {
+        try {
+            const user = await User.findByIdAndDelete(req.params.id)
+
+            if (!user) {
+                return res.status(404).send();
+            }
+
+            res.send(user);
+        } catch (e) {
+            res.status(500).send();
+        }
+    });
+</pre>
+<p>We are using middleware in the <strong>Update</strong> route and to get this to work we had to make changes from <code>User.findByIdAndUpdate()</code> to <code>User.findById()</code> because the <code>User.findByIdAndUpdate()</code> doesn't work with the Mongoose middleware.</p>
+<p>In Postman we add a new user.</p>
+<p><img src="assets/images/postman-add-new-user.jpg" alt="Postman Create new user with hashed password" title="Postman Create new user with hashed password"></p>
+<p>In the database.</p>
+<blockquote>
+<p>/* 6 */<br>
+{<br>
+&quot;_id&quot; : ObjectId(&quot;5ef03a526a97684a3490bf66&quot;),<br>
+&quot;age&quot; : 0,<br>
+&quot;name&quot; : &quot;Jen Robson&quot;,<br>
+&quot;email&quot; : &quot;jen@jen.com.au&quot;,<br>
+&quot;password&quot; : &quot;$2a$08$z1ugeu271rQDnQnbidsy8.gYzCxRTDCfXRwziCdO2ps0RVJ.DQXjm&quot;,<br>
+&quot;__v&quot; : 0<br>
+}</p>
+</blockquote>
+<p>We can also update a document in Postman.</p>
+<p><img src="assets/images/postman-add-new-user.jpg" alt="Postman Update user with hashed password" title="Postman Update user with hashed password"></p>
+<p>In the database.</p>
+<blockquote>
+<p>/* 5 */<br>
+{<br>
+&quot;_id&quot; : ObjectId(&quot;5ef0359180589330a052f47b&quot;),<br>
+&quot;age&quot; : 34,<br>
+&quot;name&quot; : &quot;Ethan James Robson&quot;,<br>
+&quot;email&quot; : &quot;ethan@ethan.com.au&quot;,<br>
+&quot;password&quot; : &quot;$2a$08$n/oVuMWLCnGtDNpoM0L3Gepc.zDHEVhMIm.fcf7UGiuuWSh/pMR6q&quot;,<br>
+&quot;__v&quot; : 0<br>
+}</p>
+</blockquote>
+<h5 id="challenge">Challenge</h5>
+<p>Change how the tasks are updated.</p>
+<ol>
+<li>Find the task.</li>
+<li>Alter the task properties</li>
+<li>Save the task.</li>
+<li>Test your work by updating a task in Postman.</li>
+</ol>
+<p><img src="assets/images/postman-update-task-middleware.jpg" alt="Postman Update task to allow for middleware" title="Postman Update task to allow for middleware"></p>
+<h3 id="logging-in-users">Logging in Users</h3>
+<p>We need the ability for users to log into their existing accounts.</p>
+<h4 id="logging-in-users">Logging in Users</h4>
+<p>Logging in a user is a two-step process. The user provides their email and password, and the first thing to do is fetch the user by their email. From there, bcrypt is used to verify the password provided matches the hashed password stored in the database. If either step fails, the users won't be able to log in. If both steps succeed, then you know the user is
+who they say they are.</p>
+<p>We need to create a route that allows a user to enter their credentials and then validate that they are indeed that user.</p>
+<p>We need to add the route in <code>routers/user.js</code>.</p>
+<pre class="prettyprint">    router.post('/users/login', async (req, res) =&gt; {
+        try {
+            const user = await User.findByCredentials(req.body.email, req.body.password);
+
+            res.send(user);
+        } catch (e) {
+            res.status(400).send();
+        }
+    });
+</pre>
+<p>We now need to create our own function, <code>findByCredentials()</code> that is part of the <strong>User</strong> model. We can do this in the <strong>User</strong> model with <code>userSchema.statics</code>.</p>
+<pre class="prettyprint">    userSchema.statics.findByCredentials = async (email, password) =&gt; {
+        const user = await User.findOne(email);
+
+        if (!user) {
+            throw new Error('Unable to login!');
+        }
+
+        const isMatch = bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            throw new Error('Unable to login!');
+        }
+
+        return user;
+    }
+</pre>
+<p><strong>Note:</strong> we are providing a very generic error message that doesn't give away too much information to a malicious user. We don't want them to know that the email was valid and that the password failed. This is why both errors have the same message.</p>
+<p>We also need to allow for unique email addresses. Only one email address should appear in our database. We can do this by changing the <strong>User</strong> model.</p>
+<pre class="prettyprint">    email: {
+        type: String,
+        unique: true,
+        required: true,
+        trim: true,
+        lowercase: true,
+        validate(value) {
+            if (!validator.isEmail(value)) {
+                throw new Error('Failed to provide a valid email address!');
+            }
+        }
+    },
+</pre>
+<p>We add the <strong>unique: true</strong> property.</p>
+<p><strong>Note</strong> there is a catch to this. We have to delete all <strong>User</strong> documents from our database to enable this to happen.</p>
+<p>We are actually going to drop the whole database.</p>
+<p><strong>Note:</strong> we have to stop and start our web server as well!</p>
+<p>Once this has been completed we can go over to Postman and create a new <strong>User</strong> and a new <strong>Task</strong>.</p>
+<p>Go back to the database and refresh <code>Ctrl-R</code> and you will see that the database and the two collections have been re-created.</p>
+<p>Once again, in Postman try and add the same user record you added previously to make sure that a user can't create a document with the same email address.</p>
+<p>We get this message.</p>
+<p><img src="assets/images/duplicate-email.jpg" alt="Postman duplicate email error" title="Postman duplicate email error"></p>
+<p>Once we are happy that a user can't create a duplicate email account we can create a new <strong>login</strong> request in Postman.</p>
+<p>I have created a user with the credentials.</p>
+<blockquote>
+<p>alan@alan.com.au<br>
+tulsa@123</p>
+</blockquote>
+<p>In Postman I run the user login with the credentials above and I get.</p>
+<p><img src="assets/images/postman-successful-login.jpg" alt="Postman successful login" title="Postman successful login"></p>
+<h3 id="json-web-tokens">JSON Web Tokens</h3>
+<p>We are now going to explore JWT's (JSON Web Tokens). JWT's provide a nice system for issuing and validating authentication tokens. The authentication token will ensure that the client doesn't need to log in every time they want to perform an operation on the server.</p>
+<h4 id="json-web-tokens">JSON Web Tokens</h4>
+<p>First up, install the library.</p>
+<pre class="prettyprint">    npm i jsonwebtoken
+</pre>
+<p>The <strong>sign</strong> method can be used to generate a new token. <strong>sign</strong> accepts three arguments: The first is the data to embed in the token: This needs to include a unique identifier for the user. The second is a secret phrase: This is used to issue and validate tokens, ensuring that the token data hasn't been tampered with. The third is a set of options: The example below uses <strong>expiresIn</strong> to create a token that's valid for seven days.</p>
+<pre class="prettyprint">    const jwt = require('jsonwebtoken');
+
+    const token = jwt.sign({ _id: '1234' }, 'thisismynodecourse', { expiresIn: '7 days' });
+</pre>
+<p>Tokens can be issued to users when they sign up or log in to the application. These can then be stored on the data and used to authenticate the user when they perform other options.</p>
+<p>Once you have created a token you will notice that there are two periods in the string. These denote three different parts. The first part is known as the header. The second part is the payload or body and it contains the data we provided. In our case it would be the id we provided. The last part is the signature and it is used to verify the token. The point of the token isn't to hide the data and it is publicly viewable. The whole point is to create data (our id) that is verifiable via the signature (the second value in the sign in process). So if somebody comes along and tries to change the body they are not going to be able to do this because they won't know what secret (signature) was used.</p>
+<p>We can copy the middle value and put it into the following site.</p>
+<p><a href="https://www.base64decode.org" title="BASE64  website">BASE64  website</a></p>
+<p>It will decode the following data.</p>
+<blockquote>
+<p>{&quot;_id&quot;:&quot;1234&quot;,&quot;iat&quot;:1592876517}</p>
+</blockquote>
+<p>As you can see the <code>_id</code> is publicly available as well as the timestamp it was created.</p>
+<p>We have seen how to create a token and now we will see how to verify it.</p>
+<p>The server can verify the token using verify. This requires two arguments: The first is the token to validate. The second is the secret phrase that the token was created with. If valid, the embedded data will be returned. This would allow the server to figure out which user is performing the operation.</p>
+<pre class="prettyprint">    // data._id contains the user id of the user that owns this token
+    const data = jwt.verify(token, 'thisismynodecourse');
+</pre>
+<p>{ _id: '1234', iat: 1592878315 }</p>
+<p><code>verify()</code> is going to return the payload for the token if everything went well or throw an error if there were problems.</p>
+<p>If we mess with the signature and add an extra character to it we will get our error.</p>
+<blockquote>
+<p>(node:10572) UnhandledPromiseRejectionWarning: JsonWebTokenError: invalid signature</p>
+</blockquote>
+<p>We can also add the expiration data to the <code>sign()</code> method.</p>
+<pre class="prettyprint">    const jwt = require('jsonwebtoken');
+
+    const myFunction = async () =&gt; {
+        const token = jwt.sign({ _id: '1234'}, 'thisismynodecourse');
+
+        console.log(token);
+
+        const data = jwt.verify(token, 'thisismynodecourse', { expiresIn: '7 days' });
+
+        console.log(data);
+    }
+
+    myFunction();
+</pre>
+<blockquote>
+<p>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxMjM0IiwiaWF0IjoxNTkyODgwMDIzfQ.eeb2SR1IGZtXnox-tiRPgKEmtQG0IZoVvx52D1o0Kf4<br>
+{ _id: '1234', iat: 1592880023 }</p>
+</blockquote>
+<h3 id="generating-authentication-tokens">Generating Authentication Tokens</h3>
+<p>We are now going to integrate JWT's into the application. This will allow the app to issue an authentication token when a user signs up or logs in.</p>
+<h4 id="generating-and-storing-auth-tokens">Generating and Storing Auth Tokens</h4>
+<p>Authentication tokens for a user can be stored in the database. This provides a way for users to log out. All generated authentication tokens will be stored as part of the user
+profile. If a user logs out, that token will be removed from the user profile. A token would only be considered valid if it's a valid JWT and it's still stored as part of the user profile. A
+user could be logged out of all sessions by simply deleting all the tokens stored in their user profile.</p>
+<p>The snippet below adds a tokens array onto the user model. This will be used to store all valid authentication tokens for a user.</p>
+<pre class="prettyprint">    const userSchema = new mongoose.Schema({
+        tokens: [{
+            token: {
+                type: String,
+                required: true
+            }
+        }]
+    });
+</pre>
+<p>The instance method below is responsible for generating new authentication tokens. The token is created, stored in the database, and finally returned from the function.</p>
+<pre class="prettyprint">    userSchema.methods.generateAuthToken = async function () {
+        const user = this;
+
+        const token = jwt.sign({ _id: user._id.toString() }, 'thisismynodecourse');
+
+        return token;
+    }
+</pre>
+<p><code>generateAuthToken()</code> can then be called to generate a fresh authentication token when users sign up or login.</p>
+<pre class="prettyprint">    router.post('/users/login', async (req, res) =&gt; {
+        try {
+            const user = await User.findByCredentials(req.body.email, req.body.password);
+            const token = await user.generateAuthToken();
+
+            res.send({ user, token });
+        } catch (e) {
+            res.status(400).send();
+        }
+    });
+</pre>
+<p>When we run Postman we get the user object and the token that was created.</p>
+<p><img src="assets/images/postman-show-user-token.jpg" alt="Postman login showing user and token" title="Postman login showing user and token"></p>
+<p>The token as it is at the moment has been passed to the client. We are not saving it on the server as yet and users can't log out so we can't expire the token. We can fix that by tracking the tokens we generate for users. This will allow a user to login from multiple devices, e.g a computer or a phone and then they would be allowed to logout on one while still being logged in on the other. So what we are going to do is store the token as part of the user document.</p>
+<p>In the userSchema we add the <strong>tokens</strong> array.</p>
+<pre class="prettyprint">    tokens: [{
+        token: {
+            type: String,
+            required: true
+        }
+    }]
+</pre>
+<p>This will store multiple tokens for a user. In the <code>generateAuthToken()</code> method we need to concatenate the tokens into the database.</p>
+<pre class="prettyprint">    userSchema.methods.generateAuthToken = async function () {
+        const user = this;
+
+        const token = jwt.sign({ _id: user._id.toString() }, 'thisismynodecourse');
+
+        user.tokens = user.tokens.concat({ token });
+        await user.save();
+
+        return token;
+    }
+</pre>
+<p>It is time to delete the database again and restart the application.</p>
+<p>Now, back in Postman run the login again.</p>
+<p><img src="assets/images/postman-save-token-in-database.jpg" alt="Postman login saving token to the database" title="Postman login saving token to the database"></p>
+<p>When we go back to the database we can see the users document now contains a single token.</p>
+<pre class="prettyprint">    /* 2 */
+    {
+        &quot;_id&quot; : ObjectId(&quot;5ef063e174606f514cd361fd&quot;),
+        &quot;age&quot; : 0,
+        &quot;name&quot; : &quot;Alan Robson&quot;,
+        &quot;email&quot; : &quot;alan@alan.com.au&quot;,
+        &quot;password&quot; : &quot;$2a$08$vZT2nuzrm7HzsVJxdqjSBOMCqop6b5fPHdlDPxWc57UOxlUM31TiO&quot;,
+        &quot;__v&quot; : 1,
+        &quot;tokens&quot; : [
+            {
+                &quot;_id&quot; : ObjectId(&quot;5ef1b864cdc88d0ea0ec9020&quot;),
+                &quot;token&quot; : &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.&gt;   eyJfaWQiOiI1ZWYwNjNlMTc0NjA2ZjUxNGNkMzYxZmQiLCJpYXQiOjE1OTI4OTk2ODR9.&gt;    mbSdFgQjmLFw519wSdRMverv0GsNoKPZcjwQDF697UI&quot;
+            }
+        ]
+    }
+</pre>
+<h5 id="challenge">Challenge</h5>
+<p>Have a new user signup generate authentication tokens.</p>
+<ol>
+<li>Generate a new token for the saved user.</li>
+<li>Send back both the token and the user.</li>
+<li>Create a new user from Postman and confirm the token is there.</li>
+</ol>
+<h5 id="modify-create-user-endpoint">Modify Create user endpoint</h5>
+<pre class="prettyprint">    router.post('/users', async (req, res) =&gt; {
+        const user = new User(req.body);
+
+        try {
+            await user.save();
+            const token = await user.generateAuthToken();
+
+            res.status(201).send({ user, token });  
+        } catch (e) {
+            res.status(400).send(e);  
+        }
+    });
+</pre>
+<p><img src="assets/images/postman-new-user-with-token.jpg" alt="Postman Create user with token" title="Postman Create user with token"></p>
+<p>In the database.</p>
+<pre class="prettyprint">    /* 2 */
+    {
+        &quot;_id&quot; : ObjectId(&quot;5ef1bd5c815a5913701326a9&quot;),
+        &quot;age&quot; : 14,
+        &quot;name&quot; : &quot;James Robson&quot;,
+        &quot;email&quot; : &quot;james@james.com.au&quot;,
+        &quot;password&quot; : &quot;$2a$08$4tvbvsOggJMr2ECFHvdE0eQ6ogdn9Fa9mYY0b1kWCgF3lqOxM8H/K&quot;,
+        &quot;tokens&quot; : [
+            {
+                &quot;_id&quot; : ObjectId(&quot;5ef1bd5c815a5913701326aa&quot;),
+                &quot;token&quot; : &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.    eyJfaWQiOiI1ZWYxYmQ1YzgxNWE1OTEzNzAxMzI2YTkiLCJpYXQiOjE1OTI5MDA5NTZ9.   a7NRUyVOGEM36R6BaJOaxNlCdGRzBgTOtZXEG2kJpKg&quot;
+            }
+        ],
+        &quot;__v&quot; : 0
+    }
+</pre>
+<h3 id="express-middleware">Express Middleware</h3>
+<p>We are now going to explore Express middleware. When working with middleware, you'll have more control over how your server processes requests. This will be used to check that a user is authenticated before performing specific operations.</p>
+<p><a href="http://expressjs.com/th/guide/using-middleware.html" title="Express Middleware web page">Express Middleware web page</a>.</p>
+<h4 id="exploring-express-middleware">Exploring Express Middleware</h4>
+<p>Express middleware is nothing more than a function that runs as Express handles a given request. You can customize the function to do whatever you want it to do, and you can have it run whenever you want it to.</p>
+<h4 id="how-middleware-works">How middleware works</h4>
+<blockquote>
+<p>Without middleware --&gt; new request --&gt; run route handler</p>
+<p>With middleware --&gt; new request --&gt; do something --&gt; run route handler</p>
+</blockquote>
+<p>The example below uses middleware to print information about incoming requests. Middleware functions should accept three parameters: <strong>req, res</strong>, and <strong>next</strong>. The only new parameter is <strong>next</strong>. next is called to signal to Express that the middleware function is done.</p>
+<pre class="prettyprint">    const loggerMiddleware = (req, res, next) =&gt; {
+        console.log('New request to: ' + req.method + ' ' + req.path);
+        next();
+    }
+</pre>
+<p>Register your function as middleware for the application.</p>
+<pre class="prettyprint">    app.use(loggerMiddleware);
+</pre>
+<h4 id="a-middleware-function-for-task-app">A middleware function for Task app</h4>
+<p>This function is going to be used in <strong>index.js</strong>. It <strong>must</strong> be placed before all other <code>app.use()</code> statements.</p>
+<pre class="prettyprint">    app.use((req, resp, next) =&gt; {
+        console.log(req.method, req.path);
+    });
+</pre>
+<p>This will log each request method and path. It will print the request method and the path but the way it is set up it will never finish. We need to add a <code>next()</code> method to complete the process.</p>
+<pre class="prettyprint">    app.use((req, resp, next) =&gt; {
+        console.log(req.method, req.path);
+        next()
+    });
+</pre>
+<p>The <code>next()</code> call will let the application know that we have finished our middleware process and <code>next()</code> allows the application to move on to run the route handler.</p>
+<p>Now the process will complete and in our terminal we can see our request method and request path.</p>
+<blockquote>
+<p>GET /users</p>
+</blockquote>
+<p>Once the middleware method has completed the route handler will process its process and in Postman you will see that all users have been printed out.</p>
+<p>There are times when you wouldn't want your middleware to finish and in these cases you wouldn't want to proceed to <code>next()</code>. This would be the case if your user couldn't be logged in for some reason.</p>
+<p>Now for another example we will disable all GET requests and enable POST, PATCH or DELETE requests.</p>
+<pre class="prettyprint">    app.use((req, res, next) =&gt; {
+        if (req.method === 'GET') {
+            res.send('GET requests are disabled!');
+        } else {
+            next();
+        }
+    });
+</pre>
+<p>We have to add in the <code>res.send()</code> call otherwise the GET call would never finsh. This results in the following Postman message.</p>
+<p><img src="assets/images/postman-get-requests-disabled.jpg" alt="Postman GET requests disabled" title="Postman GET requests disabled"></p>
+<p>If we call a POST request to add a new user it will succeed.</p>
+<p>This allows us to limit what a user has access to and we will use this in our application to enable authentication.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Setup middleware for when your site is in maintenance mode.</p>
+<ol>
+<li>Register a new middleware function.</li>
+<li>Send back a maintenance message with a 503 code.</li>
+<li>Try your requests from the server and confirm status/message is shown.</li>
+</ol>
+<pre class="prettyprint">    const siteDown = true;
+
+    app.use((req, res, next) =&gt; {
+        if (siteDown) {
+            res.status(503).send('Site is down for maintenance.');
+        } else {
+            next();
+        }
+    });
+</pre>
+<p>This results in the following Postman message.</p>
+<p><img src="assets/images/postman-site-down.jpg" alt="Postman Site is down message" title="Postman Site is down message"></p>
+<p>These middleware requests will run for every route handler and we can also create middleware for specific requests only.</p>
+<h3 id="accepting-authentication-tokens">Accepting Authentication Tokens</h3>
+<p>Now we can use Express middleware to put specific routes behind authentication. That will require the client to be authenticated before the operation can be performed.</p>
+<h4 id="accepting-and-validating-tokens">Accepting and Validating Tokens</h4>
+<p>The goal of the authentication middleware is to validate the authentication token and then fetch the profile for that user.<strong>auth</strong> below shows how you can get this done. Notice that the user profile is added onto <strong>req.user</strong>. This allows route handler functions to access the user profile without needing to fetch it again.</p>
+<p>To do this we are going to create a new folder named middleware in src. We will create a new file for each piece of middleware for each task we create. In our case <code>auth.js</code> will be used for authentication.</p>
+<p>We are going to add <strong>auth</strong> to the GET users route handler, i.e. you have to be authenticated to use this route handler.</p>
+<h5 id="srcmiddlewareauthjs">src/middleware/auth.js</h5>
+<pre class="prettyprint">    const auth = async ((req, res, next) =&gt; {
+        console.log('Authentication middleware is running.');
+        next();
+    });
+
+    module.exports = auth;
+</pre>
+<p>At present we are just going to send a message that our middleware is working.</p>
+<p>In <code>src/routers/user.js</code> we can add <strong>auth</strong> to our GET users route handler.</p>
+<pre class="prettyprint">router.get('/users', auth, async (req, res) =&gt; {
+    try {
+        const users = await User.find({});
+        res.send(users);
+    } catch (e) {
+        res.status(500).send();
+    }
+});
+</pre>
+<p>When we request <strong>GET users</strong> in Postman this will show all users and will print the following message in the terminal.</p>
+<blockquote>
+<p>Authentication middleware is running.</p>
+</blockquote>
+<p>Now we are going to add the authentication.</p>
+<pre class="prettyprint">    const User = require('../models/user');
+    const jwt = require('jsonwebtoken');
+
+    const auth = async (req, res, next) =&gt; {
+       try {
+        const token = req.header('Authorization').replace('Bearer ', '');
+        console.log(token);
+       } catch (e) {
+           res.status(401).send({ error: 'Please authenticate.'});
+       }
+    };
+
+    module.exports = auth;
+</pre>
+<p>To test this we have to have a JWT token for a logged in user. You can login as a user and at the bottom of the <code>response.body</code> grab the token.</p>
+<p>We need to add this into the header of the <strong>Read users</strong> request.</p>
+<p><img src="assets/images/postman-authorisation.jpg" alt="Postman Setting up authorisation" title="Postman Setting up authorisation">;</p>
+<p>**Note: ** I used the English spelling for Authorisation and this has caused problems. I have now gone back and spelled it as Authorization. Even though this was only a variable it caused problems and once I gave it American spelling the problem was fixed.</p>
+<p>If you look at your terminal you should see the token showing.</p>
+<p>Now, once we have the token we decode it and this will give us the user id so we can then use this and the token to get the correct user details and verify that the user is logged in so we can show all of the user data to that specific user.</p>
+<pre class="prettyprint">    const User = require('../models/user');
+    const jwt = require('jsonwebtoken');
+
+    const auth = async (req, res, next) =&gt; {
+       try {
+        const token = req.header('Authorization').replace('Bearer ', '');
+        const decoded = jwt.verify(token, 'thisismynodecourse');
+        const user = await User.findOne({ _id: decoded._id, 'tokens.token': token });
+
+        req.user = user;
+
+        next();
+        if (!user) {
+            throw new Error();
+        }
+       } catch (e) {
+           res.status(401).send({ error: 'Please authenticate.'});
+       }
+    };
+
+    module.exports = auth;
+</pre>
+<p><img src="assets/images/postman-success-validation.jpg" alt="Postman Successful validation" title="Postman Successful validation">;</p>
+<p>If the user can see all of the user data it means that the user authenticated correctly.</p>
+<p>Now we are going to mess with the authentication string and add a new character at the start of the string.</p>
+<p><img src="assets/images/Postman-unsuccessful-authentication.jpg" alt="Postman Unsuccessful validation" title="Postman Unsuccessful validation">;</p>
+<p>This has stopped us from authenticating the user and printed a message to authenticate stopping the user from seeing the data.</p>
+<p>This allows us to lockdown our data.</p>
+<p>As the application stands at the moment the user can see all other users data and we don't want this to happen so we need to allow the user to see only his own profile. We can do this by changing the route handler.</p>
+<p>We know that the <strong>auth</strong> object has authenticated this user and that the response contains the user details so we can rewrite this route handler.</p>
+<pre class="prettyprint">    router.get('/users/me', auth, async (req, res) =&gt; {
+        res.send(req.user);
+    });
+</pre>
+<p>Now, we can test this out again in Postman but first let's rename the request to <strong>Read profile</strong>.</p>
+<p><img src="assets/images/postman-read-profile.jpg" alt="Postman Read profile" title="Postman Read profile">;</p>
+<p>Now as you can see it is only sending the authorised users profile information.</p>
+<h3 id="advanced-postman">Advanced Postman</h3>
+<p>Postman has environment variables and we can use these to swap out our localhost variable for our live web address when we deploy our API to Heroku.</p>
+<h4 id="local-environment">Local environment</h4>
+<h4 id="create-url-variable">Create url variable</h4>
+<p>We can create a local environment to keep variables for that environment.</p>
+<p>We will create a <strong>url</strong> variable with a value of <em>localhost:3000</em>.</p>
+<p><img src="assets/images/postman-local-environment.jpg" alt="Postman Local environment" title="Postman Local environment">;</p>
+<p>We also create a production environment with no variable as yet.</p>
+<p>Now lets work out how to use these environments. Switch over to the <strong>dev</strong> environment and  open up the <strong>Create user</strong> request.</p>
+<p>Remove the string <em>localhost:3000</em> and replace it with <code>{{url}}</code>. The full request should be <code>{{url}}/users</code></p>
+<p>So now we have to change all of our links to have the same url part as above.</p>
+<p>We can also do this with our user authentication. In <strong>Read profile</strong>.</p>
+<ol>
+<li>Remove the token and click on the <strong>Authorization</strong> tab.</li>
+<li>In the TYPE dropdown select <strong>Bearer Token</strong> and add the token into the <strong>Token</strong> field.</li>
+<li>Save the request and fire it off again to see that it is working.</li>
+</ol>
+<p>This works fine for the one user so now we are going to set this up for all users.</p>
+<p>Set TYPE to <strong>Inherit auth from parent</strong>.</p>
+<p>Now click on <strong>Edit</strong> Task collection and click on the <strong>Authorization</strong> tab and then select <strong>Bearer Token</strong>. Once again add your token in here. Go back to <strong>Read profile</strong> and try to read the user's profile. If this works you know that you have set it up properly.</p>
+<p>Both <em>Create user</em> and <em>Login user</em> don't require authorization so open both of those tabs up and set <strong>Authorization</strong> to <strong>No Auth</strong>.</p>
+<p>All of the other logins are set to <strong>Inherit auth from parent</strong> which is what we require.</p>
+<h4 id="create-authtoken-to-automate-authorization-process">Create authToken to automate authorization process</h4>
+<p>We can also automate the one manual task that we do and we can do this with a bit of JavaScript. That is every time we want to authenticate a user we have to add their token into the collection.</p>
+<p>Go back to Edit the Task App collection and click on the <strong>Authorization</strong> tab. Remove the token and replace it with <code>{{authToken}}</code>.</p>
+<p>Go back to the <strong>Login user</strong> request and click on the <strong>Tests</strong> tab. Type the following code into the edit box.</p>
+<pre class="prettyprint">    if (pm.response.code === 200) {
+        pm.environment.set('authToken', pm.response.json().token)
+    }
+</pre>
+<p>This will allow us to get the login token for our current user.</p>
+<p>To do this you have to login for a particular user and it will automate the token process.</p>
+<p>In Postman I use the <strong>Login user</strong> with the following credentials and login.</p>
+<blockquote>
+<p>&quot;email&quot;: &quot;james@james.com.au&quot;,<br>
+&quot;password&quot;: &quot;charley@123&quot;</p>
+</blockquote>
+<p>If I look at the <strong>token</strong> variable for this user at the bottom of the page in Postman I get the following token.</p>
+<p><img src="assets/images/token-variable.jpg" alt="Postman token variable for the logged in user" title="Postman token variable for the logged in user">;</p>
+<p>This is the token for <code>james@james.com.au</code> who is the current logged in user.</p>
+<p>Now, if I go to the Environment Management Dialog and look at the Authorization tab I will see that it has the same token saved in the environment variable <strong>authToken</strong></p>
+<p><img src="assets/images/postman-save-token-in-environment.jpg" alt="Postman Save token in local environment" title="Postman Save token in local environment">;</p>
+<p>So now we are going to take the code in the <strong>Tests</strong> tab and add it to the <strong>Create user</strong> Tests tab. We make one small change to the code.</p>
+<pre class="prettyprint">    if (pm.response.code === 201) {
+        pm.environment.set('authToken', pm.response.json().token)
+    }
+</pre>
+<p>We set the status to 201 which is the code we get back for saving a user and knowing that things went well.</p>
+<p>We have now got a completely automated setup and the only thing we have to do is login once and all of the other routes that need authorization will use the token from the current logged in user.</p>
+<h3 id="logging-out">Logging Out</h3>
+<p>We are now going to create a way for users to log out of the app. We can do this with a new route.</p>
+<p>This route will require authentication to logout.</p>
+<p>We have to make a minor addition to <strong>auth.js</strong></p>
+<pre class="prettyprint">    req.token = token;
+</pre>
+<p>This will save the users current token. Now, all the other handlers will have access to that token and we can use it directly in our new route handler to delete the token off the users <strong>tokens</strong> array.</p>
+<pre class="prettyprint">    router.post('/users/logout', auth, async (req, res) =&gt; {
+        try {
+            req.user.tokens = req.user.tokens.filter((token) =&gt; {
+                return token.token !== req.token;
+            });
+
+            await req.user.save();
+            res.send();
+        } catch (e) {
+            res.status(500).send();
+        }
+    });
+</pre>
+<p>This will allow us to logout. Now we can create a new <strong>Logout users</strong> request in Postman.</p>
+<blockquote>
+<p>POST {{url}}/users/logout</p>
+</blockquote>
+<p>Set Authorization to <strong>Inherit auth from parent</strong> and save.</p>
+<p>First we need to run the <strong>Read profile</strong> request to make sure a user is logged in.</p>
+<p>The current user's token is.</p>
+<blockquote>
+<p>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWY0NDA0MDM1ZjI3NjBjMjg5MGRjNTkiLCJpYXQiOjE1OTMwNjc3MjV9.DSySUzUDLGqMgmAeTr8Y49QmFIlCG-d8yQE2Hw84b9w</p>
+</blockquote>
+<p>We logout the current user and get a status of <strong>200</strong> that lets us know that the user is logged out.</p>
+<p>To make sure that the user is really logged out we can go back to the <strong>Read profile</strong> request and click <code>Send</code> again. This time it shouldn't allow us to see the user's profile.</p>
+<p>We should get the following message.</p>
+<p><img src="assets/images/postman-user-not-authorised.jpg" alt="Postman User not authorised" title="Postman User not authorised">;</p>
+<p>What if we want to logout of all user sessions?</p>
+<h5 id="challenge">Challenge</h5>
+<p>Create a new way to logout of all sessions.</p>
+<ol>
+<li>Setup a route. POST /users/logoutAll</li>
+<li>Create the route to wipe the tokens array. Send 200 or 500.</li>
+<li>Test your work Login a few times and logout of all. Check database.</li>
+</ol>
+<h5 id="logoutall-route-handler">LogoutAll route handler</h5>
+<pre class="prettyprint">    router.post('/users/logoutAll', auth, async (req, res) =&gt; {
+        try {
+            req.user.tokens = [];
+
+            await req.user.save();
+            res.send();
+        } catch (e) {
+            res.status(500).send();
+        }
+    });
+</pre>
+<p>Now in Postman create a new request named <strong>LogoutAll users</strong></p>
+<blockquote>
+<p>POST {{url}}/users/logoutAll</p>
+</blockquote>
+<p>Set Authorization to <strong>Inherit auth from parent</strong> and save.</p>
+<p>First we need to run the <strong>Read profile</strong> request to make sure a user is logged in. There is a user logged in with three tokens.</p>
+<p><img src="assets/images/postman-current-user-with-three-tokens.jpg" alt="Postman Current user with three tokens" title="Postman Current user with three tokens">;</p>
+<p>Now we can run the request <strong>LogoutAll users</strong> and we should get a <strong>200</strong>. Now run <strong>Read profile</strong> again and we should get a <strong>401</strong> and the following message</p>
+<blockquote>
+<p>{<br>
+&quot;error&quot;: &quot;Please authenticate.&quot;<br>
+}</p>
+</blockquote>
+<p>Now go to the database and refresh users. You should check for the user who was logged in and they shouldn't have any tokens.</p>
+<blockquote>
+<p>/* 2 */<br>
+{<br>
+&quot;_id&quot; : ObjectId(&quot;5ef4404035f2760c2890dc59&quot;),<br>
+&quot;age&quot; : 0,<br>
+&quot;name&quot; : &quot;Alan Robson&quot;,<br>
+&quot;email&quot; : &quot;alan@alan.com.au&quot;,<br>
+&quot;password&quot; : &quot;$2a$08$cVU0JtQPgVHuCC6OSbe00.cp0BcsRGzQhPJQ4aG3c4wNgOOJFNM4C&quot;,<br>
+&quot;tokens&quot; : [],<br>
+&quot;__v&quot; : 8<br>
+}</p>
+</blockquote>
+<p>This means that we have logged the user out of all current logins.</p>
+<h3 id="hiding-private-data">Hiding Private Data</h3>
+<p>We need to limit what data gets sent to the client. This will allow us to hide authentication tokens and hashed passwords from server responses.</p>
+<h4 id="hiding-private-data">Hiding Private Data</h4>
+<p>When a Mongoose document is passed to <code>res.send</code>, Mongoose converts the object into JSON. You can customize this by adding <code>toJSON</code> as a method on the object. The method below removes the <strong>password</strong> and <strong>tokens</strong> properties before sending the response back.</p>
+<pre class="prettyprint">    userSchema.methods.toJSON = function () {
+        const user = this;
+        const userObject = user.toObject();
+
+        delete userObject.password;
+        delete userObject.tokens;
+
+        return userObject;
+    }
+</pre>
+<p>Results in.</p>
+<p><img src="assets/images/postman-hide-data.jpg" alt="Postman Hide current user data" title="Postman Hide current user data">;</p>
+<p>If I go to the <strong>Read profile</strong> request I can see that I am also hiding data here as well.</p>
+<p><img src="assets/images/postman-read-profile-hide-data.jpg" alt="Postman Read profile also hides data" title="Postman Read profile also hides data">;</p>
+<h3 id="authenticating-user-endpoints">Authenticating User Endpoints</h3>
+<p>We are now going to add authentication to the other user endpoints.</p>
+<p>The first thing we need to do is remove the following route handler.</p>
+<pre class="prettyprint">    router.get('/users/:id', async (req, res) =&gt; {
+        ...
+    }
+</pre>
+<p>This performs the same function as the <strong>Read profile</strong> route handler.</p>
+<p>The next route we need to refactor is the <strong>Delete user</strong> route. We need to use authentication on this route. At the moment it is expecting the <code>_id</code> of a user and we should not allow a user to delete a particular <code>_id</code>. The user should only be allowed to delete themselves.</p>
+<pre class="prettyprint">    router.delete('/users/me', auth, async (req, res) =&gt; {
+        try {
+            const user = await User.findByIdAndDelete(req.user._id);
+
+            if (!user) {
+                return res.status(404).send();
+            }
+
+            res.send(user);
+        } catch (e) {
+            res.status(500).send();
+        }
+    });
+</pre>
+<p>Because we are using <strong>auth</strong> we have access to the current user so we can use <code>req.user._id</code>.</p>
+<p>The code above can be refactored ever more because we don't need to check if the user exists in the <code>if()</code> statement. We also have access to a <code>remove()</code> method on the Mongoose document. It is asynchronous so we use <code>await</code>.</p>
+<pre class="prettyprint">    router.delete('/users/me', auth, async (req, res) =&gt; {
+        try {
+            await req.user.remove();
+            res.send(req.user);
+        } catch (e) {
+            res.status(500).send();
+        }
+    });
+</pre>
+<p>Change the Postman request to.</p>
+<blockquote>
+<p>DELETE /users/me</p>
+</blockquote>
+<p>Make sure Authorization is <strong>Inherit auth from parent</strong> and then you can delete a logged in user.</p>
+<p><img src="assets/images/postman-authenticated-delete.jpg" alt="Postman Delete authenticated user" title="Postman Delete authenticated user">;</p>
+<h5 id="challenge">Challenge</h5>
+<p>Refactor the Update user route.</p>
+<ol>
+<li>Update the URL to /users/me</li>
+<li>Add the Authentication middleware.</li>
+<li>Use the existing user document instead of fetching the user id.</li>
+<li>Test your work in Postman.</li>
+</ol>
+<pre class="prettyprint">    router.patch('/users/me', auth, async (req, res) =&gt; {
+        const updates = Object.keys(req.body);
+        const allowedUpdates = ['name', 'email', 'password', 'age'];
+
+        const isValidOperation = updates.every((update) =&gt; allowedUpdates.includes(update));
+
+        if (!isValidOperation) {
+            return res.status(400).send({error: 'Invalid updates.'});
+        }
+
+        try {
+            updates.forEach((update) =&gt; req.user[update] = req.body[update]);
+
+            await req.user.save();
+
+            res.send(req.user);
+        } catch (e) {
+            res.status(400).send(e);
+        }
+    });
+</pre>
+<p>We need to do updates to the <strong>Update user</strong> request in Postman.</p>
+<blockquote>
+<p>PATCH /users/me</p>
+</blockquote>
+<p>Make sure Authorization is set to <em>inherit auth from parent</em>.</p>
+<h3 id="the-usertask-relationship">The User/Task Relationship</h3>
+<p>We need to create a relationship between a user and tasks. This will make it possible to know which tasks a user created.</p>
+<h4 id="mongoose-relationships">Mongoose Relationships</h4>
+<p>To set up the relationship, both the user and task model will be changed. First up, a new field needs to be added onto the task. This will store the ID of the user who created it.</p>
+<h5 id="srcmodelstaskjs">/src/models/task.js</h5>
+<pre class="prettyprint">'use strict';
+
+const mongoose = require('mongoose');
+const validator = require('validator');
+
+const Task = mongoose.model('Task', {
+    description: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    completed: {
+        type: Boolean,
+        default: false
+    },
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
+    }    
+});
+
+module.exports = Task;
+</pre>
+<p>We add the new field <code>owner</code> and its type will be a Mongoose <strong>ObjectId</strong> and we need to set <code>required</code> to true.</p>
+<p>Now we need to add authentication to the <strong>Create task</strong> route handler.</p>
+<pre class="prettyprint">    const auth = require('../middleware/auth');
+</pre>
+<p>Now we change the route handler to add the <code>owner</code>.</p>
+<pre class="prettyprint">    router.post('/tasks', auth, async (req, res) =&gt; {
+        const task = new Task({
+            ...req.body,
+            owner: req.user._id
+        });
+
+        try {
+            await task.save();
+            res.status(201).send(task);
+        } catch (e) {
+            res.status(400).send(e);
+        }
+    });
+</pre>
+<p>Seeing as we have changed the database we need to drop it and restart the server.</p>
+<p>Once we do this login with a user and then create a new task. Once you do this you will see the current users <strong>_id</strong> in the <code>owner</code> field.</p>
+<p><img src="assets/images/postman-create-task-with-owner.jpg" alt="Postman Create task with owner Id" title="Postman Create task with owner Id">;</p>
+<p>Now we can expand on this to get the current user values. First, make a small change to our tasks <code>owner</code> field.</p>
+<pre class="prettyprint">    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    }
+</pre>
+<p>We add the <code>ref</code> value and set it to 'User' model. Now we can create a promise function in <strong>index.js</strong> to get the user object.</p>
+<pre class="prettyprint">    const Task = require('./models/task');
+
+    const main = async () =&gt; {
+        const task = await Task.findById('5ef6cc7de572fc21d02435cc');
+        await task.populate('owner').execPopulate();
+        console.log(task.owner);
+    }
+
+    main();
+</pre>
+<p>Returns.</p>
+<blockquote>
+<p>{ age: 0,<br>
+_id: 5ef6cac296c9c94198cd0b16,<br>
+name: 'Alan Robson',<br>
+email: 'alan@alan.com.au',<br>
+password:<br>
+'$2a$08$WaxLtYvwyzc0GUqFn1Hxo.tLwUFDMfZTVL89c13VNHc6aOirqv54.',<br>
+tokens:<br>
+[ { _id: 5ef6cac296c9c94198cd0b17,<br>
+token:<br>
+'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWY2Y2FjMjk2YzljOTQxOThjZDBiMTYiLCJpYXQiOjE1OTMyMzIwNjZ9.&gt; y6At8qIW_Yih32I64x1u6mkMQMkOm7E35IydJCy3xns' } ],<br>
+__v: 1 }</p>
+</blockquote>
+<p>Now we have a relationship between <code>User</code> and <code>Task</code> and we can use <code>populate</code> to get User object.</p>
+<p>We have taken a <code>Task</code> and found a <code>User</code> from it so now let's go the other way and use a <code>User</code> to find their tasks.</p>
+<p>To do this, a virtual property needs to be added onto the user model. The code below adds a tasks field onto users that can be used to fetch the tasks for a given user. It's a virtual property because users in the database won't have a tasks field. It's a reference to the task data stored in the separate collection.</p>
+<pre class="prettyprint">    userSchema.virtual('tasks', {
+        ref: 'Task',
+        localField: '_id',
+        foreignField: 'owner'
+    });
+</pre>
+<p>I change the main function in index to.</p>
+<pre class="prettyprint">    const Task = require('./models/task');
+    const User = require('./models/user');
+
+    const main = async () =&gt; {
+        const user = await User.findById('5ef6cac296c9c94198cd0b16');
+        await user.populate('tasks').execPopulate();
+        console.log(user.tasks);
+    }
+
+    main();
+</pre>
+<p>Returns.</p>
+<blockquote>
+<p>[ { completed: false,<br>
+_id: 5ef6cc57e572fc21d02435ca,<br>
+description: 'Take out rubbish',<br>
+owner: 5ef6cac296c9c94198cd0b16,<br>
+__v: 0 },<br>
+{ completed: false,<br>
+_id: 5ef6cc6ae572fc21d02435cb,<br>
+description: 'Clean hall cupboard',<br>
+owner: 5ef6cac296c9c94198cd0b16,<br>
+__v: 0 },<br>
+{ completed: false,<br>
+_id: 5ef6cc7de572fc21d02435cc,<br>
+description: 'Mow the backyard',<br>
+owner: 5ef6cac296c9c94198cd0b16,<br>
+__v: 0 } ]</p>
+</blockquote>
+<p>We have created a couple of temporary functions in index.js and now we need to add these to our API.</p>
+<h3 id="authenticating-task-endpoints">Authenticating Task Endpoints</h3>
+<p>We need to add authentication to our final four task endpoints.</p>
+<p>The first task endpoint to change is the <em>Read a task</em> by id. We have to make sure they are authenticated and that the task they want to fetch is one that they created.</p>
+<pre class="prettyprint">    router.get('/tasks/:id', auth, async (req, res) =&gt; {
+        const task = await Task.findOne({ _id, owner: req.user._id });
+
+        try {
+            const task = await Task.findById(_id);
+
+            if (!task) {
+                return res.status(404).send();
+            }
+
+            res.send(task);
+        } catch (e) {
+            res.status(500).send();
+        }
+    });
+</pre>
+<p>In the line below both _id's have to  match or the task won't be found.</p>
+<pre class="prettyprint">    const task = await Task.findOne({ _id, owner: req.user._id });
+</pre>
+<p>Test this out in Postman with the <strong>Read task</strong> endpoint.</p>
+<p>Grab the last task you created for the currently logged in user.</p>
+<p><img src="assets/images/postman-current-user-task.jpg" alt="Postman Read task created by user" title="Postman Read task created by user">;</p>
+<p>The current user can view a task that they created.</p>
+<p>Now login as the other user you created and try to run the <strong>Read Task</strong> again. This user didn't create the task so should get a <strong>404</strong>.</p>
+<p><img src="assets/images/postman-bad-request.jpg" alt="Postman Read task created by other user fails" title="Postman Read task created by other user fails">;</p>
+<p>The current user can't read a task they didn't create.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Refactor GET tasks.</p>
+<ol>
+<li>Add authentication.</li>
+<li>Return tasks only created by the authenticated user.</li>
+<li>Test your work.</li>
+</ol>
+<pre class="prettyprint">    router.get('/tasks', auth, async (req, res) =&gt; {
+        try {
+            const tasks = await Task.find({ owner: req.user._id });
+            res.send(tasks);
+        } catch (e) {
+            res.status(500).send();
+        }
+    });
+</pre>
+<p>or you could do this to get the same results.</p>
+<pre class="prettyprint">    router.get('/tasks', auth, async (req, res) =&gt; {
+        try {
+            await req.user.populate('tasks').execPopulate();
+
+            res.send(req.user.tasks);
+        } catch (e) {
+            res.status(500).send();
+        }
+    });
+</pre>
+<p>I am logged in with <code>user._id</code> 5ef6cac296c9c94198cd0b16.</p>
+<p><img src="assets/images/postman-read-users-tasks.jpg" alt="Postman Read tasks created by user" title="Postman Read tasks created by user">;</p>
+<p>Next, we want to update a task by id.</p>
+<pre class="prettyprint">    router.patch('/tasks/:id', auth, async (req, res) =&gt; {
+        const updates = Object.keys(req.body); 
+        const allowedUpdates = ['description', 'completed'];
+
+        const isValidOperation = updates.every((update) =&gt; allowedUpdates.includes(update));
+
+        if (!isValidOperation) {
+            return res.status(400).send({error: 'Invalid updates.'});
+        }
+
+        try {
+            const task = await Task.findOne({ _id: req.params.id, owner: req.user._id });
+
+            if (!task) {
+                return res.status(404).send();
+
+            }
+
+            updates.forEach((update) =&gt; task[update] = req.body[update]);
+
+            await task.save();
+
+            res.send(task);
+        } catch (e) {
+            res.status(400).send(e);
+        }
+    });
+</pre>
+<p>We find the task with this line.</p>
+<pre class="prettyprint">    const task = await Task.findOne({ _id: req.params.id, owner: req.user._id });
+</pre>
+<p>And once again we have to be the current user who owns the task.</p>
+<p><img src="assets/images/postman-user-updates-their-task.jpg" alt="Postman User updates a task they created." title="Postman User updates a task they created.">;</p>
+<p>In the case above the user has completed one of the tasks that they created.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Refactor DELETE /tasks/id.</p>
+<ol>
+<li>Add authentication.</li>
+<li>Find the task by _id/owner (findOneAndDelete).</li>
+<li>Test your work.</li>
+</ol>
+<pre class="prettyprint">    router.delete('/tasks/:id', auth, async (req, res) =&gt; {
+        const _id = req.params.id;
+
+        try {
+            const task = await Task.findOneAndDelete({ _id, owner: req.user._id });
+
+            if (!task) {
+                return res.status(404).send();
+            }
+
+            res.send(task);
+        } catch (e) {
+            res.status(500).send();
+        }
+    });
+</pre>
+<p>I logged in as me with an _id of 5ef6cac296c9c94198cd0b16.</p>
+<p><img src="assets/images/postman-delete-user-task.jpg" alt="Postman User deletes a task they created." title="Postman User deletes a task they created.">;</p>
+<p>I was able to successfully delete a task that I had created.</p>
+<p>I now try to delete a task created by another user _id. I end up getting a 404 error as I expected.</p>
+<h3 id="cascade-delete-tasks">Cascade Delete Tasks</h3>
+<p>We will now use Mongoose middleware to clean up a user's tasks when they close their account. This will make sure that all their data is securely removed from the database.</p>
+<h4 id="deleting-a-users-tasks">Deleting a User's Tasks</h4>
+<p>The middleware function below is registered using <strong>pre</strong>. It will run just before <code>remove</code> fires for the user. The function itself deletes all tasks created by that user. Now when a user closes their account, their other data will get deleted too.</p>
+<pre class="prettyprint">    const Task = require('./task');
+
+    userSchema.pre('remove', async function (next) {
+        const user = this;
+
+        await Task.deleteMany({ owner: user._id});
+
+        next();
+    });
+</pre>
+
+</div><!-- starter-template -->
+</div><!-- /.container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"/>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+</body>
+</html>

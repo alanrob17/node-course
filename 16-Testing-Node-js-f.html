@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>16 - Testing Node.js</title>
+<link href="assets/css/bootstrap.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="assets/css/starter-template.css" rel="stylesheet">
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&amp;skin=sunburst"></script>
+<style type="text/css">
+h2 {
+	margin-top: 60px;
+}
+
+h4, h3 {
+	padding-top: 40px!;		
+}
+
+p {
+	font-size: 1.2em;
+}
+h4 {
+	font-size: 1.4em;
+}
+
+img, pre.prettyprint {
+	margin-top: 1.5em;
+	margin-bottom: 1.5em;
+}
+h1, h2, h3, h4, h5, h6 {
+    color:#007bff;
+
+}
+blockquote {
+    border-left: 4px solid #999;
+    padding-left: 1rem;
+    page-break-inside: avoid;
+}
+</style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Udemy - The Complete Node.js Developer Course</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">16 - Testing Node.js <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container">
+    <div class="starter-template">
+
+
+<h2 id="testing-nodejs">Testing Node.js</h2>
+<h3 id="section-intro">Section Intro</h3>
+<p>We are going to learn how to test our Node.js applications. Setting up an automated test suite makes it easy to check that your application is always working as expected.</p>
+<h3 id="jest-testing-framework">Jest Testing Framework</h3>
+<p>We will be using the Jest testing framework. Jest gives you everything you need to create a test suite for your Node.js applications.</p>
+<h3 id="setting-up-jest">Setting up Jest</h3>
+<p>Install the module.</p>
+<pre class="prettyprint">    npm i jest
+</pre>
+<p>Next, create a test script in package.json. The script itself is jest. This allows you to use <strong>npm test</strong> to run the Jest test suite.</p>
+<p>Now, you'll need to create a test suite. This is a file in your project that ends with <strong>.test.js</strong>. The file extension allows Jest to find and run the test suites for your project.</p>
+<h3 id="creating-a-test-case">Creating a Test Case</h3>
+<p>You can add a test case to a test suite using the test function. Jest provides various functions as global variables in your test suite files. test is one of them. The first argument to test is the name of your test case. The second argument to test is the test function itself.</p>
+<p>If the test function throws an error, the test cast will fail. If the test function doesn't throw an error, the test case will pass.</p>
+<p>The test case below would always pass, as no error is thrown.</p>
+<pre class="prettyprint">    test('Hello world!', () =&gt; {
+    });
+</pre>
+<p>The test case below would always fail, as it throws an error.</p>
+<pre class="prettyprint">    test('This should fail', () =&gt; {
+        throw new Error('Failure!');
+    });
+</pre>
+<p>I can now run a test by.</p>
+<pre class="prettyprint">    npm test
+</pre>
+<p>These are the results.</p>
+<p><img src="assets/images/jest-test-01.jpg" alt="Jest test results 1" title="Jest test results 1"></p>
+<h3 id="writing-tests-and-assertions">Writing Tests and Assertions</h3>
+<p>We can add assertions to our test cases. Assertions allow you to check if a given value is what you're expecting or not.</p>
+<p>Create our function.</p>
+<h5 id="srcmathjs">src/math.js</h5>
+<pre class="prettyprint">    const calculateTip = (total, tipPercent) =&gt; {
+        const tip = total * tipPercent;
+        return total + tip;
+    }
+
+    module.exports = { calculateTip }
+</pre>
+<p>Create our test.</p>
+<h5 id="testsmathtestjs">tests/math.test.js</h5>
+<pre class="prettyprint">    const { calculateTip } = require('../src/math');
+
+    test('Should calculate total with tip.', () =&gt; {
+        const total = calculateTip(10, .3);
+
+        if (total !== 13) {
+            throw new Error('Total tip should be 13. Got ' + total);
+        }
+    });
+</pre>
+<p>When I run the test I get.</p>
+<p><img src="assets/images/successful-test.jpg" alt="Successful test" title="Successful test"></p>
+<p>Things ran as expected so we are getting a good result. Imagine when we wrote the original function we used a minus instead of a plus to calculate the total.</p>
+<pre class="prettyprint">    const calculateTip = (total, tipPercent) =&gt; {
+        const tip = total * tipPercent;
+        return total - tip;
+    }
+</pre>
+<p>We don't have to change our test as it is set up correctly.</p>
+<p>When we run the test again.</p>
+<p><img src="assets/images/calculate-tip-error.jpg" alt="Calculate tip error" title="Calculate tip error"></p>
+<p>Now we see that we have an error in <strong>math.js</strong>. We got an incorrect result. Should have been 13 but we got 7 so we can go back to the calculateTip function and try and find where our error is occuring. Once we have found the error do the test again to make sure it is working correctly.</p>
+<p>The way we wrote our test can be improved.</p>
+<p>The test suite below has a single test case for the <strong>calculateTip</strong> function. The test case itself calculates a 30% tip on a $10 restaurant bill. The assertion checks that the calculated total equals $13. The assertion is made using <code>toBe</code> to check for equality.</p>
+<pre class="prettyprint">    const { calculateTip } = require('../src/math');
+
+    test('Should calculate total with tip', () =&gt; {
+        const total = calculateTip(10, .3);
+        expect(total).toBe(13);
+    });
+</pre>
+<p>Add the error back into the function and run the test again.</p>
+<p><img src="assets/images/expect-error.jpg" alt="Expect error" title="Expect error"></p>
+<p>This is a more efficient way of writing your test.</p>
+<p>Now we can refactor our function knowing the test is in place and doesn't have to be rewritten.</p>
+<pre class="prettyprint">    const calculateTip = (total, tipPercent) =&gt; total + (total * tipPercent);
+</pre>
+<p>Rerun the test to make sure we haven't broken anything.</p>
+<p>We can also add a default value for the tip in case the user forgets to add a tip value.</p>
+<pre class="prettyprint">    const calculateTip = (total, tipPercent = .25) =&gt; total + (total * tipPercent);
+</pre>
+<p>In this case we have to write another test to catch the default tip value.</p>
+<p>Add this test.</p>
+<pre class="prettyprint">    test('Should calculate the total with the default tip.', () =&gt; {
+        const total = calculateTip(10);
+
+        expect(total).toBe(12.5);
+    });
+</pre>
+<p>When we run the tests we get the following results.</p>
+<p><img src="assets/images/default-value-test.jpg" alt="Default value test" title="Default value test"></p>
+<p>In this case both tests run correctly.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Test temperature conversion functions</p>
+<ol>
+<li>Export both functions and load them into the test suite.</li>
+<li>Create &quot;Should convert 32 F to 0 C&quot;.</li>
+<li>Create &quot;Should convert 0 C to 32 F&quot;.</li>
+<li>Run the Jest to test your work!</li>
+</ol>
+<pre class="prettyprint">    test('Should convert 32 F to 0 C.', () =&gt; {
+        const celsius = fahrenheitToCelsius(32);
+
+        expect(celsius).toBe(0);
+    });
+
+    test('Should convert 0 C to 32 F.', () =&gt; {
+        const fahrenheit = celsiusToFahrenheit(0);
+
+        expect(fahrenheit).toBe(32);
+    });
+</pre>
+<p>Returns the following results.</p>
+<p><img src="assets/images/four-tests-passed.jpg" alt="Temperature tests passed" title="Temperature tests passed"></p>
+<p>Once again I can refactor both functions to short arrow functions</p>
+<pre class="prettyprint">    const fahrenheitToCelsius = (temp) =&gt; (temp - 32) / 1.8;
+
+    const celsiusToFahrenheit = (temp) =&gt; (temp * 1.8) + 32;
+</pre>
+<p>I then rerun all of my tests to make sure I haven't broken my functions and I should get the same results as above.</p>
+<p>We can set Jest up to run every time our code changes.</p>
+<h5 id="packagejson-partial">package.json (partial)</h5>
+<pre class="prettyprint">        &quot;dev&quot;: &quot;env-cmd -f ./config/dev.env nodemon src/index.js&quot;,
+        &quot;test&quot;: &quot;jest --watch&quot;
+      },
+      &quot;dependencies&quot;: {
+</pre>
+<h3 id="testing-asynchronous-code">Testing Asynchronous Code</h3>
+<p>We need to test asynchronous code. This will be necessary to test the Express API endpoints.</p>
+<p>let's create a <code>setTimeout()</code> callback function.</p>
+<pre class="prettyprint">    test('Async test demo.', () =&gt; {
+        setTimeout(() =&gt; {
+            expect(1).toBe(2);
+        }, 2000);
+    });
+</pre>
+<p>When the tests run they will all pass. This is clearly incorrect. Jest won't wait for the test to run after 2 seconds so the <code>expect()</code> test runs after Jest has completed its tests.</p>
+<p>We can force Jest to wait by calling a function in the callback.</p>
+<pre class="prettyprint">    test('Async test demo.', (done) =&gt; {
+        setTimeout(() =&gt; {
+            expect(1).toBe(2);
+            done();
+        }, 2000);
+    });
+</pre>
+<p><img src="assets/images/settimeout-failure.jpg" alt="setTimeout test failure" title="setTimeout test failure"></p>
+<p>The two test cases below test the asynchronous <strong>add</strong> function you created earlier in the course. Both test cases add up 2 and 3 and assert that the total is 5.</p>
+<pre class="prettyprint">    const add = (a, b) =&gt; {
+        return new Promise((resolve, reject) =&gt; {
+            setTimeout(() =&gt; {
+                if (a &lt; 0 || b &lt; 0) {
+                    return reject('Numbers must be non-negative');
+                }
+
+                resolve(a + b);
+            }, 2000);
+        });
+    }
+</pre>
+<p>The callback function for the first test case accepts a <code>done</code> parameter. This lets Jest know that the test function contains asynchronous code. Jest won't determine if the test passed or failed until <code>done</code> is called. In the example below, <code>then</code> is called to run some code after the numbers are added. This is where the assertion is added and it's where <code>done</code> is called.</p>
+<pre class="prettyprint">    test('Should add two numbers.', (done) =&gt; {
+        add(2, 3).then((sum) =&gt; {
+            expect(sum).toBe(5);
+            done();
+        });
+    });
+</pre>
+<p>Your test cases can use <strong>async/await</strong> as well. The test case below is a refactored version of the test case above. The test case function is defined with <code>async</code>. <code>await</code> is used in the function to ensure that Jest waits for those asynchronous tasks to complete. Both test cases are functionally identical.</p>
+<pre class="prettyprint">    test('Should add two numbers async/await.', async () =&gt; {
+        const sum = await add(10, 22);
+
+        expect(sum).toBe(32);
+    });
+</pre>
+<p>This works because Jest will wait for a promise to finish. We don't have to use the dummy <code>done()</code> function.</p>
+<p>Both of the tests above perform the same task but it is preferable to use the <strong>async/await</strong> syntax.</p>
+<h3 id="testing-an-express-application-part-i">Testing an Express Application: Part I</h3>
+<p>We are going to set up the Express API to be easily testable. This involves settings up a test environment as well as configuring Jest to work with Node.</p>
+<h4 id="creating-a-test-environment">Creating a Test Environment</h4>
+<p>Creating the test environment requires <strong>test.env</strong> to be added to the <strong>config</strong> directory. The contents will be identical to <strong>dev.env</strong>, with the exception of the MongoDB connection string. The test environment should use a separate database such as <strong>task-manager-api-test</strong>. This will prevent the test cases from messing with development data.</p>
+<h5 id="testenv">test.env</h5>
+<pre class="prettyprint">PORT=3000
+SENDGRID_API_KEY=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
+MONGODB_URL=mongodb://127.0.0.1:27017/task-manager-api-test
+JWT_SECRET=thisismynodecourse
+</pre>
+<p>We have only made one change to our test.env from our dev.env variables and that is a different database name.</p>
+<p>Why don't we just use the development environment for our testing? We don't want to fill our development database with seed data so we need to create a new test database.</p>
+<p>With the environment in place, update the test script to load the environment file in. That would be <strong>env-cmd .f ./config/test.env jest --watch --runInBand</strong>.</p>
+<h4 id="configuring-jest">Configuring Jest</h4>
+<p>By default, Jest is expecting to run in the browser. You can use Jest with Node, but you'll need to configure Jest to enable support. Jest can be configured by adding a <strong>jest</strong> property in package.json. The configuration below sets testEnv to node to ensure that Jest runs correctly in Node.js.</p>
+<pre class="prettyprint">{
+    &quot;jest&quot;: {
+        &quot;testEnv&quot;: &quot;node&quot;
+    }
+}
+</pre>
+<p>For more information check out <a href="https://jestjs.io/docs/en/configuration" title="configuring Jest.">configuring Jest.</a></p>
+<h3 id="testing-an-express-application-part-ii">Testing an Express Application: Part II</h3>
+<p>We are now ready to add tests for the Express API. Each test case will focus on testing a specific endpoint, making assertions about the response from the server.</p>
+<h4 id="testing-with-supertest">Testing with Supertest</h4>
+<p>Supertest was created by the Express team to allow you to easily test your Express apps.</p>
+<p>First up, install the module.</p>
+<pre class="prettyprint">    npm i supertest --save-dev
+</pre>
+<p>We also need to make changes to our application to allow it to work in the test environment. Our test app doesn't need to run the express application so we don't need to use <code>app.listen()</code>. We are going to set up an <strong>app.js</strong> file to run our test environment and will leave our <strong>index.js</strong> file for development and production.</p>
+<h5 id="appj">app.j</h5>
+<pre class="prettyprint">    const express = require('express');
+    const userRouter = require('./routers/user');
+    const taskRouter = require('./routers/task');
+    require('./db/mongoose');
+
+    const app = express();
+
+    app.use(express.json());
+    app.use(userRouter);
+    app.use(taskRouter);
+
+    module.exports = app;
+</pre>
+<p>We have take most of the code from <strong>index.js</strong> and will call <strong>app.js</strong> in <strong>index.js</strong> to stop us from repeating a lot of the code.</p>
+<h5 id="indexjs">index.js</h5>
+<pre class="prettyprint">    'use strict';
+
+    const app = require('./app');
+
+    const port = process.env.PORT;
+
+    app.listen(port, () =&gt; {
+        console.log('Server is up on port ' + port);
+    });
+</pre>
+<p>Now, supertest can be used to test an endpoint. The test case below tests that new users can sign up for accounts. All the account data provided is valid, so a new account should be created.</p>
+<p>Step one is to pass the express <strong>app</strong> to <strong>request</strong>. Next, supertest methods can be chained together to fit the needs of your tests. <strong>post</strong> is used to make an HTTP POST request to <strong>/users</strong>. <strong>send</strong> is used to send the correct JSON data to the server. <strong>expect</strong> is used to assert that the response status code is correct. In this case, a successful signup should result in a <strong>201</strong> status code.</p>
+<h5 id="testsusertestjs">/tests/user.test.js</h5>
+<pre class="prettyprint">    const request = require('supertest');
+
+    const app = require('../src/app');
+
+    test('Should sign up a new user.', async () =&gt; {
+        await request(app).post('/users').send({
+            name: 'Alan',
+            email: 'alan@robsonmail.com',
+            password: 'alan@123'
+        }).expect(201);
+    });
+</pre>
+<p>Results in.</p>
+<p><img src="assets/images/user-test-success.jpg" alt="New user test passed" title="New user test passed"></p>
+<p>In the database (Robo 3T).</p>
+<p><img src="assets/images/new-user-in-test-db.jpg" alt="New user in the test database" title="New user in the test database"></p>
+<p>In the MongoDB database</p>
+<p><img src="assets/images/mongo-db-new-user.jpg" alt="New user in the MongoDB test database" title="New user in the MongoDB test database"></p>
+<p>There is a minor problem with our code. If I rerun the test (type <code>a</code> in the terminal kicks it off again) I get a <strong>401</strong> bad request because the user record is already in the database.</p>
+<p>In this case we need to tell Jest to wipe the database before we run our tests again.</p>
+<h3 id="jest-setup-and-teardown">Jest Setup and Teardown</h3>
+<p>We need to configure Jest to add test data into the database. This will allow you to test operations that require existing data, such as the login operation. You can't log in if there isn't a user account in the database to login to.</p>
+<h4 id="seeding-database">Seeding Database</h4>
+<p>Jest provides lifecycle functions that you can use to configure your test suite. There are four:</p>
+<ol>
+<li>beforeEach - Run some code before each test case</li>
+<li>afterEach - Run some code after each test case</li>
+<li>before - Run some code once before the tests run</li>
+<li>after - Run some code once after the tests run</li>
+</ol>
+<p><code>beforeEach</code> works great for adding test data to the database. The <code>beforeEach</code> call below removes all users and then adds a single test user into the database. By having this run before each test case, it ensures that the tests run in a consistent environment each time they execute.</p>
+<p>We add this code before our tests to delete all users in the test database.</p>
+<pre class="prettyprint">    const User = require('../src/models/user');
+
+    beforeEach(async () =&gt; {
+        await User.deleteMany();
+    });
+</pre>
+<p>Once again we are using promises to make sure all users are deleted before we continue on to the tests.</p>
+<p>This time when we run the tests we will see that they are passing again.</p>
+<p>What if we need to add a user for particular tests? We can add one after we delete all users in <code>beforeEach()</code>. This can then be used for any tests ,like login() that require a user to be available for testing.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Test login failure</p>
+<ol>
+<li>Create &quot;Should not login non-existent user&quot;.</li>
+<li>Send off the request with bad credentials.</li>
+<li>Expect the correct status response.</li>
+<li>Test your work.</li>
+</ol>
+<pre class="prettyprint">    test('Should not login non-existent user.', async () =&gt; {
+        await request(app).post('/users/login').send({
+            email: 'fred@fred.com',
+            password: 'doggo@1'
+        }).expect(400);
+    });
+</pre>
+<p>Results.</p>
+<p><img src="assets/images/cant-login-non-existent-user.jpg" alt="Can't login non existent user" title="Can't login non existent user"></p>
+<h5 id="challenge">Challenge</h5>
+<p>Test Delete account.</p>
+<ol>
+<li>Create &quot;Should delete account for user&quot; - Setup auth header and expect correct status code.</li>
+<li>Create &quot;Should not delete account for unauthorised user&quot;. - expect correct status code.</li>
+<li>Test your work</li>
+</ol>
+<pre class="prettyprint">    test('Should delete account for user.', async() =&gt; {
+        await request(app)
+            .delete('/users/me')
+            .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+            .send()
+            .expect(200);
+    });
+
+    test('Should not delete account for unauthorised user.', async() =&gt; {
+        await request(app)
+            .delete('/users/me')
+            .send()
+            .expect(401);
+    });
+</pre>
+<p>These tests pass.</p>
+<h3 id="advanced-assertions">Advanced Assertions</h3>
+<p>We can test the information that is being created when we test creating a new user. We can create a variable for the response and test what was sent back. In the case below we are testing to see that the user has a name value.</p>
+<pre class="prettyprint">    test('Should sign up a new user.', async () =&gt; {
+        const response = await request(app).post('/users').send({
+            name: 'Alan',
+            email: 'alan@robsonmail.com',
+            password: 'alan@123'
+        }).expect(201);
+
+        // Assert that the user was changed correctly.
+        const user = await User.findById(response.body.user._id);
+        expect(user).not.toBeNull();
+
+        // Assertions about the response.
+        expect(response.body.user.name).toBe('Alan');
+    });
+</pre>
+<p>We can test the whole object sent back if we need to.</p>
+<pre class="prettyprint">    test('Should sign up a new user.', async () =&gt; {
+        const response = await request(app).post('/users').send({
+            name: 'Alan',
+            email: 'alan@robsonmail.com',
+            password: 'alan@123'
+        }).expect(201);
+
+        // Assert that the user was changed correctly.
+        const user = await User.findById(response.body.user._id);
+        expect(user).not.toBeNull();
+
+        // Assertions about the response.
+        expect(response.body).toMatchObject({
+            user: {
+                name: 'Alan',
+                email: 'alan@robsonmail.com'
+            },
+            token: user.tokens[0].token
+        });
+
+        expect(user.password).not.toBe('alan@123');
+    });
+</pre>
+<h5 id="challenge">Challenge</h5>
+<p>Validate new token is being saved.</p>
+<ol>
+<li>Fetch the user from the database.</li>
+<li>Assert that the token in the response matches the users second token.</li>
+<li>Test your work.</li>
+</ol>
+<pre class="prettyprint">    test('Should login an existing user.', async () =&gt; {
+        const response = await request(app).post('/users/login').send({
+            email: userOne.email,
+            password: userOne.password
+        }).expect(200);
+
+        const user = await User.findById(response.body.user._id);
+
+        expect(response.body.token).toBe(user.tokens[1].token);
+    });
+</pre>
+<p>Tests pass.</p>
+<h3 id="challenge">Challenge</h3>
+<p>Validate user is removed.</p>
+<ol>
+<li>Fetch the user from the database.</li>
+<li>Assert null response (use assertion from the signup test).</li>
+<li>Test your work.</li>
+</ol>
+<pre class="prettyprint">    test('Should delete account for user.', async() =&gt; {
+        const response = await request(app)
+            .delete('/users/me')
+            .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+            .send()
+            .expect(200);
+
+        const user = await User.findById(userOneId);
+        expect(user).toBeNull();
+    });
+</pre>
+<p>Tests pass.</p>
+<h3 id="mocking-libraries">Mocking Libraries</h3>
+<p>We are now going to learn how to mock npm modules. Jest lets you mock npm modules so you can override module functionality in your test environment.</p>
+<h3 id="mocking-sendgrid">Mocking SendGrid</h3>
+<p>You can mock an npm module by creating a <strong>__mocks__</strong> directory in the tests folder. A module can be mocked by creating a file in the <strong>__mocks__</strong> folder. The file name should match up with the module name, so <strong>tests/__mocks__/express.js</strong> can be used to mock the Express library. If the npm module uses a scope like <strong>@sendgrid/mail</strong>, then a <strong>@sendgrid</strong> folder would be created with a <strong>mail.js</strong> file inside.</p>
+<p>The job of the mock file is to provide mocked versions of the library features. The SendGrid mock below defines and exports <strong>setApiKey</strong> and <strong>send</strong>. This ensures that our code still works even though emails will no longer be sent for the tests.</p>
+<h5 id="srctestsmockssendgridmailjs">/src/tests/__mocks__/@sendgrid/mail.js</h5>
+<pre class="prettyprint">    module.exports = {
+        setApiKey() {
+
+        },
+        send() {
+
+        }
+    }
+</pre>
+<h3 id="wrapping-up-user-tests">Wrapping up User Tests</h3>
+<p>We need to create a test to upload an avatar. To do this we create a folder named <strong>fixtures</strong> in <strong>tests</strong>. This is where we put assets we need for our testing.</p>
+<p>We will put our profile picture in this folder.</p>
+<pre class="prettyprint">    test('Should upload avatar image.', async() =&gt; {
+        await request(app)
+            .post('/users/me/avatar')
+            .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+            .attach('avatar', 'tests/fixtures/profile-pic.jpg')
+            .expect(200);
+    });
+</pre>
+<p><img src="assets/images/test-avatar.jpg" alt="Test upload avatar" title="Test upload avatar"></p>
+<p>We want to carry out a further test to see if the user has an avatar.</p>
+<pre class="prettyprint">    test('Should upload avatar image.', async() =&gt; {
+        await request(app)
+            .post('/users/me/avatar')
+            .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+            .attach('avatar', 'tests/fixtures/profile-pic.jpg')
+            .expect(200);
+
+        const user = await User.findById(userOneId);
+        expect(user.avatar).toEqual(expect.any(Buffer));
+    });
+</pre>
+<p><strong>Note:</strong> we are using <code>toEqual()</code> instead of <code>toBe()</code>. <code>toBe()</code> does a strict equality test and because we are checking an object the strict equality test would fail. This is where we have to use <code>toEqual</code> and what we are testing is to see that the field <code>user.avatar</code> contains a buffer. As long as there is a buffer it means that we have uploaded an image and stored it in <code>user.avatar</code>.</p>
+<p>Once we save we see that our tests have passed.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Test user updates.</p>
+<ol>
+<li>Create &quot;Should update valid user fields&quot;. - Update the name of the test user. - Check the data to confirm it has changed.</li>
+<li>Create &quot;Should not update invalid user fields&quot;. - Update a &quot;location&quot; field and expect a status error code.</li>
+<li>test your work.</li>
+</ol>
+<h5 id="test-1">Test 1.</h5>
+<pre class="prettyprint">    test('Should update valid user fields.', async() =&gt; {
+        await request(app)
+            .patch('/users/me')
+            .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+            .send({
+                name: 'Charley'
+            })
+            .expect(200);
+
+        const user = await User.findById(userOneId);
+        expect(user.name).toEqual('Charley');
+    });
+</pre>
+<h5 id="test-2">Test 2.</h5>
+<pre class="prettyprint">    test('Should not update invalid user fields.', async() =&gt; {
+        await request(app)
+            .patch('/users/me')
+            .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+            .send({
+                name: 'James',
+                location: 'Melbourne, Vic'
+            })
+            .expect(400);
+    });
+</pre>
+<h3 id="setup-task-test-suite">Setup Task Test Suite</h3>
+<p>Before we can set up the Task tests we need to change the setup of our testing code.</p>
+<h5 id="testsfixturesdbjs">tests/fixtures/db.js</h5>
+<pre class="prettyprint">    const jwt = require('jsonwebtoken');
+    const mongoose = require('mongoose');
+    const User = require('../../src/models/user');
+
+    const userOneId = new mongoose.Types.ObjectId();
+
+    const userOne = {
+        _id: userOneId,
+        name: 'James',
+        email: 'james@robsonmail.com',
+        password: 'james@123',
+        tokens: [{
+            token: jwt.sign({ _id: userOneId }, process.env.JWT_SECRET)
+        }]
+    }
+
+    const setupDatabase = async () =&gt; {
+        await User.deleteMany();
+        await new User(userOne).save();
+    }
+
+    module.exports = {
+        userOneId,
+        userOne,
+        setupDatabase
+    }
+</pre>
+<p>The <strong>db.js</strong> file takes out code from the <strong>user.test.js</strong> files so we can use our new user in our <strong>task.test.js</strong> file. This makes our test user available to both sets of tests.</p>
+<h5 id="testsusertestjs-setup">tests/user.test.js (setup)</h5>
+<pre class="prettyprint">    const request = require('supertest');
+
+    const app = require('../src/app');
+    const User = require('../src/models/user');
+
+    const { userOneId, userOne, setupDatabase } = require('./fixtures/db');
+
+    beforeEach(setupDatabase);
+</pre>
+<h5 id="teststasktestjs-setup">tests/task.test.js (setup)</h5>
+<pre class="prettyprint">    const request = require('supertest');
+    const app = require('../src/app');
+    const Task = require('../src/models/task');
+    const { userOneId, userOne, setupDatabase } = require('./fixtures/db');
+
+    beforeEach(setupDatabase);
+</pre>
+<p>Before we can get our tests to work correctly we have to make a change to <strong>package.json</strong></p>
+<pre class="prettyprint">    &quot;test&quot;: &quot;env-cmd -f ./config/test.env jest --watch --runInBand&quot;
+</pre>
+<p>The setting <strong>--runInBand</strong> will make sure our tests run in series and that there is no overlap.</p>
+<p>Now we can write our first task test.</p>
+<pre class="prettyprint">    test('Should fetch user tasks', async () =&gt; {
+        const response = await request(app)
+            .post('/tasks')
+            .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+            .send({
+                description: 'Play fortnite'
+            })
+            .expect(201);
+
+        const task = await Task.findById(response.body._id);
+        expect(task).not.toBeNull();
+        expect(task.completed).toEqual(false);
+    });
+</pre>
+<p>In the test above we can create a new task and then test that it is not null and also test that the completed field is <strong>false</strong>.</p>
+<h3 id="testing-with-task-data">Testing with Task Data</h3>
+<p>Testing tasks will require that some test tasks exist in the database. Like with users, tasks can be added to the database using <code>beforeEach</code>. The test case below fetches all tasks for the user. It also asserts that the status code is a <strong>200</strong> and the tasks are sent back correctly.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Test delete Task security (one user should not be able to delete another user's tasks).</p>
+<ol>
+<li>Attempt to have the second user delete the first task (should fail). - setup necessary exports from db.js.</li>
+<li>Assert the failure status code.</li>
+<li>Assert the first task is still in the database.</li>
+<li>Test your work.</li>
+</ol>
+<pre class="prettyprint">    test('Should not delete other users tasks.', async () =&gt; {
+        const response = await request(app)
+            .delete(`/tasks/${taskOne._id}`)
+            .set('Authorization', `Bearer ${userTwo.tokens[0].token}`)
+            .send()
+            .expect(404);
+
+            const task = await Task.findById(taskOne._id);
+            expect(task).not.toBeNull();
+    });
+</pre>
+<h4 id="more-user-tests">More user tests</h4>
+<p>The following lists are extra tests you could create.</p>
+<pre>    User Test Ideas
+
+        Should not signup user with invalid name/email/password
+        Should not update user if unauthenticated
+        Should not update user with invalid name/email/password
+        Should not delete user if unauthenticated
+
+    Task Test Ideas
+
+        Should not create task with invalid description/completed
+        Should not update task with invalid description/completed
+        Should delete user task
+        Should not delete task if unauthenticated
+        Should not update other users task
+        Should fetch user task by id
+        Should not fetch user task by id if unauthenticated
+        Should not fetch other users task by id
+        Should fetch only completed tasks
+        Should fetch only incomplete tasks
+        Should sort tasks by description/completed/createdAt/updatedAt
+        Should fetch page of tasks
+</pre>
+
+
+
+</div><!-- starter-template -->
+</div><!-- /.container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"/>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+</body>
+</html>

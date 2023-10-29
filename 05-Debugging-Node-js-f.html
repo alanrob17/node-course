@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>05 - Debugging Node.js</title>
+<link href="assets/css/bootstrap.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="assets/css/starter-template.css" rel="stylesheet">
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&amp;skin=sunburst"></script>
+<style type="text/css">
+h2 {
+	margin-top: 60px;
+}
+
+h4, h3 {
+	padding-top: 40px!;		
+}
+
+p {
+	font-size: 1.2em;
+}
+h4 {
+	font-size: 1.4em;
+}
+
+img, pre.prettyprint {
+	margin-top: 1.5em;
+	margin-bottom: 1.5em;
+}
+h1, h2, h3, h4, h5, h6 {
+    color:#007bff;
+
+}
+blockquote {
+    border-left: 4px solid #999;
+    padding-left: 1rem;
+    page-break-inside: avoid;
+}
+</style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Udemy - The Complete Node.js Developer Course</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">05 - Debugging Node.js <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container">
+    <div class="starter-template">
+
+
+<h2 class="code-line" data-line-start=0 data-line-end=1><a id="Debugging_Nodejs_0"></a>Debugging Node.js</h2>
+<p class="has-line-data" data-line-start="2" data-line-end="3">Node comes with a great set of tools for getting to the bottom of any bug or programming issue.</p>
+<h3 class="code-line" data-line-start=4 data-line-end=5><a id="Consolelog_4"></a>Console.log</h3>
+<p class="has-line-data" data-line-start="6" data-line-end="7">While it's nice to have advanced debugging tools at the ready, there's nothing wrong with using <strong>console.log</strong> to debug your application. It's not the fanciest technique, but it works.</p>
+<p class="has-line-data" data-line-start="8" data-line-end="9">When in doubt, use a few calls to <strong>console.log</strong> to figure out what's going on. It's great for dumping a variable to the terminal so you can check its value. It also works for figuring out what order your code is running in.</p>
+<h3 class="code-line" data-line-start=10 data-line-end=11><a id="Node_Debugger_10"></a>Node Debugger</h3>
+<p class="has-line-data" data-line-start="12" data-line-end="13">Printing values to the console with <strong>console.log</strong> is a good start, but there are often times where we need a more complete debugging solution. For that, Node.js ships with a built-in debugger. It builds off of the developer tools that Chrome and V8 use when debugging JavaScript code in the browser.</p>
+<p class="has-line-data" data-line-start="14" data-line-end="15">Start your application with inspect to use the debugger.</p>
+<pre class="prettyprint">    node inspect app.js
+</pre>
+<p class="has-line-data" data-line-start="20" data-line-end="21">This isn't working in Windows at the moment, use this instead.</p>
+<pre class="prettyprint">    node --inspect-brk app.js
+</pre>
+<p class="has-line-data" data-line-start="26" data-line-end="27">Next, visit <strong>chrome://inspect</strong> in the Chrome browser. There, you'll see a list of all the Node.js processes that you're able to debug. Click "inspect" next to your Node.js process to open up the developer tools. From there, you can click the blue "play" button near the top-right of the "sources" tab to start up the application.</p>
+<p class="has-line-data" data-line-start="28" data-line-end="29">When running the app in debug mode, you can add breakpoints into your application to stop it at a specific point in the code. This gives you a chance to explore the application state and figure out what's going wrong.</p>
+<pre class="prettyprint">    console.log('Thing one');
+
+    debugger; // Debug tools will pause here until your click play again
+
+    console.log('Thing two');
+</pre>
+<p class="has-line-data" data-line-start="38" data-line-end="39"><img src="assets/images/debugging.jpg" alt="Chrome debugging tools" title="Chrome debugging tools"></p>
+<p class="has-line-data" data-line-start="40" data-line-end="41"><strong>Note:</strong> To get the <strong>console</strong> open you press the <code>escape</code> key.</p>
+
+
+
+</div><!-- starter-template -->
+</div><!-- /.container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"/>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+</body>
+</html>

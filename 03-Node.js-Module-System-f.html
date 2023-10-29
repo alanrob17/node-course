@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>03 - Node.js Module System</title>
+<link href="assets/css/bootstrap.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="assets/css/starter-template.css" rel="stylesheet">
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&amp;skin=sunburst"></script>
+<style type="text/css">
+h2 {
+	margin-top: 60px;
+}
+
+h4, h3 {
+	padding-top: 40px!;		
+}
+
+p {
+	font-size: 1.2em;
+}
+h4 {
+	font-size: 1.4em;
+}
+
+img, pre.prettyprint {
+	margin-top: 1.5em;
+	margin-bottom: 1.5em;
+}
+h1, h2, h3, h4, h5, h6 {
+    color:#007bff;
+
+}
+blockquote {
+    border-left: 4px solid #999;
+    padding-left: 1rem;
+    page-break-inside: avoid;
+}
+</style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Udemy - The Complete Node.js Developer Course</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">03 - Node.js Module System <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container">
+    <div class="starter-template">
+
+
+<h1 class="code-line" data-line-start=0 data-line-end=1><a id="Nodejs_Module_System_0"></a>Node.js Module System</h1>
+<h2 class="code-line" data-line-start=2 data-line-end=3><a id="Importing_Nodejs_Core_Modules_2"></a>Importing Node.js Core Modules</h2>
+<p class="has-line-data" data-line-start="4" data-line-end="5">Node.js comes with dozens of built-in modules. These built-in modules, sometimes referred to as core modules, give you access to tools for working with the file system, making http requests, creating web servers, and more.</p>
+<p class="has-line-data" data-line-start="6" data-line-end="7">To get started, let's work with some built-in Node.js modules. These are modules that come with Node, so there's no need to install them.</p>
+<p class="has-line-data" data-line-start="8" data-line-end="11">The module system is built around the <strong>require</strong> function. This function is used to load in a<br>
+module and get access to its contents. require is a global variable provided to all your<br>
+Node.js scripts, so you can use it anywhere you like.</p>
+<pre class="prettyprint">    const fs = require('fs');
+
+    fs.writeFileSync('notes.txt', 'I live in Ballarat.');
+</pre>
+<p class="has-line-data" data-line-start="18" data-line-end="19">The script above uses require to load in the <code>fs</code> module. This is a built-in Node.js module that provides functions you can use to manipulate the file system. The script uses <code>writeFileSync</code> to write a message to <em>notes.txt</em>.</p>
+<p class="has-line-data" data-line-start="20" data-line-end="21">You can use another function <code>appendFileSync</code> to appen more text to the file you have created.</p>
+<pre class="prettyprint">    const fs = require('fs');
+
+    fs.writeFileSync('notes.txt', 'I live in Ballarat.');
+
+    fs.appendFileSync('notes.txt', '\nMy name is Alan.');
+</pre>
+<h3 class="code-line" data-line-start=30 data-line-end=31><a id="Importing_Your_Own_Files_30"></a>Importing Your Own Files</h3>
+<p class="has-line-data" data-line-start="32" data-line-end="33">Create a new file named <em>utils.js</em> with the following console.log() call.</p>
+<pre class="prettyprint">    const fs = require('fs');
+
+    fs.writeFileSync('utils.js', 'console.log(\'utils.js\');');
+</pre>
+<p class="has-line-data" data-line-start="40" data-line-end="41">Now, in <em>app.js</em> add the following line.</p>
+<pre class="prettyprint">    require('./utils.js');
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="46" data-line-end="47">utils.js</p>
+</blockquote>
+<p class="has-line-data" data-line-start="48" data-line-end="49">In this case we require the <em>utils.js</em> file and run the contents of that file within our <em>app.js</em> file.</p>
+<p class="has-line-data" data-line-start="50" data-line-end="51">You know how to use <strong>require</strong> to load in built-in modules. <strong>require</strong> can also be used to load in JavaScript files you've created. All you need to do is provide <strong>require</strong> with a relative path to the script you want to load. This path should start with <code>./</code> and then link to the file that needs to be loaded in.</p>
+<p class="has-line-data" data-line-start="52" data-line-end="53">Now let's create some variables in <em>utils.js</em>. Change <em>app.js</em> to:</p>
+<pre class="prettyprint">    require('./utils.js');
+
+    console.log(name);
+</pre>
+<h5 class="code-line" data-line-start=60 data-line-end=61><a id="utilsjs_60"></a>utils.js</h5>
+<pre class="prettyprint">    console.log('utils.js');
+
+    const name = 'Alan';
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="68" data-line-end="69">ReferenceError: name is not defined</p>
+</blockquote>
+<p class="has-line-data" data-line-start="70" data-line-end="71">We get an error. This raises an important point.</p>
+<p class="has-line-data" data-line-start="72" data-line-end="73">All external files we create are known as modules and have their own scope with its own variables. <em>app.js</em> cannot access the variables in <em>utils.js</em> even though it was loaded in with <strong>require</strong>.</p>
+<p class="has-line-data" data-line-start="74" data-line-end="75">We can get around this by exporting the things that <em>utils.js</em> should share with <em>app.js</em>.</p>
+<p class="has-line-data" data-line-start="76" data-line-end="77">You have to export all of the items that you want to use through another JavaScript file.</p>
+<h5 class="code-line" data-line-start=78 data-line-end=79><a id="utilsjs_78"></a>utils.js</h5>
+<pre class="prettyprint">    console.log('utils.js');
+
+    const name = 'Alan';
+
+    module.exports = name;
+</pre>
+<h5 class="code-line" data-line-start=88 data-line-end=89><a id="appjs_88"></a>app.js</h5>
+<pre class="prettyprint">    const name = require('./utils.js');
+
+    console.log(name);
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="96" data-line-end="98">utils.js<br>
+Alan</p>
+</blockquote>
+<p class="has-line-data" data-line-start="99" data-line-end="100">We can also export functions.</p>
+<h5 class="code-line" data-line-start=101 data-line-end=102><a id="utilsjs_101"></a>utils.js</h5>
+<pre class="prettyprint">    console.log('utils.js');
+
+    const name = 'Alan';
+
+    const add = (a, b) =&gt; {
+        return a + b;
+    }
+
+    module.exports = add;
+</pre>
+<h5 class="code-line" data-line-start=115 data-line-end=116><a id="appjs_115"></a>app.js</h5>
+<pre class="prettyprint">    const add = require('./utils.js');
+
+    console.log(add(5, 6));
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="123" data-line-end="125">utils.js<br>
+11</p>
+</blockquote>
+<h5 class="code-line" data-line-start=126 data-line-end=127><a id="Challenge_126"></a>Challenge</h5>
+<ol>
+<li class="has-line-data" data-line-start="128" data-line-end="129">Create a new file named <em>notes.js</em></li>
+<li class="has-line-data" data-line-start="129" data-line-end="130">Create getNotes function that returns "your notes…".</li>
+<li class="has-line-data" data-line-start="130" data-line-end="131">Export getNotes function.</li>
+<li class="has-line-data" data-line-start="131" data-line-end="133">From app.js load in and call the function printing the message to the console.</li>
+</ol>
+<h5 class="code-line" data-line-start=133 data-line-end=134><a id="notesjs_133"></a>notes.js</h5>
+<pre class="prettyprint">    const getNotes = function () {
+        return 'Your notes...';
+    }
+
+    module.exports = getNotes;
+</pre>
+<h5 class="code-line" data-line-start=143 data-line-end=144><a id="appjs_143"></a>app.js</h5>
+<pre class="prettyprint">    const getNotes = require('./notes.js');
+
+    const notes = getNotes();
+
+    console.log(notes);
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="153" data-line-end="154">Your notes…</p>
+</blockquote>
+<h3 class="code-line" data-line-start=155 data-line-end=156><a id="Importing_npm_Modules_155"></a>Importing npm Modules</h3>
+<p class="has-line-data" data-line-start="157" data-line-end="158">When you install Node.js, you also get <strong>npm</strong>. <strong>npm</strong> is a package manager that allows you to install and use third-party npm libraries in your code. This opens up a world of possibilities, as there are npm packages for everything from email sending to file uploading. In this lesson, you'll learn how to integrate npm into your Node.js app.</p>
+<h4 class="code-line" data-line-start=159 data-line-end=160><a id="Initialising_npm_159"></a>Initialising npm</h4>
+<p class="has-line-data" data-line-start="161" data-line-end="162">Your Node.js application needs to initialise <em>npm</em> before <em>npm</em> can be used. You can run <code>npm init</code> from the root of your project to get that done. That command will ask you a series of questions about the project and it'll use the information to generate a <em>package.json</em> file in the root of your project.</p>
+<pre class="prettyprint">    npm init
+</pre>
+<p class="has-line-data" data-line-start="167" data-line-end="168">This command initialises npm in our project. It creates a configuration file named <em>project.json</em>. This package is going to maintain all of the dependencies in our project.</p>
+<h5 class="code-line" data-line-start=169 data-line-end=170><a id="packagejson_169"></a>package.json</h5>
+<pre class="prettyprint">    {
+      &quot;name&quot;: &quot;notes-app&quot;,
+      &quot;version&quot;: &quot;1.0.0&quot;,
+      &quot;description&quot;: &quot;&quot;,
+      &quot;main&quot;: &quot;app.js&quot;,
+      &quot;scripts&quot;: {
+        &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;
+      },
+      &quot;author&quot;: &quot;&quot;,
+      &quot;license&quot;: &quot;ISC&quot;
+    }
+</pre>
+<p class="has-line-data" data-line-start="185" data-line-end="186">First we need to find some npm packages to add to our project. Go to:</p>
+<p class="has-line-data" data-line-start="187" data-line-end="188"><a href="https://npmjs.com/">npm website</a></p>
+<p class="has-line-data" data-line-start="189" data-line-end="190">We are looking for the <em>validator</em> package. When we find it we can go to its npm package page and it will have the command to install it.</p>
+<pre class="prettyprint">    npm install validator
+</pre>
+<p class="has-line-data" data-line-start="195" data-line-end="196">Look at the package.json file again and you will see that <em>validator</em> has been added in as a dependency.</p>
+<pre class="prettyprint">    {
+      &quot;name&quot;: &quot;notes-app&quot;,
+      &quot;version&quot;: &quot;1.0.0&quot;,
+      &quot;description&quot;: &quot;&quot;,
+      &quot;main&quot;: &quot;app.js&quot;,
+      &quot;scripts&quot;: {
+        &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;
+      },
+      &quot;author&quot;: &quot;&quot;,
+      &quot;license&quot;: &quot;ISC&quot;,
+      &quot;dependencies&quot;: {
+        &quot;validator&quot;: &quot;^13.0.0&quot;
+      }
+    }
+</pre>
+<p class="has-line-data" data-line-start="214" data-line-end="215">In our project you will see a <em>node_modules</em> folder which contains the single validator package. You will also see a <em>package-lock.json</em> file. This file has more information on the package we installed. It has a <strong>sha</strong> value in the identity line and if we need to reinstall the package again it will go out and grab the identical package that was initially installed.</p>
+<p class="has-line-data" data-line-start="216" data-line-end="217">You can delete the <em>node-modules</em> folder if you want to shift your software. Another user can do a <em>node install</em> and it will re-install all of your packages again.</p>
+<p class="has-line-data" data-line-start="218" data-line-end="219">To use the validator package you will have to go to the npm validator package page which lists all of the functions that it contains.</p>
+<p class="has-line-data" data-line-start="220" data-line-end="221">Test the email validation.</p>
+<h5 class="code-line" data-line-start=222 data-line-end=223><a id="appjs_222"></a>app.js</h5>
+<pre class="prettyprint">    const validator = require('validator');
+    const getNotes = require('./notes.js');
+
+    const notes = getNotes();
+
+    console.log(notes);
+
+    const email = '<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1d7c717c735d7c717c73337e7270">[email&#160;protected]</a>';
+
+    console.log(validator.isEmail(email));
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="237" data-line-end="238">true</p>
+</blockquote>
+<p class="has-line-data" data-line-start="239" data-line-end="240">Change email to:</p>
+<pre class="prettyprint">    const email = '@alan.com';
+
+    console.log(validator.isEmail(email));
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="247" data-line-end="248">false</p>
+</blockquote>
+<p class="has-line-data" data-line-start="249" data-line-end="250"><em>@alan.com</em> isn't a valid email address.</p>
+<p class="has-line-data" data-line-start="251" data-line-end="252">Another test.</p>
+<pre class="prettyprint">    const url = 'https://www.alan.robson.com.au';
+
+    console.log(validator.isURL(url));
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="259" data-line-end="260">true</p>
+</blockquote>
+<p class="has-line-data" data-line-start="261" data-line-end="262">It is a valid URL.</p>
+<p class="has-line-data" data-line-start="263" data-line-end="264">There are close to a hundred validators in this package that need to be checked out.</p>
+<h3 class="code-line" data-line-start=265 data-line-end=266><a id="Printing_in_Colour_265"></a>Printing in Colour</h3>
+<h5 class="code-line" data-line-start=267 data-line-end=268><a id="Challenge_267"></a>Challenge</h5>
+<p class="has-line-data" data-line-start="269" data-line-end="270">Use the Chalk library in your project.</p>
+<ol>
+<li class="has-line-data" data-line-start="271" data-line-end="272">install v 2.4.1. of chalk.</li>
+<li class="has-line-data" data-line-start="272" data-line-end="273">Load chalk into app.js</li>
+<li class="has-line-data" data-line-start="273" data-line-end="274">use it to print the string "Success" to the console in green.</li>
+<li class="has-line-data" data-line-start="274" data-line-end="276">Test your work.</li>
+</ol>
+<p class="has-line-data" data-line-start="276" data-line-end="277">Bonus: use the docs play around with different options in chalk. Create some bold and inverse text.</p>
+<pre class="prettyprint">    const chalk = require('chalk');
+
+    console.log(chalk.green('Success'));
+</pre>
+<h5 class="code-line" data-line-start=284 data-line-end=285><a id="Output_284"></a>Output</h5>
+<p class="has-line-data" data-line-start="286" data-line-end="287"><img src="assets/images/chalk-console.jpg" alt="chalk console output" title="chalk console output"></p>
+<pre class="prettyprint">    const chalk = require('chalk');
+
+    console.log(chalk.green('Success'));
+
+    const name = 'Alan';
+    console.log(chalk.green('Hello %s').bold(), name);
+    console.log(chalk.green.bold('Hello %s'), name);
+    console.log(chalk.green.inverse('Hello %s'), name);
+
+    console.log('Hello %s', name);
+</pre>
+<p class="has-line-data" data-line-start="301" data-line-end="302"><img src="assets/images/chalk-console-2.jpg" alt="chalk console output" title="chalk console output"></p>
+<p class="has-line-data" data-line-start="303" data-line-end="304">The last line was added because I haven't seen this kind of substitution before. It looks like a C# substitution.</p>
+<pre class="prettyprint">    console.log('Hello %s', name);
+</pre>
+<h3 class="code-line" data-line-start=309 data-line-end=310><a id="Global_npm_Modules_and_nodemon_309"></a>Global npm Modules and nodemon</h3>
+<p class="has-line-data" data-line-start="311" data-line-end="312">You can use npm modules from outside of your scripts by installing them globally. Globally installed modules are designed to be used from the terminal and provide you with new commands you can run. In this lesson, you'll learn how to install and work with global modules.</p>
+<h4 class="code-line" data-line-start=313 data-line-end=314><a id="Installing_an_npm_Module_Globally_313"></a>Installing an npm Module Globally</h4>
+<p class="has-line-data" data-line-start="315" data-line-end="316">npm modules can be installed globally by adding a <code>-g</code> flag to the installation command. Not all modules are designed to be installed globally, so be sure to refer to the module documentation to learn how it's supposed to be used.</p>
+<pre class="prettyprint">    npm install -g nodemon
+</pre>
+<p class="has-line-data" data-line-start="321" data-line-end="322">A globally installed module is not added as a dependency to your project. That means you won't see it listed in package.json or package-lock.json. You also won't find its code in node_modules. Globally installed modules are located in a special directory in your machine which is created and managed by npm.</p>
+<p class="has-line-data" data-line-start="323" data-line-end="324">When you install nodemon globally, you get access to a new nodemon command from the terminal. This can be used to start a Node.js application and then restart the application when any of the app scripts change. This means you won't need to switch between the terminal and text editor to restart your application every time you make a change.</p>
+<pre class="prettyprint">    nodemon app.js
+</pre>
+<p class="has-line-data" data-line-start="329" data-line-end="330">You can stop nodemon by using <code>CTRL+C</code> from the terminal.</p>
+
+
+
+</div><!-- starter-template -->
+</div><!-- /.container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"/>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+</body>
+</html>

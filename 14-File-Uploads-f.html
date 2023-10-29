@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>14 - File Uploads</title>
+<link href="assets/css/bootstrap.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="assets/css/starter-template.css" rel="stylesheet">
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&amp;skin=sunburst"></script>
+<style type="text/css">
+h2 {
+	margin-top: 60px;
+}
+
+h4, h3 {
+	padding-top: 40px!;		
+}
+
+p {
+	font-size: 1.2em;
+}
+h4 {
+	font-size: 1.4em;
+}
+
+img, pre.prettyprint {
+	margin-top: 1.5em;
+	margin-bottom: 1.5em;
+}
+h1, h2, h3, h4, h5, h6 {
+    color:#007bff;
+
+}
+blockquote {
+    border-left: 4px solid #999;
+    padding-left: 1rem;
+    page-break-inside: avoid;
+}
+</style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Udemy - The Complete Node.js Developer Course</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">14 - File Uploads <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container">
+    <div class="starter-template">
+
+<h2 id="file-uploads">File Uploads</h2>
+<h3 id="section-intro">Section Intro</h3>
+<p>We are now going to learn how to configure Node.js to support file uploads. This will allow users to upload documents, profile pictures, and any other file type you might need to support. You'll also see what it takes to store the uploaded files in MongoDB.</p>
+<h3 id="adding-support-for-file-uploads">Adding Support for File Uploads</h3>
+<p>We are going to set up multer. Multer is a library in the Express ecosystem that allows your Express application to easily support file uploads. It couldn't be easier.</p>
+<h4 id="configuring-multer">Configuring Multer</h4>
+<p>First up, install the library.</p>
+<pre class="prettyprint">    npm i multer
+</pre>
+<p>Multer can then be configured to fit your specific needs. The example below shows off a basic configuration where <code>dest</code> is set to <code>images</code>. This will store all uploaded files in a directory called <code>images</code>.</p>
+<pre class="prettyprint">    const multer = require('multer');
+
+    const upload = multer({
+        dest: 'images'
+    });
+</pre>
+<p>Multer is then added as middleware for the specific endpoint that should allow for file uploads. The route below is expecting a single <code>image</code> field on the submitted form.</p>
+<pre class="prettyprint">    router.post('/upload', upload.single('upload'), (req, res) =&gt; {
+        res.send();
+    })
+</pre>
+<p>Set up a new endpoint in Postman.</p>
+<p><img src="assets/images/file-upload.jpg" alt="File upload" title="File upload"></p>
+<p>You need to select the <strong>file</strong> option and you can then search for a file to upload. Once you have selected an image to upload click on the <strong>Send</strong> button and you should receive a status of <strong>200</strong>.</p>
+<p><img src="assets/images/successful-upload.jpg" alt="Successful file upload" title="Successful file upload"></p>
+<p>In the <em>images</em> folder you will see your image.</p>
+<p><img src="assets/images/uploaded-image.jpg" alt="Image in folder" title="Image in folder"></p>
+<p>Notice that the image has a guid for a name and no extension. We can give it a <em>.jpg</em> extension and VS Code will be able to view the file.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Setup endpoint for Avatar upload</p>
+<ol>
+<li>Add /POST/users/me/avatar to the User router.</li>
+<li>Setup Multer to store avatars in an avatars directory.</li>
+<li>Choose &quot;avatar&quot; as the name for the key when registering the middleware.</li>
+<li>Send back a &quot;200&quot; response from route handler.</li>
+<li>Test your work. Create a new Task App request and upload an image.</li>
+</ol>
+<p>in <strong>src/routers/users.js</strong>.</p>
+<pre class="prettyprint">    const upload = multer({
+        dest: 'avatars'
+    });
+
+    // POST /users/me/avatar
+    router.post('/users/me/avatar', upload.single('avatar'), (req, res) =&gt; {
+        res.send();
+    });
+</pre>
+<p>Set up the endpoint in Postman.</p>
+<p><img src="assets/images/upload-avatar.jpg" alt="Image size is too large" title="Uplaod avatar"></p>
+<p>Check the avatar directory.</p>
+<p><img src="assets/images/image-in-avatar.jpg" alt="Image in avatar folder" title="Uplaod avatar"></p>
+<h3 id="validating-file-uploads">Validating File Uploads</h3>
+<p>We will now learn how to validate file uploads. This will allow you to reject files that are too large or files of the wrong type.</p>
+<h4 id="validating-multer-uploads">Validating Multer Uploads</h4>
+<p>The multer configuration below adds these two types of validation.</p>
+<p><code>limits.fileSize</code> is set to limit the file size in bytes. The configuration below uses 1,000,000 bytes which is equivalent to 1 megabyte.</p>
+<pre class="prettyprint">    const upload = multer({
+        dest: 'images',
+        limits: {
+            fileSize: 1000000
+        }
+    });
+</pre>
+<p>To test this use the <strong>Upload image</strong> endpoint in Postman to upload the philly.jpg again. This will work because the file is less than 1 Mb in size.</p>
+<p>Test again using the fall.jpg file and this time it will fail because the file is 1.5 Mb in size.</p>
+<p>In Postman we get a status code of <strong>500</strong>.</p>
+<p><img src="assets/images/failed-image.jpg" alt="Image size is too large" title="Image size is too large"></p>
+<p>The error message is in HTML but we can change this to send back JSON.</p>
+<p>In VS Code.</p>
+<p><img src="assets/images/vscode-error.jpg" alt="Image error" title="Image error"></p>
+<h3 id="validating-file-types">Validating file types</h3>
+<p><code>fileFilter</code> is set to validate the file type. The method below will reject all documents that don't have either .doc or .docx file extensions. This same technique could be used to limit uploads to just images, PDFs, or any other file type.</p>
+<p>We need to check out the Multer documentation to see how to use <code>fileFilter</code>.</p>
+<p><a href="https://www.npmjs.com/package/multer" title="Multer documentation website.">Multer documentation website.</a></p>
+<p>We can set this up to only accept <strong>.pdf</strong> files.</p>
+<pre class="prettyprint">    const upload = multer({
+        dest: 'images',
+        limits: {
+            fileSize: 1000000
+        },
+        fileFilter(req, file, cb) {
+            if (!file.originalname.endsWith('.pdf')) {
+                return cb(new Error('File must be a .pdf!'));
+            }
+
+            cb(undefined, true);
+        }
+    });
+</pre>
+<p>Now, what if we want to allow multiple extensions? The following code allows for <strong>.doc</strong> or <strong>.docx</strong> files.</p>
+<pre class="prettyprint">    const upload = multer({
+        dest: 'images',
+            limits: {
+            fileSize: 1000000
+        },
+        fileFilter(req, file, cb) {
+            if (!file.originalname.match(/\.(doc|docx)$/)) {
+                return cb(new Error('Please upload a Word document'));
+            }
+
+            cb(undefined, true);
+        }
+    });
+</pre>
+<h5 id="challenge">Challenge</h5>
+<p>Add validation to the update avatar route.</p>
+<ol>
+<li>Limit the upload size to 1 Mb.</li>
+<li>Only allow .jpg, .jpeg or .png files to be uploaded.</li>
+<li>Test your work. Upload &gt; 1 Mb files should fail and non images should also fail.</li>
+</ol>
+<h5 id="srcroutersuserjs-partial">src/routers/user.js (partial)</h5>
+<pre class="prettyprint">    const upload = multer({
+        dest: 'avatars',
+        limits: {
+            fileSize: 1000000
+        },
+        fileFilter(req, file, cb) {
+            if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+                return cb(new Error('Please upload an image!'));
+            }
+
+            cb(undefined, true);
+        }
+    });
+</pre>
+<h3 id="handling-express-errors">Handling Express Errors</h3>
+<p>You'll now customize the errors that multer provides. This will give you complete control of what sort of response the client gets when their upload is rejected.</p>
+<h4 id="handling-express-errors">Handling Express Errors</h4>
+<p>You can handle errors from the middleware function by providing a function to Express. As shown below, a new function is passed as the final argument to router.post. This function accepts error, req, res, and next. This call signature lets Express know the function is designed to handle errors.</p>
+<p>The function itself sends back a JSON response with the error message from multer.</p>
+<pre class="prettyprint">    const upload = multer({
+        dest: 'images',
+        limits: {
+            fileSize: 1000000
+        },
+        fileFilter(req, file, cb) {
+            if (!file.originalname.match(/\.(doc|docx)$/)) {
+                return cb(new Error('Please upload a Word document!'));
+            }
+
+            cb(undefined, true);
+        }
+    });
+
+    app.post('/upload', upload.single('upload'), (req, res) =&gt; {
+        res.send();
+    }, (error, req, res, next) =&gt; {
+        res.status(400).send({ error: error.message });
+    });
+</pre>
+<p>Try and upload a Word document.</p>
+<p><img src="assets/images/success-word-doc.jpg" alt="Word document uploaded successfully" title="Word document uploaded successfully"></p>
+<p>Now try and upload a PDF document.</p>
+<p><img src="assets/images/unsuccess-word-doc.jpg" alt="Word document upload failed" title="Word document upload failed"></p>
+<p>All we did was add another function on to the request handler to handle the error. This would work for patch, delete or get as well.</p>
+<p>We need to keep the same signature that we see in the code above.</p>
+<pre class="prettyprint">    }, (error, req, res, next) =&gt; {
+</pre>
+<p>This lets Express know that this is to catch any uncaught errors because Multer threw an error when it go a bad upload.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Clean up the error handling in the avatar route handler.</p>
+<ol>
+<li>Setup an error handler function.</li>
+<li>Send back a 400 withthe error message.</li>
+<li>Test your work.</li>
+</ol>
+<h5 id="srcroutersuserjs-partial">src/routers/user.js (partial)</h5>
+<pre class="prettyprint">    // POST /users/me/avatar
+    router.post('/users/me/avatar', upload.single('avatar'), (req, res) =&gt; {
+        res.send();
+    }, (error, req, res, next) =&gt; {
+        res.status(400).send({ error: error.message });
+    });
+</pre>
+<p>Try to add an image.</p>
+<p><img src="assets/images/success-image-upload.jpg" alt="Uploaded image successfully" title="Uploaded image successfully"></p>
+<p>Try to add a non image.</p>
+<p><img src="assets/images/failed-image-upload.jpg" alt="Image upload failed" title="Image upload failed"></p>
+<h3 id="adding-images-to-the-user-profile">Adding Images to the User Profile</h3>
+<p>At the moment our images are not attached to any user. We are now going to learn how to associate the uploaded avatar with the users account.</p>
+<p>A new field needs to be added to the user model to store the avatar image data. The snippet below adds avatar on the user with the type of Buffer. The Buffer type should be used when storing binary data, which is exactly the type of data that multer provides.</p>
+<pre class="prettyprint">    // partial code
+    const userSchema = new mongoose.Schema({
+        avatar: {
+            type: Buffer
+        }
+    });
+</pre>
+<p>The avatar upload route will be able to change the user profile data, so the route should be put behind authentication. The handler function grabs the binary data and stores it on the avatar field. Finally, the changes are saved.</p>
+<pre class="prettyprint">    router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) =&gt; {
+        req.user.avatar = req.file.buffer
+        await req.user.save()
+        res.send()
+    }, (error, req, res, next) =&gt; {
+        res.status(400).send({ error: error.message })
+    });
+</pre>
+<p>If I try to save my avatar without logging in as a user.</p>
+<p><img src="assets/images/authenticate-error.jpg" alt="Authentication error" title="Authentication error"></p>
+<p>When I login as a user I get a status of <strong>200</strong> and an empty body as there is no reason to send back a message.</p>
+<p>I can now check the database to see my avatar field.</p>
+<p><img src="assets/images/avatar-added-to-db.jpg" alt="Avatar added to the database" title="Avatar added to the database"></p>
+<p>If we edit the document we can copy out the binary image in between the double quotes. We can go to jsbin.com and add some html to view the image in a browser. The binary image content below has been shortened.</p>
+<pre class="prettyprint">    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+    &lt;head&gt;
+      &lt;meta charset=&quot;utf-8&quot;&gt;
+      &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+      &lt;title&gt;JS Bin&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;h1&gt;Test image&lt;/h1&gt;
+    &lt;img src=&quot;data:image/jpg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/ ... lyaaf6070oA/9k=&quot;&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</pre>
+<p>This is how the image looks in the browser.</p>
+<p><img src="assets/images/image-in-browser.jpg" alt="Avatar added to the database" title="Avatar added to the database"></p>
+<h5 id="challenge">Challenge</h5>
+<p>Setup a route to delete the avatar from the user data.</p>
+<ol>
+<li>Setup // DELETE /users/me/avatar.</li>
+<li>Add authentication.</li>
+<li>Set the field to undefined and save the user sending back a 200.</li>
+<li>Test your work by creating a new request for Task App in Postman.</li>
+</ol>
+<h5 id="srcroutersuserjs">src/routers/user.js</h5>
+<pre class="prettyprint">    // DELETE /users/me/avatar
+    router.delete('/users/me/avatar', auth, async (req, res) =&gt; {
+        req.user.avatar = undefined;
+
+        try {
+            await req.user.save();
+            res.send();
+        } catch (e) {
+            res.status(500).send();
+        }
+    });
+</pre>
+<p>I get back a status of <strong>200</strong> telling me that everything went fine. If I look in the database the avatar field has been removed.</p>
+<h3 id="serving-up-files">Serving up Files</h3>
+<p>We are now going to serve up user profile images. These images will be served up as if they were static assets for the application.</p>
+<p>Serving up the user avatars will require two pieces of data from the server. The first is the image data, and the second is the <strong>Content-Type</strong> header. The image data is stored on the user profile. The header should be set equal to <strong>image/jpg</strong> which lets the client know they're getting a jpg image back.</p>
+<p>The route below fetches the image data and sets the <strong>Content-Type</strong> header for the response. The URL could be visited to view the profile picture.</p>
+<pre class="prettyprint">    // GET /users/123456789/avatar
+    router.get('/users/:id/avatar', async (req, res) =&gt; {
+        try {
+            const user = await User.findById(req.params.id);
+
+            if (!user || !user.avatar) {
+                throw new Error();
+            }
+
+            res.set('Content-Type', 'image/jpg');
+            res.send(user.avatar);
+        } catch (e) {
+            res.status(404).send();
+        }
+    });
+</pre>
+<p>We can use this URL in the browser to get back the image.</p>
+<p>http://127.0.0.1:3000/users/5f07e670c78c6796945b8e29/avatar</p>
+<h3 id="auto-cropping-and-image-formatting">Auto-Cropping and Image Formatting</h3>
+<p>We are going to learn how to resize and format images. This will let you create uniform sizes and file types for user avatars.</p>
+<p>First up, install the npm library.</p>
+<pre class="prettyprint">    npm i sharp
+</pre>
+<p>Now, sharp can be used to manipulate uploaded images. Before the image data is added onto the user profile, the data should be passed through sharp. The example below uses resize to resize all uploads to 250 by 250 pixels. The example also uses <strong>png</strong> to convert all images to portable network graphics. Lastly, <code>toBuffer</code> is used to retrieve the modified image data. The modified data is what should be saved in the database.</p>
+<p>We make a small change to <em>src/models.user.js</em> by deleting the avatar.</p>
+<pre class="prettyprint">    userSchema.methods.toJSON = function () {
+        const user = this;
+        const userObject = user.toObject();
+
+        delete userObject.password;
+        delete userObject.tokens;
+        delete userObject.avatar;
+
+        return userObject;
+    }
+</pre>
+<p>Then we change the route handler.</p>
+<pre class="prettyprint">    const sharp = require('sharp');
+
+    // POST /users/me/avatar
+    router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) =&gt; {
+        const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer();
+        req.user.avatar = buffer;
+        await req.user.save();
+        res.send();
+    }, (error, req, res, next) =&gt; {
+        res.status(400).send({ error: error.message });
+    });
+</pre>
+<p>We take the uploaded image and resize and change the avatar to a <strong>.png</strong> file. This creates a manageble image to use as an avatar seeing as the original <strong>.jpg</strong> image is 1920 * 1080 pixels in size.</p>
+<p>We can view the image in JSBin.com</p>
+<pre class="prettyprint">    Test image&lt;/h1&gt;
+    &lt;img src=&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPo ... AAAAASUVORK5CYII=&quot;&gt;
+</pre>
+<p>or we can run the URL.</p>
+<p>http://127.0.0.1:3000/users/5f07e670c78c6796945b8e29/avatar</p>
+<p><img src="assets/images/resized-png.jpg" alt="Resized avatar" title="Resized avatar"></p>
+<p>If you try and save this image you will see that it is now a <strong>.png</strong> image.</p>
+
+
+</div><!-- starter-template -->
+</div><!-- /.container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"/>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+</body>
+</html>

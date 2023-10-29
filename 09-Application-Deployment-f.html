@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>09 - Application Deployment</title>
+<link href="assets/css/bootstrap.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="assets/css/starter-template.css" rel="stylesheet">
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&amp;skin=sunburst"></script>
+<style type="text/css">
+h2 {
+	margin-top: 60px;
+}
+
+h4, h3 {
+	padding-top: 40px!;		
+}
+
+p {
+	font-size: 1.2em;
+}
+h4 {
+	font-size: 1.4em;
+}
+
+img, pre.prettyprint {
+	margin-top: 1.5em;
+	margin-bottom: 1.5em;
+}
+h1, h2, h3, h4, h5, h6 {
+    color:#007bff;
+
+}
+blockquote {
+    border-left: 4px solid #999;
+    padding-left: 1rem;
+    page-break-inside: avoid;
+}
+</style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Udemy - The Complete Node.js Developer Course</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">09 - Application Deployment <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container">
+    <div class="starter-template">
+
+<h2 class="code-line" data-line-start=0 data-line-end=1><a id="App"></a>Application Deployment</h2>
+<h3 class="code-line" data-line-start=0 data-line-end=1><a id="Setting_up_SSH_Keys_0"></a>Setting up SSH Keys</h3>
+<p class="has-line-data" data-line-start="2" data-line-end="3">We need to set up SSH on our machine. SSH is the protocol used to securely transfer code between your machine and GitHub/Heroku.</p>
+<h3 class="code-line" data-line-start=4 data-line-end=5><a id="Creating_SSH_Keys_4"></a>Creating SSH Keys</h3>
+<p class="has-line-data" data-line-start="6" data-line-end="7">Windows users won’t have access to the necessary SSH commands from the command prompt. Make sure to use Git Bash for the following commands.</p>
+<p class="has-line-data" data-line-start="8" data-line-end="9">SSH uses an SSH key pair to secure the connection between your machine and the machine you’re communicating with. You can check if you already have an SSH key pair with the following command. You have a key pair if you see id_rsa and id_rsa.pub in the output.</p>
+<pre class="prettyprint">    ls -a -l ~/.ssh
+</pre>
+<p class="has-line-data" data-line-start="14" data-line-end="15">You can create a new key pair using the following command. Make sure to swap out the email for your email address.</p>
+<pre class="prettyprint">[ssh-keygen -t rsa -b 4096 -C "youremail@domain.com"
+</pre>
+<p class="has-line-data" data-line-start="20" data-line-end="21">The SSH key needs to be configured to be used for new SSH connections. First, ensure that the SSH agent is running. You can do that using the command below.</p>
+<pre class="prettyprint">    eval &quot;$(ssh-agent -s)&quot;
+</pre>
+<p class="has-line-data" data-line-start="26" data-line-end="27">The command below is for Linux users and Windows users.</p>
+<pre class="prettyprint">    ssh-add ~/.ssh/id_rsa
+</pre>
+<h3 class="code-line" data-line-start=32 data-line-end=33><a id="Adding_the_ssh_key_to_GitHub_32"></a>Adding the ssh key to GitHub</h3>
+<p class="has-line-data" data-line-start="34" data-line-end="35">You need to copy the ssh key to GitHub.</p>
+<pre class="prettyprint">    cat ~/.ssh/id_rsa.pub
+</pre>
+<p class="has-line-data" data-line-start="40" data-line-end="41">Will print out the key for you. Copy the key from <strong>ssh-rsa</strong> to the end of the email address you created for the key.</p>
+<p class="has-line-data" data-line-start="42" data-line-end="43">Go up to your GitHub site and click on the profile button on the top-right hand corner.</p>
+<p class="has-line-data" data-line-start="44" data-line-end="45">Select the <strong>SSH and GPG Keys</strong> tab. Click on the <strong>ssh keys</strong> section to add a new key.</p>
+<p class="has-line-data" data-line-start="46" data-line-end="47"><img src="assets/images/profile.jpg" alt="Set your ssh key." title="Set your ssh key."></p>
+<p class="has-line-data" data-line-start="48" data-line-end="49">Add a name for the machine the key was created on (e.g. Home Desktop) and paste the key that you copied from your ~/.ssh key, id_rsa.pub. This should add the ssh key to GitHub.</p>
+<h2 class="code-line" data-line-start=50 data-line-end=51><a id="Using_Heroku_50"></a>Using Heroku</h2>
+<p class="has-line-data" data-line-start="52" data-line-end="53">Install command line tools.</p>
+<pre class="prettyprint">    heroku --version
+</pre>
+<p class="has-line-data" data-line-start="58" data-line-end="59">To get the version number. This tells you that you have successfully installed Heroku.</p>
+<p class="has-line-data" data-line-start="60" data-line-end="61">To login.</p>
+<pre class="prettyprint">    heroku login
+</pre>
+<p class="has-line-data" data-line-start="66" data-line-end="67">To add your ssh key.</p>
+<pre class="prettyprint">    heroku keys:add
+</pre>
+<p class="has-line-data" data-line-start="72" data-line-end="73">This will search for your key and pick our only key, id_rsa.pub.</p>
+<p class="has-line-data" data-line-start="74" data-line-end="75">To create a Heroku app.</p>
+<p class="has-line-data" data-line-start="76" data-line-end="77">We need to run this from the <strong>root</strong> of our app. <em>/D/WebDev/Node/node-course/web-server</em></p>
+<pre class="prettyprint">    heroku create ar-weather
+</pre>
+<p class="has-line-data" data-line-start="82" data-line-end="83">If the name is unique it will create the url for you. It will also create the place to push your app.</p>
+<blockquote>
+<p class="has-line-data" data-line-start="84" data-line-end="85"><a href="https://ar-weather.herokuapp.com/">https://ar-weather.herokuapp.com/</a> | <a href="https://git.heroku.com/ar-weather.git">https://git.heroku.com/ar-weather.git</a></p>
+</blockquote>
+<p class="has-line-data" data-line-start="86" data-line-end="87">In order to run our application we have to tell Heroku which application to run. We can add this to our <strong>package.json</strong> file.</p>
+<pre class="prettyprint">    {
+      &quot;name&quot;: &quot;web-server&quot;,
+      &quot;version&quot;: &quot;1.0.0&quot;,
+      &quot;description&quot;: &quot;&quot;,
+      &quot;main&quot;: &quot;index.js&quot;,
+      &quot;scripts&quot;: {
+        &quot;start&quot;: &quot;node src/app.js&quot;
+      },
+      &quot;keywords&quot;: [],
+      &quot;author&quot;: &quot;&quot;,
+      &quot;license&quot;: &quot;ISC&quot;,
+      &quot;dependencies&quot;: {
+        &quot;express&quot;: &quot;^4.17.1&quot;,
+        &quot;hbs&quot;: &quot;^4.1.1&quot;,
+        &quot;postman-request&quot;: &quot;^2.88.1-postman.23&quot;
+      }
+    }
+</pre>
+<p class="has-line-data" data-line-start="108" data-line-end="109">The following section tells Heroku how to run our application.</p>
+<pre class="prettyprint">    &quot;scripts&quot;: {
+            &quot;start&quot;: &quot;node src/app.js&quot;
+          },
+</pre>
+<p class="has-line-data" data-line-start="116" data-line-end="117">We could also run our application using this command, <code>node src/app.js</code></p>
+<p class="has-line-data" data-line-start="118" data-line-end="119">In development we hardcoded the <code>localhost:3000</code> url. We have to remove these from our code.</p>
+<h5 class="code-line" data-line-start=120 data-line-end=121><a id="in_appjs_120"></a>in app.js</h5>
+<pre class="prettyprint">    const app = express();
+    const port = process.env.PORT || 3000;
+</pre>
+<p class="has-line-data" data-line-start="127" data-line-end="128">Adds the <code>port</code> reference.</p>
+<p class="has-line-data" data-line-start="129" data-line-end="130">Change the <code>listen</code> reference.</p>
+<pre class="prettyprint">    app.listen(port, () =&gt; {
+        console.log('Server is up on port ' + port);
+    });
+</pre>
+<p class="has-line-data" data-line-start="137" data-line-end="138">You need to change the <code>public\src\app.js</code> file.</p>
+<pre class="prettyprint">    const url = '/weather?address=' + location;
+</pre>
+<p class="has-line-data" data-line-start="143" data-line-end="144">Now, we can push our changes to GitHub and then push our changes to Heroku.</p>
+<pre class="prettyprint">    git push heroku master
+</pre>
+<h3 class="code-line" data-line-start=149 data-line-end=150><a id="New_Feature_Deployment_Workflow_149"></a>New Feature Deployment Workflow</h3>
+<p class="has-line-data" data-line-start="151" data-line-end="152">We’ll go through the process of adding a new feature to the application. This includes committing the changes, pushing them to GitHub, and deploying them to Heroku.</p>
+<h5 class="code-line" data-line-start=153 data-line-end=154><a id="Challenge_153"></a>Challenge</h5>
+<p class="has-line-data" data-line-start="155" data-line-end="156">Add new data to forecast</p>
+<ol>
+<li class="has-line-data" data-line-start="157" data-line-end="158">Update your forecast data by adding new information.</li>
+<li class="has-line-data" data-line-start="158" data-line-end="159">Commit your changes.</li>
+<li class="has-line-data" data-line-start="159" data-line-end="160">Push your changes to GitHub and deploy to Heroku.</li>
+<li class="has-line-data" data-line-start="160" data-line-end="162">Test your work in the live application.</li>
+</ol>
+<h5 class="code-line" data-line-start=162 data-line-end=163><a id="forecastjs_162"></a>forecast.js</h5>
+<pre class="prettyprint">    const request = require('postman-request');
+
+    const forecast = (latitude, longitude, callback) =&gt;  {
+        const url = 'http://api.weatherstack.com/current?access_key=f41e35407998bf659423ffd2ac284503&amp;query=' + latitude + ','   + longitude + '&amp;units=m';
+
+        request({ url, json: true }, (error, { body }) =&gt; {
+            if (error) {
+                callback('Unable to connect to weather service.');
+            } else if (body.error) {
+                callback('Unable to find location.');
+            } else {
+                const tempObject = {
+                    temperature: body.current.temperature,
+                    precipitation: body.current.precip,
+                    description: body.current.weather_descriptions,
+                    feelslike: body.current.feelslike
+                }
+
+                const { temperature, precipitation, description, feelslike } = tempObject;
+
+                callback(undefined, `It is currently ${temperature} degrees out but feels like ${feelslike} degrees. It is $    {description} and there is ${precipitation}% chance of rain.`);
+            }
+        });
+    }
+
+    module.exports = forecast;
+</pre>
+<p class="has-line-data" data-line-start="193" data-line-end="194">To deploy, the workflow is:</p>
+<pre class="prettyprint">    git status
+
+    git add .
+
+    git commit -m &quot;Add feels like message to forecast.&quot;
+
+    git push
+
+    git status
+
+    git push heroku master
+</pre>
+<h3 class="code-line" data-line-start=209 data-line-end=210><a id="Avoiding_Global_Modules_209"></a>Avoiding Global Modules</h3>
+<p class="has-line-data" data-line-start="211" data-line-end="212">Now, we are going to refactor our application to remove the use of global modules. This ensures that your application installs all the dependencies you need to run.</p>
+<h4 class="code-line" data-line-start=213 data-line-end=214><a id="Replacing_Global_Modules_with_Local_Modules_213"></a>Replacing Global Modules with Local Modules</h4>
+<p class="has-line-data" data-line-start="215" data-line-end="216">Sick of typing out that long nodemon command? Let’s turn it into a script.</p>
+<p class="has-line-data" data-line-start="217" data-line-end="218">You can create a <strong>dev</strong> script with the value <strong>nodemon src/app.js -e js,hbs</strong>. This will start up the dev server anytime you run <strong>npm run dev</strong>.</p>
+<p class="has-line-data" data-line-start="219" data-line-end="220">The dev script needs <strong>nodemon</strong> to be installed. The issue is that <strong>nodemon</strong> isn’t listed as a dependency in <strong>package.json</strong>. However, this can be fixed by uninstalling nodemon globally.</p>
+<pre class="prettyprint">    npm uninstall -g nodemon
+</pre>
+<p class="has-line-data" data-line-start="225" data-line-end="226">Now, install it as a local dependency.</p>
+<pre class="prettyprint">    npm install nodemon --save-dev
+</pre>
+<p class="has-line-data" data-line-start="231" data-line-end="232">Now, <strong>npm install</strong> will be able to install all your application dependencies, including nodemon!</p>
+<h5 class="code-line" data-line-start=233 data-line-end=234><a id="packagejson_233"></a>package.json</h5>
+<pre class="prettyprint">    {
+      &quot;name&quot;: &quot;web-server&quot;,
+      &quot;version&quot;: &quot;1.0.0&quot;,
+      &quot;description&quot;: &quot;&quot;,
+      &quot;main&quot;: &quot;index.js&quot;,
+      &quot;scripts&quot;: {
+        &quot;start&quot;: &quot;node src/app.js&quot;,
+        &quot;dev&quot;: &quot;nodemon src/app.js -e js,hbs&quot;
+      },
+      &quot;keywords&quot;: [],
+      &quot;author&quot;: &quot;&quot;,
+      &quot;license&quot;: &quot;ISC&quot;,
+      &quot;dependencies&quot;: {
+        &quot;express&quot;: &quot;^4.17.1&quot;,
+        &quot;hbs&quot;: &quot;^4.1.1&quot;,
+        &quot;postman-request&quot;: &quot;^2.88.1-postman.23&quot;
+      },
+      &quot;devDependencies&quot;: {
+        &quot;nodemon&quot;: &quot;^2.0.4&quot;
+      }
+    }
+</pre>
+<p class="has-line-data" data-line-start="259" data-line-end="260">The script above shows <strong>nodemon</strong> as a dev dependency.</p>
+<p class="has-line-data" data-line-start="261" data-line-end="262">To run the dev script.</p>
+<pre class="prettyprint">    npm run dev
+</pre>
+
+
+
+
+</div><!-- starter-template -->
+</div><!-- /.container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"/>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+</body>
+</html>

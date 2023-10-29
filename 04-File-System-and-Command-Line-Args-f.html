@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>04 - File System and Command Line Arguments</title>
+<link href="assets/css/bootstrap.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="assets/css/starter-template.css" rel="stylesheet">
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&amp;skin=sunburst"></script>
+<style type="text/css">
+h2 {
+	margin-top: 60px;
+}
+
+h4, h3 {
+	padding-top: 40px!;		
+}
+
+p {
+	font-size: 1.2em;
+}
+h4 {
+	font-size: 1.4em;
+}
+
+img, pre.prettyprint {
+	margin-top: 1.5em;
+	margin-bottom: 1.5em;
+}
+h1, h2, h3, h4, h5, h6 {
+    color:#007bff;
+
+}
+blockquote {
+    border-left: 4px solid #999;
+    padding-left: 1rem;
+    page-break-inside: avoid;
+}
+</style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Udemy - The Complete Node.js Developer Course</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">04 - File System and Command Line Arguments <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container">
+    <div class="starter-template">
+
+
+<h2 class="code-line" data-line-start=0 data-line-end=1><a id="File_System_and_Command_Line_Arguments_0"></a>File System and Command Line Arguments</h2>
+<h3 class="code-line" data-line-start=2 data-line-end=3><a id="Getting_Input_from_Users_2"></a>Getting Input from Users</h3>
+<p class="has-line-data" data-line-start="4" data-line-end="6">I can't think of a single useful application that doesn't get input from the users. Whether it's<br>
+their email, location, or age, getting input is essential for creating real-world apps. We need to learn how to set up command line arguments that allow users to pass data into our application.</p>
+<h4 class="code-line" data-line-start=7 data-line-end=8><a id="Accessing_Command_Line_Arguments_7"></a>Accessing Command Line Arguments</h4>
+<p class="has-line-data" data-line-start="9" data-line-end="10">Command line arguments are values passed into your application from the terminal. Your Node.js application can access the command line arguments that were provided using <code>process.argv</code>. This array contains at least two items. The first is the path to the Node.js executable. The second is the path to the JavaScript file that was executed. Everything after that is a command line argument.</p>
+<p class="has-line-data" data-line-start="11" data-line-end="12">Run the command:</p>
+<pre class="prettyprint">    node app Alan
+</pre>
+<p class="has-line-data" data-line-start="17" data-line-end="18"><strong>node app</strong> is used to run the app.js script file. <em>Alan</em> is the argument. We can access the command line arguments with:</p>
+<pre class="prettyprint">    console.log(process.argv);
+</pre>
+<p class="has-line-data" data-line-start="23" data-line-end="24">Which prints out.</p>
+<blockquote>
+<p class="has-line-data" data-line-start="25" data-line-end="28">[ 'C:\Program Files\nodejs\node.exe',<br>
+'D:\WebDev\Node\node-course\notes-app\app',<br>
+'Alan' ]</p>
+</blockquote>
+<p class="has-line-data" data-line-start="29" data-line-end="30">The first argument is the program we are running. The second argument is the script file we are running. The third argument is the text we typed in, <em>Alan</em>.</p>
+<p class="has-line-data" data-line-start="31" data-line-end="32">We can grab an argument by its index value. In our case we want to get the text entered.</p>
+<pre class="prettyprint">    console.log(process.argv[2]);
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="37" data-line-end="38">Alan</p>
+</blockquote>
+<p class="has-line-data" data-line-start="39" data-line-end="40">We can use this to run a command. For example if we want to add a new note.</p>
+<pre class="prettyprint">    node app add
+</pre>
+<p class="has-line-data" data-line-start="45" data-line-end="46">Our code is:</p>
+<pre class="prettyprint">    const command = process.argv[2];
+
+    if (command === 'add') {
+        console.log('Add a new note...');
+    } else if (command === 'remove') {
+        console.log('Removing note...');
+    }
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="57" data-line-end="59">$ node app add<br>
+Add a new note…</p>
+</blockquote>
+<p class="has-line-data" data-line-start="60" data-line-end="61">Run again.</p>
+<blockquote>
+<p class="has-line-data" data-line-start="62" data-line-end="64">$ node app remove<br>
+Removing note…</p>
+</blockquote>
+<h3 class="code-line" data-line-start=65 data-line-end=66><a id="Argument_Parsing_with_Yargs__Part_1_65"></a>Argument Parsing with Yargs - Part 1</h3>
+<p class="has-line-data" data-line-start="67" data-line-end="69">Node.js provides a bare-bones way to access command line arguments. While it's a good start, it doesn't provide any way to parse more complex command line arguments. We are going to use Yargs to easily set up a more complex set of arguments for<br>
+your application.</p>
+<h4 class="code-line" data-line-start=70 data-line-end=71><a id="Setting_Up_Yargs_70"></a>Setting Up Yargs</h4>
+<p class="has-line-data" data-line-start="72" data-line-end="73">First, install <strong>Yargs</strong> in your project.</p>
+<pre class="prettyprint">    npm i yargs</a>
+</pre>
+<p class="has-line-data" data-line-start="78" data-line-end="79">Now, yargs can be used to make it easier to work with command line arguments. The following code will show the difference between standard argument parsing and yargs parsing.</p>
+<pre class="prettyprint">    const chalk = require('chalk');
+    const yargs = require('yargs');
+    const getNotes = require('./notes.js');
+
+    console.log(process.argv);
+  
+    console.log();
+
+    console.log(yargs.argv);
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="92" data-line-end="96">[ 'C:\Program Files\nodejs\node.exe',<br>
+'D:\WebDev\Node\node-course\notes-app\app',<br>
+'add',<br>
+'–title=This is my new title' ]</p>
+<p class="has-line-data" data-line-start="97" data-line-end="98">{ _: [ 'add' ], title: 'This is my new title', '$0': 'app' }</p>
+</blockquote>
+<p class="has-line-data" data-line-start="99" data-line-end="100">Now, run the following command.</p>
+<pre class="prettyprint">    node app --help
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="105" data-line-end="108">Options:<br>
+–help Show help [boolean]<br>
+–version Show version number [boolean]</p>
+</blockquote>
+<p class="has-line-data" data-line-start="109" data-line-end="110">We can check the version:</p>
+<pre class="prettyprint">    node app --version
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="115" data-line-end="116">1.0.0</p>
+</blockquote>
+<p class="has-line-data" data-line-start="117" data-line-end="118">We can modify the version of yargs that we are using by:</p>
+<pre class="prettyprint">    yargs.version('1.1.0');
+</pre>
+<p class="has-line-data" data-line-start="123" data-line-end="124">Run this:</p>
+<pre class="prettyprint">    node app --version
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="129" data-line-end="130">1.1.0</p>
+</blockquote>
+<p class="has-line-data" data-line-start="131" data-line-end="132">Add the following code:</p>
+<pre class="prettyprint">    yargs.command({
+        command: 'add',
+        describe: 'Add a new note.',
+        handler: function () {
+            console.log('Adding a new note...');
+        }
+    });
+
+    console.log(yargs.argv);
+</pre>
+<p class="has-line-data" data-line-start="145" data-line-end="146">Now we can run the help again.</p>
+<pre class="prettyprint">    node app --help
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="151" data-line-end="153">Commands:<br>
+app add Add a new note.</p>
+<p class="has-line-data" data-line-start="154" data-line-end="157">Options:<br>
+–help Show help [boolean]<br>
+–version Show version number [boolean]</p>
+</blockquote>
+<p class="has-line-data" data-line-start="158" data-line-end="159">Now, we will go ahead and use the command.</p>
+<pre class="prettyprint">    node app add
+</pre>
+<p class="has-line-data" data-line-start="164" data-line-end="165">Returns.</p>
+<blockquote>
+<p class="has-line-data" data-line-start="166" data-line-end="168">Adding a new note…<br>
+{ _: [ 'add' ], '$0': 'app' }</p>
+</blockquote>
+<p class="has-line-data" data-line-start="169" data-line-end="170">Now, let's add a new command</p>
+<pre class="prettyprint">    // Create remove command
+    yargs.command({
+        command: 'remove',
+        describe: 'Remove the current note.',
+        handler: function () {
+            console.log('Removing a note...');
+        }
+    });
+
+    console.log(yargs.argv);
+</pre>
+<p class="has-line-data" data-line-start="184" data-line-end="185">Run.</p>
+<pre class="prettyprint">    node app remove
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="190" data-line-end="192">Removing a note…<br>
+{ _: [ 'remove' ], '$0': 'app' }</p>
+</blockquote>
+<h5 class="code-line" data-line-start=193 data-line-end=194><a id="Challenge_193"></a>Challenge</h5>
+<p class="has-line-data" data-line-start="195" data-line-end="196">Add two new commands</p>
+<ol>
+<li class="has-line-data" data-line-start="197" data-line-end="198">Setup command to support "list" and print placeholder message for now.</li>
+<li class="has-line-data" data-line-start="198" data-line-end="199">Setup command to support "read" and print placeholder message for now.</li>
+<li class="has-line-data" data-line-start="199" data-line-end="201">Test your work by running both commands to ensure correct output.</li>
+</ol>
+<p class="has-line-data" data-line-start="201" data-line-end="202">Code.</p>
+<pre class="prettyprint">    // Create list command
+    yargs.command({
+        command: 'list',
+        describe: 'List all notes.',
+        handler: function () {
+            console.log('Listing the notes...');
+        }
+    });
+
+    // Create read command
+    yargs.command({
+        command: 'read',
+        describe: 'read current note.',
+        handler: function () {
+            console.log('Read the current note...');
+        }
+    });
+
+    console.log(yargs.argv);
+</pre>
+<p class="has-line-data" data-line-start="225" data-line-end="226">Run.</p>
+<pre class="prettyprint">    node app list
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="231" data-line-end="233">Listing the notes…<br>
+{ _: [ 'list' ], '$0': 'app' }</p>
+</blockquote>
+<p class="has-line-data" data-line-start="234" data-line-end="235">Run.</p>
+<pre class="prettyprint">    node app read
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="240" data-line-end="242">Read the current note…<br>
+{ _: [ 'read' ], '$0': 'app' }</p>
+</blockquote>
+<p class="has-line-data" data-line-start="243" data-line-end="244">Now run the help command.</p>
+<pre class="prettyprint">    node app --help
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="249" data-line-end="250">app [command]</p>
+<p class="has-line-data" data-line-start="251" data-line-end="256">Commands:<br>
+app add Add a new note.<br>
+app remove Remove the current note.<br>
+app list List all notes.<br>
+app read read current note.</p>
+</blockquote>
+<h3 class="code-line" data-line-start=257 data-line-end=258><a id="Argument_Parsing_with_Yargs__Part_II_257"></a>Argument Parsing with Yargs - Part II</h3>
+<p class="has-line-data" data-line-start="259" data-line-end="260">We will continue to explore Yargs. The goal is to allow users to pass in the title and body of their notes using command line options. This same technique could be used to allow users to pass in data such as their name, email, or address.</p>
+<p class="has-line-data" data-line-start="261" data-line-end="262">We are going to add a title to the <strong>add</strong> command.</p>
+<pre class="prettyprint">    // Create add command
+    yargs.command({
+        command: 'add',
+        describe: 'Add a new note.',
+        builder: {
+            title: {
+                describe: 'Note title.'
+            }
+        },
+        handler: function (argv) {
+            console.log('Adding a new note...', argv);
+        }
+    });
+</pre>
+<p class="has-line-data" data-line-start="279" data-line-end="280">Run.</p>
+<pre class="prettyprint">    node app add --title=&quot;Shopping list.&quot;
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="285" data-line-end="287">Adding a new note… { _: [ 'add' ], title: 'Shopping list.', '$0': 'app' }<br>
+{ _: [ 'add' ], title: 'Shopping list.', '$0': 'app' }</p>
+</blockquote>
+<p class="has-line-data" data-line-start="288" data-line-end="289">we also have the option to force the user to add a title when adding a new note.</p>
+<pre class="prettyprint">    // Create add command
+    yargs.command({
+        command: 'add',
+        describe: 'Add a new note.',
+        builder: {
+            title: {
+                describe: 'Note title.',
+                demandOption: true
+            }
+        },
+        handler: function (argv) {
+            console.log('Adding a new note...', argv);
+        }
+    });
+</pre>
+<p class="has-line-data" data-line-start="307" data-line-end="308">Run.</p>
+<pre class="prettyprint">    node app add
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="313" data-line-end="314">app add</p>
+<p class="has-line-data" data-line-start="315" data-line-end="316">Add a new note.</p>
+<p class="has-line-data" data-line-start="317" data-line-end="321">Options:<br>
+–help Show help [boolean]<br>
+–version Show version number [boolean]<br>
+–title Note title. [required]</p>
+<p class="has-line-data" data-line-start="322" data-line-end="323">Missing required argument: title</p>
+</blockquote>
+<p class="has-line-data" data-line-start="324" data-line-end="325">We also want to ensure that the title is always a string.</p>
+<pre class="prettyprint">    // Create add command
+    yargs.command({
+        command: 'add',
+        describe: 'Add a new note.',
+        builder: {
+            title: {
+                describe: 'Note title.',
+                demandOption: true,
+                type: 'string'
+            }
+        },
+        handler: function (argv) {
+            console.log('Adding a new note...', argv);
+        }
+    });
+</pre>
+<p class="has-line-data" data-line-start="344" data-line-end="345">Run.</p>
+<pre class="prettyprint">    node app add -- title=
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="350" data-line-end="351">app add</p>
+<p class="has-line-data" data-line-start="352" data-line-end="353">Add a new note.</p>
+<p class="has-line-data" data-line-start="354" data-line-end="358">Options:<br>
+–help Show help [boolean]<br>
+–version Show version number [boolean]<br>
+–title Note title. [string] [required]</p>
+<p class="has-line-data" data-line-start="359" data-line-end="360">Missing required argument: title</p>
+</blockquote>
+<p class="has-line-data" data-line-start="361" data-line-end="362">In the code we are using the following line to print the arguments and this is important.</p>
+<pre class="prettyprint">    console.log(yargs.argv);
+</pre>
+<p class="has-line-data" data-line-start="367" data-line-end="368">If we don't add this the code won't print out the arguments. There is another way to do this.</p>
+<pre class="prettyprint">    yargs.parse();
+</pre>
+<p class="has-line-data" data-line-start="373" data-line-end="374">Will print out the same message as above.</p>
+<p class="has-line-data" data-line-start="375" data-line-end="376">Now we want to be able to grab the <em>title</em> value and we can do this by:</p>
+<pre class="prettyprint">    // Create add command
+    yargs.command({
+        command: 'add',
+        describe: 'Add a new note.',
+        builder: {
+            title: {
+                describe: 'Note title.',
+                demandOption: true,
+                type: 'string'
+            }
+        },
+        handler: function (argv) {
+            console.log('Title: ' + argv.title);
+        }
+    });
+</pre>
+<p class="has-line-data" data-line-start="395" data-line-end="396">Run.</p>
+<pre class="prettyprint">    node app add --title=&quot;Shopping list.&quot;
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="401" data-line-end="402">Title: Shopping list.</p>
+</blockquote>
+<h5 class="code-line" data-line-start=403 data-line-end=404><a id="Challenge_403"></a>Challenge</h5>
+<p class="has-line-data" data-line-start="405" data-line-end="406">Add an option to yargs.</p>
+<ol>
+<li class="has-line-data" data-line-start="407" data-line-end="408">Setup a body option for the add command.</li>
+<li class="has-line-data" data-line-start="408" data-line-end="409">Configure a description, make it required and make it a string type.</li>
+<li class="has-line-data" data-line-start="409" data-line-end="410">Log the body value in the handler function.</li>
+<li class="has-line-data" data-line-start="410" data-line-end="412">Test your work.</li>
+</ol>
+<p class="has-line-data" data-line-start="412" data-line-end="413">Code.</p>
+<pre class="prettyprint">    // Create add command
+    yargs.command({
+        command: 'add',
+        describe: 'Add a new note.',
+        builder: {
+            title: {
+                describe: 'Note title.',
+                demandOption: true,
+                type: 'string'
+            },
+            body: {
+                describe: 'Note body.',
+                demandOption: true,
+                type: 'string'
+            }
+        },
+        handler: function (argv) {
+            console.log('Title: ' + argv.title);
+            console.log('Body: ' + argv.body);
+        }
+    });
+</pre>
+<p class="has-line-data" data-line-start="438" data-line-end="439">Run.</p>
+<pre class="prettyprint">    node app add --title=&quot;Shopping list.&quot; --body=&quot;This is my list of shopping items.&quot;
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="444" data-line-end="446">Title: Shopping list.<br>
+Body: This is my list of shopping items.</p>
+</blockquote>
+<p class="has-line-data" data-line-start="447" data-line-end="448">Run.</p>
+<pre class="prettyprint">    node app add --title=&quot;Shopping list.&quot;
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="453" data-line-end="454">app add</p>
+<p class="has-line-data" data-line-start="455" data-line-end="456">Add a new note.</p>
+<p class="has-line-data" data-line-start="457" data-line-end="462">Options:<br>
+–help Show help [boolean]<br>
+–version Show version number [boolean]<br>
+–title Note title. [string] [required]<br>
+–body Note body. [string] [required]</p>
+<p class="has-line-data" data-line-start="463" data-line-end="464">Missing required argument: body</p>
+</blockquote>
+<h3 class="code-line" data-line-start=465 data-line-end=466><a id="Storing_Data_with_JSON_465"></a>Storing Data with JSON</h3>
+<p class="has-line-data" data-line-start="467" data-line-end="468">We need to learn how to work with JSON. JSON, which stands for JavaScript Object Notation, is a lightweight data format. JSON makes it easy to store or transfer data.</p>
+<p class="has-line-data" data-line-start="469" data-line-end="470">You'll be using it in this application to store users notes in the file system.</p>
+<h4 class="code-line" data-line-start=471 data-line-end=472><a id="Working_with_JSON_471"></a>Working with JSON</h4>
+<p class="has-line-data" data-line-start="473" data-line-end="474">Since JSON is nothing more than a string, it can be used to store data in a text file or transfer data via HTTP requests between two machines.</p>
+<p class="has-line-data" data-line-start="475" data-line-end="476">JavaScript provides two methods for working with JSON. The first is <code>JSON.stringify</code> and the second is <code>JSON.parse</code>. <code>JSON.stringify</code> converts a JavaScript object into a JSON string, while <code>JSON.parse</code> converts a JSON string into a JavaScript object.</p>
+<p class="has-line-data" data-line-start="477" data-line-end="478">An example of working with JSON.</p>
+<pre class="prettyprint">    const book = {
+        title: 'The Rich Man\'s House',
+        author: 'Andrew McGahan'
+    }
+
+    const bookJSON = JSON.stringify(book);
+    console.log(bookJSON);
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="489" data-line-end="490">{"title":"The Rich Man's House","author":"Andrew McGahan"}</p>
+</blockquote>
+<p class="has-line-data" data-line-start="491" data-line-end="492">The opposite of <code>JSON.stringify</code> is <code>JSON.parse</code>. <code>JSON.parse</code> takes in the JSON string and passes back a JSON object.</p>
+<pre class="prettyprint">    const newBook = JSON.parse(bookJSON);
+
+    console.log('Book: %s -- %s', newBook.author, newBook.title);
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="499" data-line-end="500">Book: Andrew McGahan – The Rich Man's House</p>
+</blockquote>
+<p class="has-line-data" data-line-start="501" data-line-end="502">Next we are going to save our JSON text to a file.</p>
+<pre class="prettyprint">    const fs = require('fs');
+
+    const book = {
+        title: 'The Rich Man\'s House',
+        author: 'Andrew McGahan'
+    }
+
+    const bookJSON = JSON.stringify(book);
+
+    fs.writeFileSync('books.json', bookJSON);
+</pre>
+<p class="has-line-data" data-line-start="516" data-line-end="517">We can view the file with the command.</p>
+<pre class="prettyprint">    cat books.json
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="522" data-line-end="523">{"title":"The Rich Man's House","author":"Andrew McGahan"}</p>
+</blockquote>
+<p class="has-line-data" data-line-start="524" data-line-end="525">Now we want to comment out all of the writing code and create some code to read in the JSON file.</p>
+<pre class="prettyprint">    const fs = require('fs');
+
+    const dataBuffer = fs.readFileSync('books.json');
+
+    console.log(dataBuffer);
+</pre>
+<p class="has-line-data" data-line-start="534" data-line-end="535">At this stage the data is actually binary data and we can see this if we dump <code>dataBuffer</code> to the console.</p>
+<blockquote>
+<p class="has-line-data" data-line-start="536" data-line-end="537">&lt;Buffer 7b 22 74 69 74 6c 65 22 3a 22 54 68 65 20 52 69 63 68 20 4d 61 6e 27 73 20 48 6f 75 73 65 22 2c 22 61 75 74 68 6f 72 22 3a 22 41 6e 64 72 65 77 20 4d … &gt;</p>
+</blockquote>
+<p class="has-line-data" data-line-start="538" data-line-end="539">To make the data more user friendly we can use JSON.parse() to format it back into an object.</p>
+<pre class="prettyprint">    const fs = require('fs');
+
+    const dataBuffer = fs.readFileSync('books.json');
+
+    const book = JSON.parse(dataBuffer);
+
+    console.log('Book: %s -- %s', book.author, book.title);
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="550" data-line-end="551">Book: Andrew McGahan – The Rich Man's House</p>
+</blockquote>
+<p class="has-line-data" data-line-start="552" data-line-end="553">I could have also used this code to change the binary data into a string.</p>
+<pre class="prettyprint">    console.log(dataBuffer.toString());
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="558" data-line-end="559">{"title":"The Rich Man's House","author":"Andrew McGahan"}</p>
+</blockquote>
+<h5 class="code-line" data-line-start=560 data-line-end=561><a id="Challenge_560"></a>Challenge</h5>
+<p class="has-line-data" data-line-start="562" data-line-end="563">Work with JSON and the file system</p>
+<ol>
+<li class="has-line-data" data-line-start="564" data-line-end="565">Load and parse the JSON data.</li>
+<li class="has-line-data" data-line-start="565" data-line-end="566">Change the name and age properties to your data.</li>
+<li class="has-line-data" data-line-start="566" data-line-end="567">Stringify the changed object and overwrite the original data.</li>
+<li class="has-line-data" data-line-start="567" data-line-end="569">Test your data by viewing the data in the JSON file.</li>
+</ol>
+<p class="has-line-data" data-line-start="569" data-line-end="570">Code.</p>
+<pre class="prettyprint">    const fs = require('fs');
+
+    const dataBuffer = fs.readFileSync('data.json');
+
+    const person = JSON.parse(dataBuffer);
+
+    person.name = 'Alan';
+    person.planet = 'Mars';
+    person.age = 68;
+
+    const personJSON = JSON.stringify(person);
+
+    fs.writeFileSync('data.json', personJSON);
+</pre>
+<p class="has-line-data" data-line-start="587" data-line-end="588">Run.</p>
+<pre class="prettyprint">    cat data.json
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="593" data-line-end="594">{"name":"Alan","planet":"Mars","age":68}</p>
+</blockquote>
+<h3 class="code-line" data-line-start=595 data-line-end=596><a id="Adding_a_note_595"></a>Adding a note</h3>
+<h5 class="code-line" data-line-start=597 data-line-end=598><a id="appjs_597"></a>app.js</h5>
+<pre class="prettyprint">    const chalk = require('chalk');
+    const yargs = require('yargs');
+    const notes = require('./notes.js');
+
+    yargs.version('1.1.0');
+
+    // Create add command
+    yargs.command({
+        command: 'add',
+        describe: 'Add a new note.',
+        builder: {
+            title: {
+                describe: 'Note title.',
+                demandOption: true,
+                type: 'string'
+            },
+            body: {
+                describe: 'Note body.',
+                demandOption: true,
+                type: 'string'
+            }
+        },
+        handler: function (argv) {
+            notes.addNote(argv.title, argv.body);
+        }
+    });
+</pre>
+<p class="has-line-data" data-line-start="628" data-line-end="629">We have to change the <code>require</code> call for <em>notes.js</em> as we need to access multiple functions. We store the different functions in an object named <strong>notes</strong>. To use one of the functions from <em>notes.js</em> we use dot notation.</p>
+<pre class="prettyprint">    notes.addNote(argv.title, argv.body);
+</pre>
+<p class="has-line-data" data-line-start="634" data-line-end="635">In the case above we are calling <code>addNote()</code> from <em>notes.js</em>.</p>
+<h5 class="code-line" data-line-start=636 data-line-end=637><a id="notesjs_636"></a>notes.js</h5>
+<pre class="prettyprint">    const fs = require('fs');
+
+    const getNotes = function () {
+        return 'Your notes...';
+    }
+
+    const addNote = function (title, body) {
+        const notes = loadNotes();
+        const duplicateNotes = notes.filter(function (note) {
+            return note.title.toLowerCase() === title.toLowerCase();
+        });
+
+        if (duplicateNotes.length === 0) {
+            notes.push({
+                title: title,
+                body: body
+            });
+
+            saveNotes(notes);
+            console.log('New note added.');
+        } else {
+            console.log('Duplicate note, not added.');
+        }
+    }
+
+    const saveNotes = function (notes) {
+        const dataJSON = JSON.stringify(notes);
+        fs.writeFileSync('notes.json', dataJSON);
+    }
+
+    const loadNotes = function () {
+        try {
+            const dataBuffer = fs.readFileSync('notes.json');
+            const dataJSON = dataBuffer.toString();
+
+            return JSON.parse(dataJSON);
+        } catch (e) {
+            return [];
+        }
+    }
+
+    module.exports = {
+        getNotes: getNotes,
+        addNote: addNote
+    }
+</pre>
+<p class="has-line-data" data-line-start="686" data-line-end="687">The first thing to note is the <code>module.exports</code> object at the bottom of the code.</p>
+<pre class="prettyprint">    module.exports = {
+        getNotes: getNotes,
+        addNote: addNote
+    }
+</pre>
+<p class="has-line-data" data-line-start="695" data-line-end="696">This is how we export multiple functions from this file to be used in other JavaScript files.</p>
+<p class="has-line-data" data-line-start="697" data-line-end="698">In the <code>addNote()</code> function we are checking the title field for duplicate titles. If one is found we are going to ignore it. We filter through the existing notes to see if the title already exists in the notes.json.</p>
+<h3 class="code-line" data-line-start=699 data-line-end=700><a id="Removing_a_note_699"></a>Removing a note</h3>
+<h5 class="code-line" data-line-start=701 data-line-end=702><a id="Challenge_701"></a>Challenge</h5>
+<p class="has-line-data" data-line-start="703" data-line-end="704">Setup command option and function</p>
+<ol>
+<li class="has-line-data" data-line-start="705" data-line-end="706">Setup the "Remove" command to take a required "–title" option.</li>
+<li class="has-line-data" data-line-start="706" data-line-end="707">Create and export a removeNote function from notes.js.</li>
+<li class="has-line-data" data-line-start="707" data-line-end="708">Call removeNote in remove command handler.</li>
+<li class="has-line-data" data-line-start="708" data-line-end="709">Have removeNote log the title of the note to be removed.</li>
+<li class="has-line-data" data-line-start="709" data-line-end="711">Test your work using: node app remove --title "Some title to be removed".</li>
+</ol>
+<h5 class="code-line" data-line-start=711 data-line-end=712><a id="appjs_711"></a>app.js</h5>
+<pre class="prettyprint">    // Create remove command
+    yargs.command({
+        command: 'remove',
+        describe: 'Remove the current note.',
+        handler: function (argv) {
+            notes.removeNote(argv.title);
+        }
+    });
+</pre>
+<h5 class="code-line" data-line-start=724 data-line-end=725><a id="notesjs_724"></a>notes.js</h5>
+<pre class="prettyprint">    const removeNote = function (title) {
+        const notes = loadNotes();
+
+        const notesToKeep = notes.filter(function (note) {
+            return note.title.toLowerCase() !== title.toLowerCase();
+        });
+
+        if (notes.length &gt; notesToKeep.length) {
+            console.log(chalk.green.inverse('Note removed!'))
+            saveNotes(notesToKeep);
+        } else {
+            console.log(chalk.red.inverse('No note found!'));
+        }
+    }
+
+    module.exports = {
+        getNotes: getNotes,
+        addNote: addNote,
+        removeNote: removeNote
+    }
+</pre>
+<p class="has-line-data" data-line-start="749" data-line-end="750">In <em>notes.js</em> we are going to select all of the notes that don't match the title we want to remove. Once we get these we can save the notes and the note that we wanted to remove will be left out of <em>notes.json</em>.</p>
+<h3 class="code-line" data-line-start=751 data-line-end=752><a id="More_notes_on_arrow_functions_751"></a>More notes on arrow functions</h3>
+<p class="has-line-data" data-line-start="753" data-line-end="754">We are going to create an object with a standard function.</p>
+<pre class="prettyprint">    const event = {
+        name: 'Birthday Party',
+        printGuestList: function () {
+            console.log('Guest list for ' + this.name);
+        }
+    }
+
+    event.printGuestList();
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="766" data-line-end="767">Guest list for Birthday Party</p>
+</blockquote>
+<p class="has-line-data" data-line-start="768" data-line-end="769">Now, we are going to change it into an arrow function.</p>
+<pre class="prettyprint">const event = {
+    name: 'Birthday Party',
+    printGuestList: () =&gt; {
+        console.log('Guest list for ' + this.name);
+    }
+}
+
+event.printGuestList();
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="781" data-line-end="782">Guest list for undefined</p>
+</blockquote>
+<p class="has-line-data" data-line-start="783" data-line-end="784">This doesn't work as anticipated. Clearly it is unable to find the <em>name</em> variable. This is because arrow functions don't bind their own <code>this</code> value. That means that we don't have access to <code>this</code> in reference to this object.</p>
+<p class="has-line-data" data-line-start="785" data-line-end="786">Arrow functions aren't suited to methods in objects.</p>
+<p class="has-line-data" data-line-start="787" data-line-end="788">There is actually an ES6 method shorthand that allows us to have a shorter syntax while still having access to standard function features like the <code>this</code> binding.</p>
+<pre class="prettyprint">    const event = {
+        name: 'Birthday Party',
+        printGuestList() {
+            console.log('Guest list for ' + this.name);
+        }
+    }
+
+    event.printGuestList();
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="800" data-line-end="801">Guest list for Birthday Party</p>
+</blockquote>
+<p class="has-line-data" data-line-start="802" data-line-end="803">The code above isn't an arrow function. It is just using an alternative syntax available to use when we are setting up methods on objects.</p>
+<p class="has-line-data" data-line-start="804" data-line-end="805">We are going to add on to the previous example.</p>
+<pre class="prettyprint">    const event = {
+        name: 'Birthday Party',
+        guestList: ['Alan', 'Justin', 'Jen'],
+        printGuestList() {
+            console.log('Guest list for ' + this.name);
+
+            this.guestList.forEach(function (guest) {
+                console.log(guest + ' will be attending the ' + this.name);
+            });
+        }
+    }
+
+    event.printGuestList();
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="822" data-line-end="826">Guest list for Birthday Party<br>
+Alan will be attending the undefined<br>
+Justin will be attending the undefined<br>
+Jen will be attending the undefined</p>
+</blockquote>
+<p class="has-line-data" data-line-start="827" data-line-end="828">Once again this code doesn't work. This is because the new standard function we created has its own <code>this</code> binding and in this case we don't want it to have a <code>this</code> binding. We want it to access the <code>this</code> binding of its parent function (printGuestList()) because there I was able to access the <code>this</code> binding for <code>this.name</code>.</p>
+<p class="has-line-data" data-line-start="829" data-line-end="830">Arrow functions can solve the problem we have.</p>
+<pre class="prettyprint">    const event = {
+        name: 'Birthday Party',
+        guestList: ['Alan', 'Justin', 'Jen'],
+        printGuestList() {
+            console.log('Guest list for ' + this.name);
+
+            this.guestList.forEach((guest) =&gt; {
+                console.log(guest + ' will be attending the ' + this.name);
+            });
+        }
+    }
+
+    event.printGuestList();
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="847" data-line-end="851">Guest list for Birthday Party<br>
+Alan will be attending the Birthday Party<br>
+Justin will be attending the Birthday Party<br>
+Jen will be attending the Birthday Party</p>
+</blockquote>
+<p class="has-line-data" data-line-start="852" data-line-end="853">Swapping out the standard function for an arrow function works. Arrow functions don't bind their own <code>this</code> value so that means we have access to the <code>this</code> value outside of our function.</p>
+<h5 class="code-line" data-line-start=854 data-line-end=855><a id="Challenge_854"></a>Challenge</h5>
+<p class="has-line-data" data-line-start="856" data-line-end="857">Create method to get incomplete tasks</p>
+<ol>
+<li class="has-line-data" data-line-start="858" data-line-end="859">Define getTasksToDo method</li>
+<li class="has-line-data" data-line-start="859" data-line-end="860">Use filter to to return just the uncompleted tasks (arrow function)</li>
+<li class="has-line-data" data-line-start="860" data-line-end="862">Test your work by running the script</li>
+</ol>
+<pre class="prettyprint">    const tasks = {
+        tasks: [{
+            text: 'Grocery shopping',
+            completed: true
+        },{
+            text: 'Clean yard',
+            completed: false
+        }, {
+            text: 'Film course',
+            completed: false
+        }]
+    }
+
+    console.log(tasks.getTasksToDo());
+</pre>
+<h5 class="code-line" data-line-start=879 data-line-end=880><a id="Completed_code_879"></a>Completed code</h5>
+<pre class="prettyprint">    const tasks = {
+        tasks: [{
+            text: 'Grocery shopping',
+            completed: true
+        },{
+            text: 'Clean yard',
+            completed: false
+        }, {
+            text: 'Film course',
+            completed: false
+        }],
+        getTasksToDo() {
+            const tasksToDo = this.tasks.filter((task) =&gt; {
+                return task.completed === false;
+            });
+
+            return tasksToDo;
+        }
+    }
+
+    console.log(tasks.getTasksToDo());
+</pre>
+<blockquote>
+<p class="has-line-data" data-line-start="905" data-line-end="907">[ { text: 'Clean yard', completed: false },<br>
+{ text: 'Film course', completed: false } ]</p>
+</blockquote>
+<p class="has-line-data" data-line-start="908" data-line-end="909">We can refactor this to a shorthand method call.</p>
+<pre class="prettyprint">    getTasksToDo() {
+        return this.tasks.filter((task) =&gt; task.completed === false);
+    }
+</pre>
+<h5 class="code-line" data-line-start=916 data-line-end=917><a id="Challenge_916"></a>Challenge</h5>
+<p class="has-line-data" data-line-start="918" data-line-end="919">Refacter all functions in notes-app</p>
+<ol>
+<li class="has-line-data" data-line-start="920" data-line-end="921">If a function is a method, use ES6 method function syntax.</li>
+<li class="has-line-data" data-line-start="921" data-line-end="922">Otherwise use the most concise arrow function possible.</li>
+<li class="has-line-data" data-line-start="922" data-line-end="924">Test your work.</li>
+</ol>
+<h6 class="code-line" data-line-start=924 data-line-end=925><a id="notesjs_924"></a>notes.js</h6>
+<pre class="prettyprint">    const chalk = require('chalk');
+    const fs = require('fs');
+
+    const getNotes = () =&gt; 'Your notes...';
+
+    const addNote = (title, body) =&gt; {
+        const notes = loadNotes();
+        const duplicateNotes = notes.filter((note) =&gt; note.title.toLowerCase() === title.toLowerCase());
+
+        if (duplicateNotes.length === 0) {
+            notes.push({
+                title: title,
+                body: body
+            });
+
+            saveNotes(notes);
+            console.log('New note added.');
+        } else {
+            console.log('Duplicate note, not added.');
+        }
+    }
+
+    const saveNotes = (notes) =&gt; {
+        const dataJSON = JSON.stringify(notes);
+        fs.writeFileSync('notes.json', dataJSON);
+    }
+
+    const loadNotes = () =&gt; {
+        try {
+            const dataBuffer = fs.readFileSync('notes.json');
+            const dataJSON = dataBuffer.toString();
+
+            return JSON.parse(dataJSON);
+        } catch (e) {
+            return [];
+        }
+    }
+
+    const removeNote = (title) =&gt; {
+        const notes = loadNotes();
+
+        const notesToKeep = notes.filter((note) =&gt; note.title.toLowerCase() !== title.toLowerCase());
+
+        if (notes.length &gt; notesToKeep.length) {
+            console.log(chalk.green.inverse('Note removed!'))
+            saveNotes(notesToKeep);
+        } else {
+            console.log(chalk.red.inverse('No note found!'));
+        }
+    }
+
+    module.exports = {
+        getNotes: getNotes,
+        addNote: addNote,
+        removeNote: removeNote
+    }
+</pre>
+<h5 class="code-line" data-line-start=985 data-line-end=986><a id="Challenge_985"></a>Challenge</h5>
+<ol>
+<li class="has-line-data" data-line-start="987" data-line-end="988">Create and export listNotes from notes.js. Header - "Your notes" from chalk. Print note title from each note.</li>
+<li class="has-line-data" data-line-start="988" data-line-end="989">Call listNotes from command handler.</li>
+<li class="has-line-data" data-line-start="989" data-line-end="991">Test your work.</li>
+</ol>
+<pre class="prettyprint">    const loadNotes = () =&gt; {
+        try {
+            const dataBuffer = fs.readFileSync('notes.json');
+            const dataJSON = dataBuffer.toString();
+
+            return JSON.parse(dataJSON);
+        } catch (e) {
+            return [];
+        }
+    }
+</pre>
+<h5 class="code-line" data-line-start=1004 data-line-end=1005><a id="Challenge_1004"></a>Challenge</h5>
+<p class="has-line-data" data-line-start="1006" data-line-end="1007">Wire up the read command</p>
+<ol>
+<li class="has-line-data" data-line-start="1008" data-line-end="1009">Setup --title option for read command</li>
+<li class="has-line-data" data-line-start="1009" data-line-end="1010">Create readNote in notes.js. Search for note by title. Find note and print note title (styled) and body (unstyled). No note found, print error in red.</li>
+<li class="has-line-data" data-line-start="1010" data-line-end="1011">Have the command handler call the function.</li>
+<li class="has-line-data" data-line-start="1011" data-line-end="1013">Test your work by running a couple of commands.</li>
+</ol>
+<pre class="prettyprint">    const readNote = (title) =&gt; {
+        const notes = loadNotes();
+
+        const foundNote = notes.find((note) =&gt; note.title.toLowerCase() === title.toLowerCase());
+
+        if (foundNote) {
+            console.log(chalk.green(foundNote.title) + ' \n\t' + foundNote.body);
+        } else {
+            console.log(chalk.red.inverse('Note not found!'));
+        }
+    }
+</pre>
+<h6 class="code-line" data-line-start=1027 data-line-end=1028><a id="Results_1027"></a>Results</h6>
+<p class="has-line-data" data-line-start="1029" data-line-end="1030">$ node app read --title="Take out the rubbish"</p>
+<blockquote>
+<p class="has-line-data" data-line-start="1031" data-line-end="1033">Take out the rubbish<br>
+Every Wednesday night.</p>
+</blockquote>
+<p class="has-line-data" data-line-start="1034" data-line-end="1035">$ node app read --title="dog"</p>
+<blockquote>
+<p class="has-line-data" data-line-start="1036" data-line-end="1037">Note not found!</p>
+</blockquote>
+
+
+
+</div><!-- starter-template -->
+</div><!-- /.container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"/>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+</body>
+</html>

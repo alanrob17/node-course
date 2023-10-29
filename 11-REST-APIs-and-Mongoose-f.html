@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>11 - REST API's and Mongoose</title>
+<link href="assets/css/bootstrap.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="assets/css/starter-template.css" rel="stylesheet">
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&amp;skin=sunburst"></script>
+<style type="text/css">
+h2 {
+	margin-top: 60px;
+}
+
+h4, h3 {
+	padding-top: 40px!;		
+}
+
+p {
+	font-size: 1.2em;
+}
+h4 {
+	font-size: 1.4em;
+}
+
+img, pre.prettyprint {
+	margin-top: 1.5em;
+	margin-bottom: 1.5em;
+}
+h1, h2, h3, h4, h5, h6 {
+    color:#007bff;
+
+}
+blockquote {
+    border-left: 4px solid #999;
+    padding-left: 1rem;
+    page-break-inside: avoid;
+}
+</style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Udemy - The Complete Node.js Developer Course</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">11 - REST API's and Mongoose <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container">
+    <div class="starter-template">
+
+
+<h2 id="rest-apis-and-mongoose">REST API's and Mongoose</h2>
+<p>In this section, you'll be creating a REST API using Express. You'll learn what exactly a
+REST API is and how it can be used as the back-end for a web or mobile application. This
+section also covers data validation, application architecture, async/await, and more.</p>
+<h3 id="setting-up-mongoose">Setting up Mongoose</h3>
+<p>We need to set up Mongoose. Mongoose makes it easy to model and manage your application data. This includes data sanitization, data validation, and more.</p>
+<p>Mongoose will serve as a replacement for the native driver, providing you with a more
+object-oriented interface.</p>
+<p><a href="https://mongoosejs.com/docs/guide.html" title="Mongoose Documentation">Mongoose Documentation</a>.</p>
+<h4 id="installing-mongoose">Installing Mongoose</h4>
+<pre class="prettyprint">    npm i mongoose
+</pre>
+<p>Like the MongoDB native driver, Mongoose provides a connect function you can use to connect to your MongoDB database.</p>
+<pre class="prettyprint">    mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
+        useUnifiedTopology: true,
+        useCreateIndex: true
+    });
+</pre>
+<h3 id="modeling-your-data">Modeling Your Data</h3>
+<p>The core feature of Mongoose is the ability to model your data. A new model can be created for the different types of data your application needs to store. You can create as many models as your application needs.</p>
+<p>The code below defines a user model. The model definition is where you define what makes up a user. This would include all the pieces of data you want to store in the database. The user model below has just two fields, a name and an age.</p>
+<pre class="prettyprint">    const User = mongoose.model('User', {
+        name: {
+            type: String
+        },
+        age: {
+            type: Number
+        }
+    });
+</pre>
+<p>With the model defined, it's time to start creating and saving users. The User variable above stores the Mongoose model. This is a constructor function that can be used to create new users. The snippet below creates a new user with the name 'Alan' and the age 68. This alone won't save any data to the database, but it's a step in the right direction.</p>
+<pre class="prettyprint">    const me = new User({
+        name: 'Alan',
+        age: 68
+    })
+</pre>
+<p>The new model instance can be saved to the database using the <code>save</code> method.</p>
+<pre class="prettyprint">    me.save().then(() =&gt; {
+        console.log(me);
+    }).catch((error) =&gt; {
+        console.log('Error!', error)
+    });
+</pre>
+<blockquote>
+<p>{ _id: 5ee725d11bfdfb4b10c044f6, name: 'Alan', age: 68, __v: 0 }</p>
+</blockquote>
+<p>When you <code>save()</code> a document it returns a promise so you can set your code up with success/error handlers.</p>
+<p><strong>Note:</strong> It is not explicitly stated but you are creating a new database named <strong>task-manager-api</strong> if it doesn't already exist.</p>
+<p><strong>Note:</strong> You create a <strong>User</strong> model (singular) and this in turn creates a collection (plural) named <strong>users</strong> when you save your first document. Once again you don't have to specify the name of the collection.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Create a model for tasks</p>
+<ol>
+<li>Define the model with description (String) and completed (Boolean) fields.</li>
+<li>Create a new instance of the model.</li>
+<li>Save the model to the database.</li>
+<li>Test your work.</li>
+</ol>
+<pre class="prettyprint">    // Define the model.
+    const Task = mongoose.model('Task', {
+        description: {
+            type: String
+        },
+        completed: {
+            type: Boolean
+        }
+    });
+
+    // Create a new instance of the model.
+    const myTask = new Task({
+        description: 'Take out the rubbish', 
+        completed: false
+    });
+
+    // Save the model to the database.
+    myTask.save().then(() =&gt; {
+        console.log(myTask);
+    }).catch((error) =&gt; {
+        console.log('Error!',error);
+    });
+</pre>
+<blockquote>
+<p>{ _id: 5ee8622e8c610079705ad730,<br>
+description: 'Take out the rubbish',<br>
+completed: false,<br>
+__v: 0 }</p>
+</blockquote>
+<h3 id="data-validation-and-sanitization-part-i">Data Validation and Sanitization: Part I</h3>
+<p>We are now going to set up data validation and sanitization for our models. Validation will allow us to restrict what data can be stored in the database, while sanitization will allow us to store user data in a uniform and standardized way.</p>
+<h4 id="data-validation-and-sanitization">Data Validation and Sanitization</h4>
+<p>Mongoose provides basic validation for our fields. Below we are requiring a value for <code>name</code> but not for <code>age</code>. We also validate the <code>age</code> field to make sure it is a positive number.</p>
+<pre class="prettyprint">    const User = mongoose.model('User', {
+        name: {
+            type: String,
+            required: true
+        },
+        age: {
+            type: Number,
+            validate(value) {
+                if (value &lt; 0) {
+                    throw new Error('Age must be a positive number!');
+                }
+            }
+        }
+    });
+
+    const me = new User({
+        name: 'James'
+    }); 
+
+    me.save().then(() =&gt; {
+        console.log(me);
+    }).catch((error) =&gt; {
+        console.log('Error!',error);
+    });
+</pre>
+<blockquote>
+<p>{ _id: 5ee86a2a5a21e474accffe48, name: 'James', __v: 0 }</p>
+</blockquote>
+<p>As you can see it allows us to leave the <code>age</code> field off.</p>
+<p>We can add a negative number to <code>age</code>.</p>
+<pre class="prettyprint">    const me = new User({
+        name: 'James',
+        age: -1
+    });
+</pre>
+<p>You see the following error and the faulty document isn't added to the collection.</p>
+<blockquote>
+<p>kind: 'user defined',<br>
+path: 'age',<br>
+value: -1,<br>
+reason:<br>
+Error: Age must be a positive number!</p>
+</blockquote>
+<p>When it comes to needing more complex validation we need to use a trusted library. We will install <strong>validator</strong>. While Mongoose provides basic tools for performing validation, the <strong>validator</strong> library provides useful methods for validating data such as email addresses, phone numbers, zip codes, and more.</p>
+<pre class="prettyprint">    npm i validator
+</pre>
+<p><a href="https://www.npmjs.com/package/validator" title="The Validator Documentation">The Validator Documentation</a>.</p>
+<p>The user model below shows how this can be configured. <code>required</code> is used to validate that a value is provided for a given field. <code>trim</code> is used to remove extra spaces before or after data. <code>lowercase</code> is used to convert the data to lowercase before saving it to the database. You can find a complete list of options in the schema documentation.</p>
+<p>You can also define custom validation for your models. This is done using validate as shown in the example below. The method gets called with the value to validate, and it should throw an error if the data is invalid. The example below uses the <code>isEmail</code> method from validator to validate the email address is valid before saving it to the database.</p>
+<pre class="prettyprint">    const mongoose = require('mongoose');
+    const validator = require('validator');
+
+    mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
+        useNewUrlParser: true,
+        useCreateIndex: true
+    });
+
+    const User = mongoose.model('User', {
+        name: {
+            type: String,
+            required: true
+        },
+        email: {
+            type: String,
+            required: true,
+            validate(value) {
+                if (!validator.isEmail(value)) {
+                    throw new Error('Failed to provide a valid email address!');
+                }
+            }
+        },
+        age: {
+            type: Number,
+            validate(value) {
+                if (value &lt; 0) {
+                    throw new Error('Age must be a positive number!');
+                }
+            }
+        }
+    });
+
+    const me = new User({
+        name: 'Alan',
+        email: 'alan@robsonmail.com',
+        age: 68
+    });
+
+    me.save().then(() =&gt; {
+        console.log(me);
+    }).catch((error) =&gt; {
+        console.log('Error!',error);
+    });
+</pre>
+<blockquote>
+<p>{ _id: 5ee873b6c65c3b52cca4db80,<br>
+name: 'Alan',<br>
+email: 'alan@robsonmail.com',<br>
+age: 68,<br>
+__v: 0 }</p>
+</blockquote>
+<p>We are going to add some more validation to our collection. Before we run this clean out all current documents from the collection.</p>
+<pre class="prettyprint">    const User = mongoose.model('User', {
+        name: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        email: {
+            type: String,
+            required: true,
+            trim: true,
+            lowercase: true,
+            validate(value) {
+                if (!validator.isEmail(value)) {
+                    throw new Error('Failed to provide a valid email address!');
+                }
+            }
+        },
+        age: {
+            type: Number,
+            default: 0,
+            validate(value) {
+                if (value &lt; 0) {
+                    throw new Error('Age must be a positive number!');
+                }
+            }
+        }
+    });
+
+    const me = new User({
+        name: ' Alan   ',
+        email: 'Alan@Robsonmail.Com'
+    }); 
+
+    me.save().then(() =&gt; {
+        console.log(me);
+    }).catch((error) =&gt; {
+        console.log('Error!',error);
+    });
+</pre>
+<blockquote>
+<p>age: 0,<br>
+_id: 5ee87681e8183e68685356f6,<br>
+name: 'Alan',<br>
+email: 'alan@robsonmail.com',<br>
+__v: 0 }</p>
+</blockquote>
+<p>Note that we have an <code>age</code> value of 0. The <code>email</code> field has been changed to lowercase and the <code>name</code> field has had all of the spaces removed.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Add a password field to User.</p>
+<ol>
+<li>Setup the field as a required string.</li>
+<li>Ensure that the length is greater than 6 characters.</li>
+<li>Trim the password.</li>
+<li>Ensure that the password doesn't contain the word &quot;password&quot;.</li>
+<li>Test your work.</li>
+</ol>
+<pre class="prettyprint">    const User = mongoose.model('User', {
+        name: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        age: {
+            type: Number,
+            default: 0,
+            validate(value) {
+                if (value &lt; 0) {
+                    throw new Error('Age must be a positive number!');
+                }
+            }
+        },
+        email: {
+            type: String,
+            required: true,
+            trim: true,
+            lowercase: true,
+            validate(value) {
+                if (!validator.isEmail(value)) {
+                    throw new Error('Failed to provide a valid email address!');
+                }
+            }
+        },
+        password: {
+            type: String,
+            required: true,
+            trim: true,
+            validate(value) {
+                if (!validator.isLength(value, {min: 7, max: undefined})) {
+                    throw new Error('password must be more than 6 characters!');
+                } else if (validator.contains(value, 'password')) {
+                    throw new Error('Invalid password!');
+                }
+            }
+        }
+    });
+
+    const me = new User({
+        name: ' Alan   ',
+        age: 68,
+        email: 'Alan@Robsonmail.Com',
+        password: 'dog@16a6'
+    });
+
+    me.save().then(() =&gt; {
+        console.log(me);
+    }).catch((error) =&gt; {
+        console.log('Error!',error);
+    });
+</pre>
+<blockquote>
+<p>{ age: 68,<br>
+_id: 5ee881c554cda57eb4316634,<br>
+name: 'Alan',<br>
+email: 'alan@robsonmail.com',<br>
+password: 'dog@16a6',<br>
+__v: 0 }</p>
+</blockquote>
+<p>Test for invalid password.</p>
+<pre class="prettyprint">    const me = new User({
+        name: ' Alan   ',
+        age: 68,
+        email: 'Alan@Robsonmail.Com',
+        password: ' Dog@  '
+    });
+</pre>
+<blockquote>
+<p>kind: 'user defined',<br>
+path: 'password',<br>
+value: 'Dog@',<br>
+reason:<br>
+Error: password must be more than 6 characters!</p>
+</blockquote>
+<pre class="prettyprint">    const me = new User({
+        name: ' Alan   ',
+        age: 68,
+        email: 'Alan@Robsonmail.Com',
+        password: 'Password'
+    });
+</pre>
+<blockquote>
+<p>kind: 'user defined',<br>
+path: 'password',<br>
+value: 'Password',<br>
+reason:<br>
+Error: Invalid password!</p>
+</blockquote>
+<h5 id="challenge">Challenge</h5>
+<p>Add validation and sanitisation to Task.</p>
+<ol>
+<li>Trim the description and make it required.</li>
+<li>Make completed optional and default it to true.</li>
+<li>Test your work.</li>
+</ol>
+<pre class="prettyprint">    const Task = mongoose.model('Task', {
+        description: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        completed: {
+            type: Boolean,
+            default: true
+        }
+    });
+
+    const myTask = new Task({
+        description: '  Take out the rubbish  '
+    });
+
+    myTask.save().then(() =&gt; {
+        console.log(myTask);
+    }).catch((error) =&gt; {
+        console.log('Error!',error);
+    });
+</pre>
+<blockquote>
+<p>{ completed: true,<br>
+_id: 5ee88528395f1d5d206dc987,<br>
+description: 'Take out the rubbish',<br>
+__v: 0 }</p>
+</blockquote>
+<h3 id="the-task-manager-application">The task manager application</h3>
+<p>In task-manager install the following.</p>
+<pre class="prettyprint">    npm i nodemon --save-dev
+
+    npm i express
+</pre>
+<p>We are going to change <strong>package.json</strong>.</p>
+<pre class="prettyprint">    &quot;devDependencies&quot;: {
+        &quot;nodemon&quot;: &quot;^2.0.4&quot;
+      },
+        &quot;scripts&quot;: {
+        &quot;start&quot;: &quot;node src/index.js&quot;,
+        &quot;dev&quot;: &quot;nodemon src/index.js&quot;
+      },
+</pre>
+<p>Start the Express server.</p>
+<pre class="prettyprint">    npm run dev
+</pre>
+<p>Create an <code>index.js</code> in the <strong>src</strong> folder.</p>
+<pre class="prettyprint">    const express = require('express');
+    const { response } = require('express');
+
+    const app = express();
+    const port = process.env.PORT || 3000;
+
+    app.post('/users', (req, res) =&gt; {
+        res.send('Testing...');
+    });
+
+    app.listen(port, () =&gt; {
+        console.log('Server is up on port ' + port);
+    });
+</pre>
+<p>To start off with we are just going to send a message that we are testing.</p>
+<p>Now, we are going to open Postman and set up a request.</p>
+<p>First, create a new collection, <strong>Task app</strong> and then create a new request, <strong>Create user</strong>.</p>
+<p>Change the request to a <strong>Post</strong>. and the url is <code>localhost:3000/users</code> to match what we set up in index.js.</p>
+<p>Now, save the request and click send. This image below is what we see in Postman.</p>
+<p><img src="assets/images/postman-request.jpg" alt="Postman request" title="Postman request"></p>
+<p>Now, we can set up a new user in Postman by clicking on <strong>body</strong>, Then selecting <strong>raw</strong> and setting the results to <strong>JSON</strong>.</p>
+<p>Now, in the body section type in the following.</p>
+<pre class="prettyprint">{
+    &quot;name&quot;: &quot;Alan Robson&quot;,
+    &quot;email&quot;: &quot;alan@alan.com.au&quot;,
+    &quot;password&quot;:&quot;james@test123&quot; 
+}
+</pre>
+<p><strong>Note:</strong> we have to use double quotes in this JSON.</p>
+<p>Now click on <strong>send</strong> again.</p>
+<p><img src="assets/images/postman-json.jpg" alt="Postman create user" title="Postman create user"></p>
+<p>We still get our <em>testing...</em> message but you will see <code>Status: 200 Ok</code> to let you know that the JSON was sent correctly.</p>
+<p>Now, the big question is how do we use this to actually send a new user into the database? Change the code to:</p>
+<pre class="prettyprint">    const express = require('express');
+
+    const app = express();
+    const port = process.env.PORT || 3000;
+
+    app.use(express.json());
+
+    app.post('/users', (req, res) =&gt; {
+        console.log(req.body);
+        res.send('Testing...');
+    });
+
+    app.listen(port, () =&gt; {
+        console.log('Server is up on port ' + port);
+    });
+</pre>
+<p>Go back to Postman and click <strong>send</strong> again. We won't see any changes in Postman but if you look at your terminal you should see the data that you added into Postman.</p>
+<p><img src="assets/images/terminal-response.jpg" alt="Terminal response" title="Terminal response"></p>
+<p>Now, we can need to set up a model in a new <strong>models</strong> folder. We will create a user model.</p>
+<h5 id="srcmodelsuserjs">src/models/user.js</h5>
+<pre class="prettyprint">    const mongoose = require('mongoose');
+    const validator = require('validator');
+
+    const User = mongoose.model('User', {
+        name: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        age: {
+            type: Number,
+            default: 0,
+            validate(value) {
+                if (value &lt; 0) {
+                    throw new Error('Age must be a positive number!');
+                }
+            }
+        },
+        email: {
+            type: String,
+            required: true,
+            trim: true,
+            lowercase: true,
+            validate(value) {
+                if (!validator.isEmail(value)) {
+                    throw new Error('Failed to provide a valid email address!');
+                }
+            }
+        },
+        password: {
+            type: String,
+            required: true,
+            trim: true,
+            validate(value) {
+                if (!validator.isLength(value, {min: 6, max: undefined})) {
+                    throw new Error('password must be more than 6 characters!');
+                } else if (validator.contains(value.toLowerCase(), 'password')) {
+                    throw new Error('Invalid password!');
+                }
+            }
+        }
+    });
+
+    module.exports = User;
+</pre>
+<p>We have to import <code>User</code> into index.js.</p>
+<p>We also have to import <code>./models/mongoose</code> because that has our database connection.</p>
+<h5 id="srcindexjs">src/index.js</h5>
+<pre class="prettyprint">    const express = require('express');
+    const User = require('./models/user');
+
+    require('./db/mongoose');
+
+    const app = express();
+    const port = process.env.PORT || 3000;
+
+    app.use(express.json());
+
+    app.post('/users', (req, res) =&gt; {
+        const user = new User(req.body);
+        user.save().then(() =&gt; {
+            res.send(user);
+        }).catch((e) =&gt; {
+            res.status(400);
+            res.send(e);
+        });;
+    });
+
+    app.listen(port, () =&gt; {
+        console.log('Server is up on port ' + port);
+    });
+</pre>
+<h5 id="srcdbmongoosejs">src/db/mongoose.js</h5>
+<pre class="prettyprint">    const mongoose = require('mongoose');
+
+    mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
+        useNewUrlParser: true,
+        useCreateIndex: true
+    });
+</pre>
+<p>If we go over to Postman we will see the response that we get back.</p>
+<p><img src="assets/images/postman-request-response.jpg" alt="Postman request and response" title="Postman request and response"></p>
+<p>Now, if we check the database we will see.</p>
+<blockquote>
+<p>/* 1 */<br>
+{<br>
+&quot;_id&quot; : ObjectId(&quot;5ee9a9babc31f94654183082&quot;),<br>
+&quot;age&quot; : 0,<br>
+&quot;name&quot; : &quot;Alan Robson&quot;,<br>
+&quot;email&quot; : &quot;alan@alan.com.au&quot;,<br>
+&quot;password&quot; : &quot;james@test123&quot;,<br>
+&quot;__v&quot; : 0<br>
+}</p>
+</blockquote>
+<p>The document was successfully added to the database.</p>
+<p>Also, at this stage we have created our first rest API route.</p>
+<p>What happens if we add incorrect data and cause an error? We can shorten the email address to 2 characters to force an error.</p>
+<p>In Postman we get the following error and the document won't be added to the collection in the database.</p>
+<p><img src="assets/images/postman-error.jpg" alt="Postman error" title="Postman error"></p>
+<p>Note that we can see a <code>400 Bad request</code> error in the response. This is because we set up the status in the <strong>catch</strong> statement.</p>
+<p>We can get a <a href="https://httpstatuses.com" title="list of status numbers">list of status numbers</a> here.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Set up the Task creation endpoint.</p>
+<ol>
+<li>Create a separate file for the Task model (load it into index,js).</li>
+<li>Create the Task creation endpoint (handle success and error).</li>
+<li>Test the endpoint from Postman with good and bad data.</li>
+</ol>
+<h5 id="srcmodelstaskjs">src/models/task.js</h5>
+<pre class="prettyprint">    const mongoose = require('mongoose');
+    const validator = require('validator');
+
+    const Task = mongoose.model('Task', {
+        description: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        completed: {
+            type: Boolean,
+            default: false
+        }
+    });
+
+    module.exports = Task;
+</pre>
+<h5 id="indexjs">index.js</h5>
+<pre class="prettyprint">    const express = require('express');
+    const User = require('./models/user');
+    const Task = require('./models/task');
+
+    require('./db/mongoose');
+
+    const app = express();
+    const port = process.env.PORT || 3000;
+
+    app.use(express.json());
+
+    app.post('/users', (req, res) =&gt; {
+        const user = new User(req.body);
+        user.save().then(() =&gt; {
+            res.send(user);
+        }).catch((e) =&gt; {
+            res.status(400);
+            res.send(e);
+        });
+    });
+
+    app.post('/tasks', (req, res) =&gt; {
+        const task = new Task(req.body); 
+        task.save().then(() =&gt; {
+            res.send(task);
+        }).catch((e) =&gt; {
+            res.status(400).send(e);
+        });
+    });
+
+    app.listen(port, () =&gt; {
+        console.log('Server is up on port ' + port);
+    });
+</pre>
+<p><strong>Note:</strong> I couldn't get this working and couldn't find an error in my code. I had a look at Postman and noticed that I had a <strong>get</strong> instead of a <strong>post</strong>. I'll have to watch out for this in future when creating and testing endpoints.</p>
+<p><strong>Note:</strong> I have chained the <code>status</code> and the <code>send</code> methods in the Task creation endpoint.</p>
+<h5 id="results">Results</h5>
+<p>A successful post.</p>
+<p><img src="assets/images/postman-tasks.jpg" alt="Postman tasks" title="Postman tasks"></p>
+<p>A failure.</p>
+<p>![Postman task failure](assets/images/postman-task failure.jpg &quot;Postman tasks&quot;)</p>
+<h3 id="status-codes">Status codes</h3>
+<p>We have added a status code of <code>400</code> for our error handling and we can also add one for our success handling as well.</p>
+<p>We are allowing Postman to send a generic <code>200</code> code but we can be more accurate with the following code.</p>
+<pre class="prettyprint">    201 Created
+</pre>
+<p>We will change our endpoints to reflect this.</p>
+<pre class="prettyprint">    app.post('/users', (req, res) =&gt; {
+        const user = new User(req.body);
+        user.save().then(() =&gt; {
+            res.status(201).send(user);
+        }).catch((e) =&gt; {
+            res.status(400).send(e);
+        });
+    });
+
+    app.post('/tasks', (req, res) =&gt; {
+        const task = new Task(req.body);
+        task.save().then(() =&gt; {
+            res.status(201).send(task);
+        }).catch((e) =&gt; {
+            res.status(400).send(e);
+        });
+    });
+</pre>
+<h3 id="resource-reading-endpoints-part-i">Resource Reading Endpoints: Part I</h3>
+<p>Now we will learn how to create REST API endpoints for reading resources. This will allow users of the API to fetch users and tasks from the database.</p>
+<h4 id="resource-reading-endpoints">Resource Reading Endpoints</h4>
+<p>Resource reading endpoints use the <strong>GET</strong> HTTP method. The URL structure is <strong>/resources</strong>
+for a list of resources and <strong>/resources/:id</strong> for fetching an individual resource by its ID. If
+you wanted to fetch all your tasks, it would be <strong>GET /tasks</strong>. If you wanted to fetch an
+individual task with the ID of 198, it would be <strong>GET /tasks/198</strong>.</p>
+<p>We can set up a <code>app.get</code> request to return all of the users.</p>
+<pre class="prettyprint">    app.get('/users', (req, res) =&gt; {
+        User.find({}).then((users) =&gt; {
+            console.log(res.send(users));
+        }).catch((e) =&gt; {
+            res.status(500).send();
+        });
+    });
+</pre>
+<p>Now, we will set up a Postman request to test our endpoint.</p>
+<p>Create a new request named <strong>Read users</strong> with an endpoint of GET localhost:3000/users and click send.</p>
+<p><img src="assets/images/postman-get-users.jpg" alt="Postman request users" title="Postman request users"></p>
+<p>The code below uses <strong>app.get</strong> to set up a GET request handler for <strong>/users/:id</strong>. :id serves as a placeholder for the ID of the user to fetch. If the request is <strong>GET /users/321</strong>, then the ID will be 321. This is known as a URL parameter, and you can access the value for URL parameters on <strong>req.params</strong>.</p>
+<pre class="prettyprint">    app.get('/users/:id', (req, res) =&gt; {
+        User.findOne({}).then((users) =&gt; {
+            console.log(req.params);
+    });
+</pre>
+<p>At the moment we will use the following for testing.</p>
+<pre class="prettyprint">    console.log(req.params);
+</pre>
+<p>We will create a Postman request to test our endpoint and just send some rubbish data.</p>
+<p>GET localhost:3000/users/123456789</p>
+<p>This will time out in Postman because we haven't set up any data to be returned in the response but if you look in the terminal you will see the following log.</p>
+<blockquote>
+<p>{ id: '123456789' }</p>
+</blockquote>
+<p>which is our <strong>req.params</strong> value.</p>
+<p>We can set up the endpoint to bring back some real data now.</p>
+<pre class="prettyprint">    app.get('/users/:id', (req, res) =&gt; {
+        User.find({}).then((users) =&gt; {
+            const _id = req.params.id;
+
+            User.findById(_id).then((user) =&gt; {
+                if (!user) {
+                    res.status(404).send();
+                }
+
+                res.send(user);
+            }).catch((e) =&gt; {
+                res.status(500).send(e);
+            });
+        });
+    });
+</pre>
+<p><strong>Note:</strong> we don't have to change the string _id value into an object. Mongoose does that for us,</p>
+<p>Now we will add a real user id into Postman and see what we get back.</p>
+<p><img src="assets/images/postman-get-user-by-id.jpg" alt="Postman request user by id" title="Postman request user by id"></p>
+<h5 id="challenge">Challenge</h5>
+<p>Set up the task reading endpoints.</p>
+<ol>
+<li>Create the endpoint for fetching all of the tasks.</li>
+<li>Create the endpoint for fetching one task by its id.</li>
+<li>Set up a new request in Postman to test your work.</li>
+</ol>
+<h5 id="tasks">tasks</h5>
+<pre class="prettyprint">    app.get('/tasks', (req, res) =&gt; {
+	  Task.find({}).then((tasks) =&gt; {
+	  	console.log(res.send(tasks));
+	  }).catch((e) =&gt; {
+	  	res.status(500).send();
+	  });
+  });
+</pre>
+<p><img src="assets/images/postman-read-tasks.jpg" alt="Postman get tasks" title="Postman get tasks"></p>
+<h5 id="task">task</h5>
+<pre class="prettyprint">    app.get('/tasks/:id', (req, res) =&gt; {
+        const _id = req.params.id;
+        Task.findById(_id).then((task) =&gt; {
+            if (!task) {
+                res.status(404).send();
+            }
+            res.send(task);
+        }).catch((e) =&gt; {
+            res.status(500).send();
+        });
+    });
+</pre>
+<p><img src="assets/images/postman-get-task-by-id.jpg" alt="Postman request task by id" title="Postman request task by id"></p>
+<h3 id="promise-chaining">Promise Chaining</h3>
+<p>We are now going to explore promise chaining. Promise chaining is a syntax that allows you to chain together multiple asynchronous tasks in a specific order. This is great for complex code where one asynchronous task needs to be performed after the completion of a different asynchronous task.</p>
+<p>We create a single promise to add two numbers together. We simulate an API call with a setTimeout() method.</p>
+<pre class="prettyprint">    const add = (a, b) =&gt; {
+        return new Promise((resolve, reject) =&gt; {
+            setTimeout(() =&gt; {
+                resolve(a + b);
+            }, 2000);
+        });
+    }
+
+    add(1, 2).then((sum) =&gt; {
+        console.log(sum);
+    }).catch((e) =&gt; {
+        console.log(e);
+    });
+</pre>
+<p>What if we wanted to add the sum of the add computation to another number. We could do it the long way by calling another add function as we do below.</p>
+<pre class="prettyprint">    const add = (a, b) =&gt; {
+        return new Promise((resolve, reject) =&gt; {
+            setTimeout(() =&gt; {
+                resolve(a + b);
+            }, 2000);
+        });
+    }
+
+    add(1, 2).then((sum) =&gt; {
+        console.log(sum);
+        add(sum, 3).then((sum2) =&gt; {
+            console.log(sum2);
+        }).catch((e) =&gt; {
+            console.log(e);
+        });
+    }).catch((e) =&gt; {
+        console.log(e);
+    });
+</pre>
+<p>There is a problem with this code. The problem is that the more we nest our asynchronous tasks the more complex the code gets. At the moment we are two asynchronous tasks deep and this would get more complex if we wanted to do another add task. We are also adding multiple <code>catch</code>'s where they aren't needed.</p>
+<p>Promise chaining is a better way to do this.</p>
+<p>Promise chaining occurs when the <code>then</code> callback function returns a promise. This allows you to chain on another <code>then</code> call which will run when the second promise is fulfilled. <code>catch</code> can still be called to handle any errors that might occur along the way.</p>
+<pre class="prettyprint">    add(1, 2).then((sum) =&gt; {
+        console.log(sum);
+        return add(sum, 3);
+    }).then((sum2) =&gt; {
+        console.log(sum2);
+    }).catch((e) =&gt; {
+        console.log(e);
+    });
+</pre>
+<p>The nice thing about promise chaining is that the code above is not nested. I could chain the add() call 100 times and it would still work without becoming e.</p>
+<p>The other nice thing is that there is only one call to <code>catch()</code> that catches all of the errors.</p>
+<p>Let's try this out in our task-manager-api.</p>
+<p>We are going to search for a user and update the users age to 1. We are then going to use promise chaining to get the count of the number of user's with the age of 1.</p>
+<pre class="prettyprint">    const mongoose = require('../src/db/mongoose');
+
+    const User = require('../src/models/user');
+
+    User.findByIdAndUpdate('5ee9a9babc31f94654183082', { age: 1 }).then((user) =&gt; {
+        console.log(user);
+        return User.countDocuments({ age: 1 });
+    }).then((result) =&gt; {
+        console.log(result);
+    }).catch((e) =&gt; {
+        console.log(e);
+    });
+</pre>
+<blockquote>
+<p>{ age: 0,<br>
+_id: 5ee9a9babc31f94654183082,<br>
+name: 'Alan Robson',<br>
+email: 'alan@alan.com.au',<br>
+password: 'james@test123',<br>
+__v: 0<br>
+}</p>
+<p>1</p>
+</blockquote>
+<p>We are getting the wrong age value but if we look in the database we will see that the age has been set to 1. We are also getting the count of one user with the age of 1.</p>
+<p>We are going to get another user with an age of 0 and add that id to our code and run the process again.</p>
+<p>This time we get the count of two users with the age of 1. and that user has been updated in the database.</p>
+<blockquote>
+<p>{ age: 0,<br>
+_id: 5ee9ae7cbc31f94654183083,<br>
+name: 'James Robson',<br>
+email: 'james@james.com.au',<br>
+password: 'wasc@esdf^st123',<br>
+__v: 0<br>
+}</p>
+<p>2</p>
+</blockquote>
+<p>We are also getting this deprecation message in the output.</p>
+<blockquote>
+<p>DeprecationWarning: Mongoose: <code>findOneAndUpdate()</code> and <code>findOneAndDelete()</code> without the <code>useFindAndModify</code> option set to false are deprecated. See: https://mongoosejs.com/docs/deprecations.html#findandmodify</p>
+</blockquote>
+<p>This is Mongoose not being up to date. We can ignore these messages or add a new line into our database connection code.</p>
+<h5 id="srcdbmongoosejs">/src/db/mongoose.js</h5>
+<pre class="prettyprint">    const mongoose = require('mongoose');
+
+    mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useFindAndModify: false
+    });
+</pre>
+<p>If we get another user Id to update and run the process again you will notice that we don't get the message again.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Use promise chaining</p>
+<ol>
+<li>Create promise-chaining-2.js</li>
+<li>Load in Mongoose and task model.</li>
+<li>Remove a given task by id.</li>
+<li>Get and print the number of incomplete tasks.</li>
+<li>Test your work.</li>
+</ol>
+<h5 id="promise-chaining-2js">promise-chaining-2.js</h5>
+<pre class="prettyprint">    const mongoose = require('../src/db/mongoose');
+
+    const Task = require('../src/models/task');
+
+    Task.deleteOne({ _id: '5eec5cc844e10e363439b080' }).then((task) =&gt; {
+        console.log(task);
+        return Task.countDocuments({ completed: false });
+    }).then((result) =&gt; {
+        console.log(result);
+    }).catch((e) =&gt; {
+        console.log(e);
+    });
+</pre>
+<blockquote>
+<p>{ completed: true,<br>
+_id: 5eec5cc844e10e363439b080,<br>
+description: 'Take out the rubbish.',<br>
+__v: 0<br>
+}</p>
+<p>3</p>
+</blockquote>
+<p>The document has been deleted from the database and the number of unfinished tasks is 3.</p>
+<h3 id="asyncawait">Async/Await</h3>
+<p>We are going to learn how to use async and await. These provide an improved syntax for working with promises. You’ll be able to write complex asynchronous code that looks like normal synchronous code. This makes it much easier to write and maintain asynchronous code.</p>
+<h4 id="exploring-asyncawait">Exploring Async/Await</h4>
+<p>The example below uses the <code>add</code> function that was created previously. The first step to using async and await is to create an asynchronous function. This is done using the <code>async</code> keyword before the function definition. This can be seen in the definition of <code>doWork</code> below. Any function can be defined as an asynchronous function, not just arrow functions.</p>
+<p>With an async function in place, you can now use the <code>await</code> operator. The <code>await</code> operator can only be used inside of asynchronous functions. This removes the need for excess callbacks and makes code much easier to read.</p>
+<p>The <code>await</code> operator is used with promises in asynchronous functions. You can see this used three times in <code>doWork</code>. The await operator allows you to work with promises in a way that looks like synchronous code. If the promise is fulfilled, the fulfilled value can be accessed as the return value from the function. If the promise is rejected, it would be as though the function threw an error. <code>await</code> will pause the function execution until the promise is either fulfilled or rejected.</p>
+<p>We are going to create a basic arrow function with no return statement and then call it from below.</p>
+<pre class="prettyprint">    const doWork = () =&gt; {
+
+    }
+
+    console.log(doWork());
+</pre>
+<p>If we run this we know it will return an <strong>undefined</strong>.</p>
+<p>Now, change the function by adding the <code>async</code> keyword before the start of the arrow function.</p>
+<pre class="prettyprint">    const doWork = async () =&gt; {
+
+    }
+
+    console.log(doWork());
+</pre>
+<p>Now, when we run this we get</p>
+<blockquote>
+<p>Promise { undefined }</p>
+</blockquote>
+<p>So we have set up an asynchronous function and these functions always return a promise and this promise is fulfilled with an <strong>undefined</strong>.</p>
+<p>So now let's explicitly return something.</p>
+<p>const doWork = async () =&gt; {
+return 'Alan';
+}</p>
+<p>console.log(doWork());</p>
+<p>We get the following returned.</p>
+<blockquote>
+<p>Promise { 'Alan' }</p>
+</blockquote>
+<p>As we said before <code>async</code> functions always return a Promise. So what we are seeing here is not a string ('Alan') but a Promise that has been fulfilled with the string 'Alan'.</p>
+<p>So now we can add a <code>then</code> and <code>catch</code> to our promise instead of returning the console.log() statement.</p>
+<pre class="prettyprint">    const doWork = async () =&gt; {
+        return 'Alan';
+    }
+
+    doWork().then((name) =&gt; {
+        console.log(name);
+    }).catch((e) =&gt; {
+        console.log(e);
+    });
+</pre>
+<p>It now returns a string.</p>
+<blockquote>
+<p>Alan</p>
+</blockquote>
+<p>So now lets run the program by throwing an error to see what <code>catch</code> returns.</p>
+<pre class="prettyprint">    const doWork = async () =&gt; {
+        throw new Error('Something went wrong.');
+        return 'Alan';
+    }
+
+    doWork().then((name) =&gt; {
+        console.log(name);
+    }).catch((e) =&gt; {
+        console.log(e);
+    });
+</pre>
+<p>Returns:</p>
+<blockquote>
+<p>Error: Something went wrong.</p>
+</blockquote>
+<p>We are now at the stage of using the <code>await</code> operator. First thing is that the <code>await</code> operator can only be used with async functions.</p>
+<p>Let's grab some code we created previously and add it to our async code.</p>
+<pre class="prettyprint">    const add = (a, b) =&gt; {
+        return new Promise((resolve, reject) =&gt; {
+            setTimeout(() =&gt; {
+                resolve(a + b);
+            }, 2000);
+        });
+    }
+
+    const doWork = async () =&gt; {
+        const sum = await add(1, 99);
+        return sum;
+    }
+
+    doWork().then((result) =&gt; {
+        console.log('Result', result);
+    }).catch((e) =&gt; {
+        console.log(e);
+    });
+</pre>
+<p>As you can see our code has been simplified to get the result. The code looks like synchronous code but it is actually asynchronous code.</p>
+<p>Let's add another number as in our previous example and then we will add another number again.</p>
+<pre class="prettyprint">    const add = (a, b) =&gt; {
+        return new Promise((resolve, reject) =&gt; {
+            setTimeout(() =&gt; {
+                resolve(a + b);
+            }, 2000);
+        });
+    }
+
+    const doWork = async () =&gt; {
+        const sum = await add(1, 99);
+        const sum2 = await add(sum, 2);
+        const sum3 = await add(sum2, 2);
+        return sum3;
+    }
+
+    doWork().then((result) =&gt; {
+        console.log('Result', result);
+    }).catch((e) =&gt; {
+        console.log(e);
+    });
+</pre>
+<p>The program waits 6 seconds and then returns.</p>
+<blockquote>
+<p>Result 104</p>
+</blockquote>
+<p>This code is much simpler that our previous promise code which is shown below.</p>
+<pre class="prettyprint">    add(1, 2).then((sum) =&gt; {
+        console.log(sum);
+        return add(sum, 3);
+    }).then((sum2) =&gt; {
+        console.log(sum2);
+    }).catch((e) =&gt; {
+        console.log(e);
+    });
+</pre>
+<p>This example using promise chaining only sums two sets of numbers but looks a lot more complicated than our new async/await code example. It is also easier to make mistakes with.</p>
+<p>Another problem with promise chaining is that it is harder to keep your code in scope. It is harder to keep all variables in scope if we want to add these to a database. We would have to create external variables and set each external variable after we got each value from the promise chaining. In our async/await all variables are available all of the time the function is in scope making it easier to send all variables to the database.</p>
+<p>Going back to our async/await example we need to be able to handle if one of our promises rejects instead of fulfills.</p>
+<p>We are going to add some code to stop users from entering negative numbers. If they do we want to reject the promise and stop processing.</p>
+<pre class="prettyprint">    const add = (a, b) =&gt; {
+        return new Promise((resolve, reject) =&gt; {
+            setTimeout(() =&gt; {
+                if (a &lt; 0 || b &lt; 0) {
+                    return reject('Numbers must be positive');
+                }
+
+                resolve(a + b);
+            }, 2000);
+        });
+    }
+
+    const doWork = async () =&gt; {
+        const sum = await add(-1, 99);
+        const sum2 = await add(sum, 2);
+        const sum3 = await add(sum2, 2);
+        return sum3;
+    }
+
+    doWork().then((result) =&gt; {
+        console.log('Result', result);
+    }).catch((e) =&gt; {
+        console.log('Error', e);
+    });
+</pre>
+<p>The first number is negative so prints out this message after two seconds have passed. This stops the processing.</p>
+<blockquote>
+<p>Error Numbers must be positive</p>
+</blockquote>
+<p>We are now going to update our promise chaining examples to use async/await. We start with the users example.</p>
+<pre class="prettyprint">    const updateAgeAndCount = async (id, age) =&gt; {
+        const user = await User.findByIdAndUpdate(id, { age });
+        const count = await User.countDocuments({ age });
+        return count;
+    }
+
+    updateAgeAndCount('5ee881c554cda57eb4316634', 2).then((result) =&gt; {
+        console.log(result);
+    }).catch((e) =&gt; {
+        console.log(e);
+    });
+</pre>
+<p>These are the results in the database:</p>
+<blockquote>
+<p>/* 1 */<br>
+{<br>
+&quot;_id&quot; : ObjectId(&quot;5ee881c554cda57eb4316634&quot;),<br>
+&quot;age&quot; : 2,<br>
+&quot;name&quot; : &quot;Alan&quot;,<br>
+&quot;email&quot; : &quot;alan@robsonmail.com&quot;,<br>
+&quot;password&quot; : &quot;dog@16a6&quot;,<br>
+&quot;__v&quot; : 0<br>
+}</p>
+</blockquote>
+<p>We get one user with the age of 2.</p>
+<p>We can run this again with a different user id ('5ee9a9babc31f94654183082').</p>
+<blockquote>
+<p>/* 2 */<br>
+{<br>
+&quot;_id&quot; : ObjectId(&quot;5ee9a9babc31f94654183082&quot;),<br>
+&quot;age&quot; : 2,<br>
+&quot;name&quot; : &quot;Alan Robson&quot;,<br>
+&quot;email&quot; : &quot;alan@alan.com.au&quot;,<br>
+&quot;password&quot; : &quot;james@test123&quot;,<br>
+&quot;__v&quot; : 0<br>
+}</p>
+</blockquote>
+<p>Now we get two users with the age of 2.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Use async/await</p>
+<ol>
+<li>Create deleteTaskAndCount as an async function.</li>
+<li>Use await to delete a task and count up incomplete tasks.</li>
+<li>Return the count.</li>
+<li>Call the function and attach then/catch to log results.</li>
+<li>Test your work.</li>
+</ol>
+<pre class="prettyprint">    const deleteTaskAndCount = async (id) =&gt; {
+        const task = await Task.findByIdAndDelete(id);
+        const count = await Task.countDocuments({ completed: false });
+
+        return count;
+    };
+
+    deleteTaskAndCount('5eeb2374ff4ee12ca09f1447').then((count) =&gt; {
+        console.log(count);
+    }).catch((e) =&gt; {
+        console.log(e);
+    });
+</pre>
+<p>The task has been deleted from the database and the number of incomplete tasks = 2.</p>
+<p>Our next job is to add async/await to our user and task route handlers in task manager.</p>
+<h5 id="post-new-user-route-handler">POST new user route handler</h5>
+<pre class="prettyprint">    app.post('/users', async (req, res) =&gt; {
+        const user = new User(req.body); 
+
+        try {
+            await user.save();
+            res.status(201).send(user);  
+        } catch (e) {
+            res.status(400).send(e);  
+        }
+    });
+</pre>
+<p>To test this out open up Postman and click on the <strong>Create user</strong> request. First, use a short password to generate an error.</p>
+<p><img src="assets/images/postman-create-user-error.jpg" alt="Postman Create user error" title="Postman Create user error"></p>
+<p>Now add a valid email address.</p>
+<p><img src="assets/images/postman-create-user-success.jpg" alt="Postman Create user success" title="Postman Create user success"></p>
+<p>Record created in the database.</p>
+<blockquote>
+<p>/* 5 */<br>
+{<br>
+&quot;_id&quot; : ObjectId(&quot;5eed4d6adf99b71fdcaf2fc4&quot;),<br>
+&quot;age&quot; : 14,<br>
+&quot;name&quot; : &quot;James Robson&quot;,<br>
+&quot;email&quot; : &quot;james@james.com.au&quot;,<br>
+&quot;password&quot; : &quot;waas5%46$ep&amp;&quot;,<br>
+&quot;__v&quot; : 0<br>
+}</p>
+</blockquote>
+<h5 id="get-users-route-handler">GET users route handler</h5>
+<pre class="prettyprint">    app.get('/users', async (req, res) =&gt; {
+        try {
+            const users = await User.find({});
+            res.send(users);
+        } catch (e) {
+            res.status(500).send();
+        }
+    });
+</pre>
+<p><img src="assets/images/postman-get-user-async.jpg" alt="Postman Read users" title="Postman Read users"></p>
+<h5 id="get-user-by-id-route-handler">GET user by id route handler</h5>
+<pre class="prettyprint">    app.get('/users/:id', async (req, res) =&gt; {
+        const _id = req.params.id;
+
+        try {
+            const user = await User.findById(_id);
+
+            if (!user) {
+                return res.status(404).send();
+            }
+
+            res.send(user);
+        } catch (e) {
+            res.status(500).send();
+        }
+    });
+</pre>
+<p><img src="assets/images/postman-get-user-by-id-async.jpg" alt="Postman Read user by id" title="Postman Read user by id"></p>
+<p>We use an <code>if()</code> condition to test if a user was found. If not, send back a <code>404</code>.</p>
+<h5 id="challenge">Challenge</h5>
+<ol>
+<li>Add async/await to Task route handlers.</li>
+<li>Test your work in Postman.</li>
+</ol>
+<h5 id="post-task-route-handler">POST task route handler</h5>
+<pre class="prettyprint">    app.post('/tasks', async (req, res) =&gt; {
+        const task = new Task(req.body); 
+
+        try {
+            await task.save();
+            res.status(201).send(task);
+        } catch (e) {
+            res.status(400).send(e);
+        }
+    });
+</pre>
+<p>Results in Postman.</p>
+<p><img src="assets/images/postman-create-task-async.jpg" alt="Postman Create new task" title="Postman Create new task"></p>
+<p>Results in database.</p>
+<blockquote>
+<p>/* 3 */<br>
+{<br>
+&quot;_id&quot; : ObjectId(&quot;5eed5569a32ab42a8c1be586&quot;),<br>
+&quot;completed&quot; : false,<br>
+&quot;description&quot; : &quot;Clean hall cupboard.&quot;,<br>
+&quot;__v&quot; : 0<br>
+}</p>
+</blockquote>
+<h5 id="postman-create-task-error-message">Postman 'Create task' error message</h5>
+<p><img src="assets/images/postman-create-task-error.jpg" alt="Postman Create new task error" title="Postman Create new task error"></p>
+<h5 id="get-all-tasks-route-handler">GET all tasks route handler</h5>
+<pre class="prettyprint">    app.get('/tasks', async (req, res) =&gt; {
+        try {
+            const tasks = await Task.find({});
+            res.send(tasks);
+        } catch (e) {
+            res.status(500).send();
+        }
+    });
+</pre>
+<p>Postman results</p>
+<p><img src="assets/images/postman-get-tasks-async.jpg" alt="Postman Get all tasks" title="Postman Get all tasks"></p>
+<h5 id="get-task-route-handler">Get Task route handler</h5>
+<pre class="prettyprint">    app.get('/tasks/:id', async (req, res) =&gt; {
+        const _id = req.params.id;
+
+        try {
+            const task = await Task.findById(_id);
+
+            if (!task) {
+                return res.status(404).send();
+            }
+
+            res.send(task);
+        } catch (e) {
+            res.status(500).send();
+        }
+    });
+</pre>
+<p>Postman results.</p>
+<p><img src="assets/images/postman-get-task-by-id-async.jpg" alt="Postman Get task by id (async)" title="Postman Get task by id (async)"></p>
+<h3 id="resource-updating-endpoints-part-i">Resource Updating Endpoints: Part I</h3>
+<p>We are now going to learn how to create REST API endpoints for updating resources. This will allow users of the API to update users and tasks that are already in the database.</p>
+<p>Resource updating endpoints use the PATCH HTTP method. The URL structure is <strong>/resources/:id</strong> for updating an individual resource by its ID. If you want to update an individual task with the ID of 44, it would be <strong>PATCH /tasks/44</strong>.</p>
+<p><code>app.patch</code> is used to set up the Express route handler.</p>
+<pre class="prettyprint">    app.patch('/users/:id', async (req, res) =&gt; {
+        // Route handler code here
+    });
+</pre>
+<p>When working with updates, it’s a good idea to alert the user if they’re trying to update something that they can’t update. The code below checks that the user is only updating fields that can be updated, otherwise it will send back an error response.</p>
+<pre class="prettyprint">    const updates = Object.keys(req.body);
+    const allowedUpdates = ['name', 'email', 'password', 'age'];
+
+    const isValidOperation = updates.every((update) =&gt; allowedUpdates.includes(update));
+
+    if (!isValidOperation) {
+        return res.status(400).send({ error: 'Invalid updates!' })
+    }
+</pre>
+<p>If all goes well, the updates will be applied to the user, then a response will be sent back.</p>
+<p>If the provided updates are valid, <strong>findByIdAndUpdate</strong> can be used to update the document in the database. <code>Try/catch</code> is used here to send back an error if something goes wrong when updating the user. This would include the new data not passing the validation defined for the model.</p>
+<pre class="prettyprint">    try {
+        const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+
+        if (!user) {
+            return res.status(404).send();
+        }
+
+        res.send(user);
+    } catch (e) {
+        res.status(400).send(e);
+    }
+</pre>
+<h5 id="final-patch-update-user-by-id">Final PATCH (update) user by id</h5>
+<pre class="prettyprint">    const updates = Object.keys(req.body); 
+    const allowedUpdates = ['name', 'email', 'password', 'age'];
+
+    const isValidOperation = updates.every((update) =&gt; allowedUpdates.includes(update));
+
+    if (!isValidOperation) {
+        return res.status(400).send({error: 'Invalid updates.'});
+    }
+
+    app.patch('/users/:id', async (req, res) =&gt; { 
+        try {
+            const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+
+            if (!user) {
+                return res.status(404).send();
+            }
+
+            res.send(user);
+        } catch (e) {
+            res.status(400).send(e);
+        }
+    });
+</pre>
+<p><strong>Note:</strong> once again you have to remember to set Postman to <strong>PATCH</strong>.</p>
+<p>What happens if somebody tries to update the id or tries to add a field that doesn't exist?</p>
+<p>We have added the following code to trap this.</p>
+<pre class="prettyprint">    const updates = Object.keys(req.body);
+    const allowedUpdates = ['name', 'email', 'password', 'age'];
+
+    const isValidOperation = updates.every((update) =&gt; allowedUpdates.includes(update));
+
+    if (!isValidOperation) {
+        return res.status(400).send({error: 'Invalid updates.'});
+    }
+</pre>
+<p><code>Object.keys</code> gives us back all of the keys in the JSON that is sent.</p>
+<p><code>updates.every()</code> allows us to check every key in the <code>res.body</code> JSON to make sure that it is in our list of <code>allowedUpdates()</code>. If not, it will send back an error.</p>
+<p>This code is information for the user to let them know that there is a problem. Our code would stop invalid data being added to the database.</p>
+<p><img src="assets/images/postman-invalid-update.jpg" alt="Postman PATCH user error" title="Postman PATCH user error"></p>
+<h5 id="challenge">Challenge</h5>
+<p>Add the Task update route handler.</p>
+<pre class="prettyprint">    app.patch('/tasks/:id', async (req, res) =&gt; {
+        const updates = Object.keys(req.body);
+        const allowedUpdates = ['description', 'completed'];
+
+        const isValidOperation = updates.every((update) =&gt; allowedUpdates.includes(update));
+
+        if (!isValidOperation) {
+            return res.status(400).send({error: 'Invalid updates.'});
+        }
+
+        try {
+            const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+
+            if (!task) {
+                return res.status(404).send();
+            }
+
+            res.send(task);
+        } catch (e) {
+            res.status(400).send(e);
+        }
+    });
+</pre>
+<h5 id="postman-task-update-error">Postman Task update error</h5>
+<p><img src="assets/images/postman-update-task-async-error.jpg" alt="Postman PATCH task error" title="Postman PATCH task error"></p>
+<h5 id="postman-task-success">Postman Task success</h5>
+<p><img src="assets/images/postman-update-task-async.jpg" alt="Postman PATCH task success" title="Postman PATCH task success"></p>
+<h5 id="update-in-database">Update in database</h5>
+<blockquote>
+<p>/* 2 */<br>
+{<br>
+&quot;_id&quot; : ObjectId(&quot;5eeb230bff4ee12ca09f1446&quot;),<br>
+&quot;completed&quot; : true,<br>
+&quot;description&quot; : &quot;Finish the Complete Node.js course.&quot;,<br>
+&quot;__v&quot; : 0<br>
+}</p>
+</blockquote>
+<h3 id="resource-deleting-endpoints">Resource Deleting Endpoints</h3>
+<p>We need to learn how to set up a REST API endpoint for deleting resources.</p>
+<h4 id="deleting-resources">Deleting Resources</h4>
+<p>Resource deleting endpoints use the <strong>DELETE HTTP</strong> method. The URL structure is
+<strong>/resources/:id</strong> for deleting an individual resource by its ID. If you want to delete an
+individual task with the ID of 897, it would be <strong>DELETE /tasks/897</strong>.</p>
+<p><code>app.delete</code> is used to set up the Express route handler.</p>
+<h4 id="delete-user-route">Delete User route</h4>
+<pre class="prettyprint">    app.delete('/users/:id', async (req, res) =&gt; {
+        try {
+            const user = await User.findByIdAndDelete(req.params.id);
+
+            if (!user) {
+                return res.status(404).send();
+            }
+
+            res.send(user);
+        } catch (e) {
+            res.status(500).send();
+        }
+    });
+</pre>
+<p>This deleted a task document from the database.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Create a Task route handler to delete a task.</p>
+<pre class="prettyprint">    app.delete('/tasks/:id', async (req, res) =&gt; {
+        try {
+            const task = await Task.findByIdAndDelete(req.params.id);
+
+            if (!task) {
+                return res.status(404).send();
+            }
+
+            res.send(task);
+        } catch (e) {
+            res.status(500).send();
+        }
+    });
+</pre>
+<p><img src="assets/images/postman-delete-task-async.jpg" alt="Postman DELETE task" title="Postman DELETE task"></p>
+<p>This deleted a task document from the database.</p>
+<h3 id="separate-route-files">Separate Route Files</h3>
+<p>We are going to learn how to organise your Express application endpoints. Defining all endpoints in a single file is a fine way to get started, but that won’t scale well as you add more routes to the app.</p>
+<h4 id="creating-separate-routers">Creating Separate Routers</h4>
+<p>Express allows you to create as many routers as you want. These separate routers can then be combined into a single Express application. You can create a new router using <code>express.Router</code> as shown below. The example file below creates the router, adds routes, and exports the router from the file.</p>
+<pre class="prettyprint">    const router = new express.Router()
+
+    router.post('/someEndpoint', (req, res) =&gt; {
+        // Do something
+    });
+
+    module.exports = router
+</pre>
+<p>The router defined in the file above can be added into the Express application in index.js. This is done by loading the router in with <strong>require</strong> and then passing the router to <code>app.use</code>. You can set up as many routers as you need for your application, though it’s common to have a router for each distinct resource your REST API has.</p>
+<pre class="prettyprint">    // Register with existing application
+    app.use(router);
+</pre>
+<p>We are going to create  a new test route.</p>
+<pre class="prettyprint">    const router = new express.Router();
+
+    router.get('/test', (req, res) =&gt; {
+        res.send('Message from test route.');
+    });
+</pre>
+<p>We can now test this route in the browser with.</p>
+<blockquote>
+<p>localhost:3000/test</p>
+</blockquote>
+<p>We get the following error.</p>
+<p><img src="assets/images/router-test-error.jpg" alt="Router test error" title="Router test error"></p>
+<p>We have to register our router with our application. We can do this with.</p>
+<pre class="prettyprint">    app.use(router);
+</pre>
+<p>Now we get the following output.</p>
+<p><img src="assets/images/router-test-success.jpg" alt="Router test success" title="Router test success"></p>
+<p>We need to separate this out into another file but first we are going to create a new folder in the <strong>src</strong> folder named <strong>routers</strong>.</p>
+<p>Now create a new file named <strong>user.js</strong>. This will store the user route endpoints.</p>
+<h5 id="srcroutersuserjs">/src/routers/user.js</h5>
+<p>We create this code to test the user router.</p>
+<pre class="prettyprint">const express = require('express');
+
+const router = new express.Router();
+
+router.get('/test', (req, res) =&gt; {
+    res.send('From a new file.');
+});
+
+module.exports = router;
+</pre>
+<h5 id="in-indexjs">In index.js</h5>
+<p>Import the user router/</p>
+<pre class="prettyprint">    const userRouter = require('./routers/user');
+</pre>
+<p>Register the user router with the application.</p>
+<pre class="prettyprint">    app.use(userRouter);
+</pre>
+<p>Now, refresh the web page.</p>
+<p><img src="assets/images/userrouter-request.jpg" alt="userRouter request" title="userRouter request"></p>
+<p>Now that we know that the test route endpoint is working we can delete it and move all of the user routes to the <strong>user.js</strong> file.</p>
+<p>We are not finished yet.</p>
+<p>The first issue is that we the user routes are using <strong>app.post</strong> and all need to be changed to <strong>router.post</strong>, etc.</p>
+<p>The second issue is we need to require the <strong>User</strong> model.</p>
+<pre class="prettyprint">    const User = require('../models/user');
+</pre>
+<p>To test that you have created the new routes correctly go over to Postman and use the <code>Read users</code> request to make sure it is still working.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Create the task router.</p>
+<ol>
+<li>Create a new file that creates and exports the new router.</li>
+<li>Move all task routes over to the new file.</li>
+<li>Load in and use that router with the express app.</li>
+<li>test your work.</li>
+</ol>
+<h5 id="srcrouterstaskjs">/src/routers/task.js</h5>
+<p>This code is for testing to make sure the task router works.</p>
+<pre class="prettyprint">    const express = require('express');
+    const Task = require('../models/task');
+    const router = new express.Router();
+
+    // testing only.
+    router.get('/newtest', (req, res) =&gt; {
+        res.send('From a new task file.');
+    });
+
+    module.exports = router;
+</pre>
+<p>It is working so now we can shift the task route endpoints to the <strong>task.js</strong> file.</p>
+<p>Change <strong>app.post</strong> to <strong>router.post</strong>, etc.</p>
+<p>Add the following so we can use the task model.</p>
+<pre class="prettyprint">    const Task = require('../models/task');
+</pre>
+<p>Use Postman <strong>Read tasks</strong> request to test that everything is working.</p>
+<p>After refactoring we have ended up with a simple index.js file and all of our routes in their respective router files. This is much better than having all of our code in one big JavaScript file.</p>
+<p>The <strong>index.js</strong> file is our Express application and gets it up and running but what the application actually does is defined in our two router files.</p>
+<h5 id="indexjs">index.js</h5>
+<pre class="prettyprint">    const express = require('express');
+    const userRouter = require('./routers/user');
+    const taskRouter = require('./routers/task');
+
+    require('./db/mongoose');
+
+    const app = express();
+    const port = process.env.PORT || 3000;
+
+    app.use(express.json());
+
+    app.use(userRouter);
+    app.use(taskRouter);
+
+    app.listen(port, () =&gt; {
+        console.log('Server is up on port ' + port);
+    });
+</pre>
+<h5 id="srcmodelsuserjs">src/models/user.js</h5>
+<pre class="prettyprint">    const mongoose = require('mongoose');
+    const validator = require('validator');
+
+    const User = mongoose.model('User', {
+        name: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        age: {
+            type: Number,
+            default: 0,
+            validate(value) {
+                if (value &lt; 0) {
+                    throw new Error('Age must be a positive number!');
+                }
+            }
+        },
+        email: {
+            type: String,
+            required: true,
+            trim: true,
+            lowercase: true,
+            validate(value) {
+                if (!validator.isEmail(value)) {
+                    throw new Error('Failed to provide a valid email address!');
+                }
+            }
+        },
+        password: {
+            type: String,
+            required: true,
+            trim: true,
+            validate(value) {
+                if (!validator.isLength(value, {min: 6, max: undefined})) {
+                    throw new Error('password must be more than 6 characters!');
+                } else if (validator.contains(value.toLowerCase(), 'password')) {
+                    throw new Error('Invalid password!');
+                }
+            }
+        }
+    });
+
+    module.exports = User;
+</pre>
+<h5 id="srcroutersuserjs">src/routers/user.js</h5>
+<pre class="prettyprint">    const express = require('express');
+    const User = require('../models/user');
+    const router = new express.Router();
+
+    router.post('/users', async (req, res) =&gt; {
+        const user = new User(req.body); 
+
+        try {
+            await user.save();
+            res.status(201).send(user);  
+        } catch (e) {
+            res.status(400).send(e);  
+        }
+    });
+
+    router.get('/users', async (req, res) =&gt; {
+        try {
+            const users = await User.find({});
+            res.send(users);
+        } catch (e) {
+            res.status(500).send();
+        }
+    });
+
+    router.get('/users/:id', async (req, res) =&gt; {
+        const _id = req.params.id;
+
+        try {
+            const user = await User.findById(_id);
+
+            if (!user) {
+                return res.status(404).send();
+            }
+
+            res.send(user);
+        } catch (e) {
+            res.status(500).send();
+        }
+    });
+
+    router.patch('/users/:id', async (req, res) =&gt; {
+        const updates = Object.keys(req.body); 
+        const allowedUpdates = ['name', 'email', 'password', 'age'];
+
+        const isValidOperation = updates.every((update) =&gt; allowedUpdates.includes(update));
+
+        if (!isValidOperation) {
+            return res.status(400).send({error: 'Invalid updates.'});
+        }
+
+        try {
+            const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+
+            if (!user) {
+                return res.status(404).send();
+            }
+
+            res.send(user);
+        } catch (e) {
+            res.status(400).send(e);
+        }
+
+    });
+
+    router.delete('/users/:id', async (req, res) =&gt; {
+        try {
+            const user = await User.findByIdAndDelete(req.params.id);
+
+            if (!user) {
+                return res.status(404).send();
+            }
+
+            res.send(user);
+        } catch (e) {
+            res.status(500).send();
+        }
+    });
+
+    module.exports = router;
+</pre>
+<p><strong>Note:</strong> I'm not going to show the Tasks files because they are similar to the <strong>Users</strong> files.</p>
+
+
+
+
+</div><!-- starter-template -->
+</div><!-- /.container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"/>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+</body>
+</html>

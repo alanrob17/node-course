@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>13 - Sorting, Pagination, and Filtering</title>
+<link href="assets/css/bootstrap.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="assets/css/starter-template.css" rel="stylesheet">
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=css&amp;skin=sunburst"></script>
+<style type="text/css">
+h2 {
+	margin-top: 60px;
+}
+
+h4, h3 {
+	padding-top: 40px!;		
+}
+
+p {
+	font-size: 1.2em;
+}
+h4 {
+	font-size: 1.4em;
+}
+
+img, pre.prettyprint {
+	margin-top: 1.5em;
+	margin-bottom: 1.5em;
+}
+h1, h2, h3, h4, h5, h6 {
+    color:#007bff;
+
+}
+blockquote {
+    border-left: 4px solid #999;
+    padding-left: 1rem;
+    page-break-inside: avoid;
+}
+</style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Udemy - The Complete Node.js Developer Course</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">13 - Sorting, Pagination, and Filtering <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container">
+    <div class="starter-template">
+
+
+<h2 id="sorting-pagination-and-filtering">Sorting, Pagination, and Filtering</h2>
+<h3 id="section-intro">Section Intro</h3>
+<p>In this section, we'll explore advanced techniques for fetching data. This includes sorting, filtering, and pagination. All three of these will give clients more control over what data they get back. This keeps applications fast, as they don't need to fetch unnecessary data.</p>
+<h3 id="working-with-timestamps">Working with Timestamps</h3>
+<p>We need to enable timestamps for our Mongoose models. Mongoose will automatically track when documents were created and updated. This is great data to have if you want to allow users to sort by when the document was created or updated.</p>
+<h4 id="enabling-mongoose-timestamps">Enabling Mongoose Timestamps</h4>
+<p>Schema options can be used to enable timestamps. Schema options are provided by passing an object in as the second argument to <code>mongoose.Schema</code>. Set <strong>timestamps</strong> to true to have Mongoose add <code>createdAt</code> and <code>updatedAt</code> fields to the model. You don't need to write any code to create or manage those fields, as Mongoose does all that for you.</p>
+<p>We add another object at the bottom of the user's schema with one field set to true. This will add the fields to our user collection.</p>
+<pre class="prettyprint">        tokens: [{
+            token: {
+                type: String,
+                required: true
+            }
+        }]
+    }, {
+        timestamps: true
+    });
+</pre>
+<p>Now that we have done this we have to drop our database again and restart our server.</p>
+<p>I create some new users and I can see the timestamps appearing.</p>
+<p><img src="assets/images/mongoose-timestamps.jpg" alt="Mongoose timestamps" title="Mongoose timestamps"></p>
+<p>Mongoose maintains these timestamps for us so we don't have to write any code to achieve this.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Refactor task model to add timestamps.</p>
+<ol>
+<li>Explicitly create schema.</li>
+<li>Setup timestamps.</li>
+<li>Create tasks from Postman to test work.</li>
+</ol>
+<pre class="prettyprint">    const mongoose = require('mongoose');
+
+    const taskSchema = new mongoose.Schema({
+        description: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        completed: {
+            type: Boolean,
+            default: false
+        },
+        owner: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'User'
+        }
+    }, {
+        timestamps: true
+    });
+
+    const Task = mongoose.model('Task', taskSchema);
+
+    module.exports = Task;
+</pre>
+<p>Results</p>
+<blockquote>
+<p>{<br>
+&quot;completed&quot;: false,<br>
+&quot;_id&quot;: &quot;5efbe2f4374c331900a89cc8&quot;,<br>
+&quot;description&quot;: &quot;Take out the rubbish&quot;,<br>
+&quot;owner&quot;: &quot;5efa86f10f536905d88589df&quot;,<br>
+&quot;createdAt&quot;: &quot;2020-07-01T01:12:20.861Z&quot;,<br>
+&quot;updatedAt&quot;: &quot;2020-07-01T01:12:20.861Z&quot;,<br>
+&quot;__v&quot;: 0<br>
+}</p>
+</blockquote>
+<p><img src="assets/images/tasks-with-timestamps.jpg" alt="Mongoose tasks with timestamps" title="Mongoose tasks with timestamps"></p>
+<h3 id="filtering-data">Filtering Data</h3>
+<p>We will use query parameters to allow for data filtering. This will allow clients to fetch all tasks, just the complete tasks, or just the incomplete tasks.</p>
+<h4 id="filtering-data">Filtering Data</h4>
+<p><strong>GET /tasks</strong> below supports a <strong>completed</strong> query parameter which can be set to <code>true</code> or <code>false</code>. This will prevent clients from fetching unnecessary data that they don't plan on using.</p>
+<p>Different endpoints that we can cater for.</p>
+<pre class="prettyprint">    {{url}}/tasks
+
+    {{url}}/tasks?completed=true
+
+    {{url}}/tasks?completed=false
+</pre>
+<p>First up, create an object to store the search criteria.</p>
+<pre class="prettyprint">    const match = {};
+</pre>
+<p>From there, check if the query parameter was provided. The provided value should be parsed into a boolean and stored on <strong>match.completed</strong>.</p>
+<pre class="prettyprint">    if (req.query.completed) {
+        match.completed = req.query.completed === 'true';
+    }
+</pre>
+<p>In the statement above whatever value is stored in <code>req.query.completed</code> will be stored in <code>match.completed</code>.</p>
+<p>Last up, <code>match</code> can be added onto populate() to fetch just the users that match the search criteria.</p>
+<pre class="prettyprint">    await req.user.populate({
+        path: 'tasks',
+        match
+    }).execPopulate();
+</pre>
+<h3 id="paginating-data">Paginating Data</h3>
+<p>We'll now add pagination to the application. This will allow the client to fetch data in pages. The client can start off with the first page of data and then fetch other pages as they're needed.</p>
+<h4 id="data-pagination">Data Pagination</h4>
+<p>Pagination is configured using <code>limit</code> and <code>skip</code>. These two values give the client complete control of the data they're getting back.</p>
+<p>If a client wanted the first page of 10 tasks, <code>limit</code> would be set to 10 and <code>skip</code> would be set to 0. If the client wanted the third page of 10 tasks, <code>limit</code> would be set to 10 and <code>skip</code> would be set to 20.
+Both <code>limit</code> and <code>skip</code> can be added onto the <strong>options</strong> object passed to populate. The code below uses <code>parseInt()</code> to convert the string query parameters into numbers first.</p>
+<pre class="prettyprint">    await req.user.populate({
+        path: 'tasks',
+        match,
+        options: {
+            limit: parseInt(req.query.limit),
+            skip: parseInt(req.query.skip)
+        }
+    }).execPopulate();
+</pre>
+<h3 id="sorting-data">Sorting Data</h3>
+<p>Now we will add sorting to the application. Clients will be able to fetch the data back in any order they like.</p>
+<p>The <strong>options</strong> object used for pagination can also be used for sorting. A sort property should be set, which is an object containing key/value pairs. The key is the field to sort.</p>
+<p>The value is 1 for ascending and -1 for descending sorting.</p>
+<p><code>GET /tasks</code> will get support for a <code>sortBy</code> query parameter. The value should include the field to sort and the order in which to sort. <code>createdAt:asc</code> would sort the tasks in ascending order with the oldest first. <code>createdAt:desc</code> would sort the tasks in a descending order with the newest first.</p>
+<p>Start with an empty object to store the sorting options.</p>
+<pre class="prettyprint">    const sort = {};
+</pre>
+<p>If the query parameter is provided, it'll get parsed and <code>sort</code> will be updated.</p>
+<pre class="prettyprint">    if (req.query.sortBy) {
+        const parts = req.query.sortBy.split(':');
+        sort[parts[0]] = parts[1] === 'desc' ? -1 : 1;
+    }
+</pre>
+<p><code>sort</code> is then added onto options. If <code>sortBy</code> isn't provided, sort will be an empty object and no sorting will occur.</p>
+<pre class="prettyprint">    await req.user.populate({
+        path: 'tasks',
+        match,
+        options: {
+            limit: parseInt(req.query.limit),
+            skip: parseInt(req.query.skip),
+            sort
+        }
+    }).execPopulate();
+</pre>
+<p>We could join all of the filters together.</p>
+<pre class="prettyprint">    {{url}}/tasks?completed=false&amp;sortBy=createdAt:asc&amp;limit=2&amp;skip=4
+</pre>
+
+
+
+</div><!-- starter-template -->
+</div><!-- /.container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"/>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+</body>
+</html>
