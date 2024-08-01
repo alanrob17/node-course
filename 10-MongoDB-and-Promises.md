@@ -1,6 +1,6 @@
-## MongoDB and Promises
+# MongoDB and Promises
 
-### Mongo database terminology
+## Mongo database terminology
 
 ![MongoDB Terminology](assets/images/no-sql-database-terminology.jpg "MongoDB Terminology")
 
@@ -12,7 +12,7 @@ A row or record is called a ``document``.
 
 A column is called a ``field``.
 
-### Installing MongoDB on Windows
+## Installing MongoDB on Windows
 
 We will install MongoDB on Windows.
 
@@ -30,7 +30,7 @@ My data folder is:
 
 This installation automatically starts the server as a service and always runs on your PC.
 
-### Installing Database GUI Viewer
+## Installing Database GUI Viewer
 
 Robo 3T is a MongoDB admin tool that makes it easy to manage and visualize the data in your database.
 
@@ -60,11 +60,11 @@ This confirms MongoDB and Robo 3& are working correctly.
 
 When we are working with MongoDB in Robo 3T we are querying in JavaScript.
 
-### Connecting and Inserting Documents
+## Connecting and Inserting Documents
 
 Now we are going to connect to our MongoDB database from our Node.js application. We will learn how to insert documents into the database to save them for later.
 
-### Connecting to MongoDB
+## Connecting to MongoDB
 
 MongoDB provides a native driver that allows you to connect to your database from Node. You can grab the driver by installing the mongodb npm module as shown below.
 
@@ -92,7 +92,7 @@ Now, initialise the project.
 
 With the driver installed, you can use the following code to connect to the database. You just need to provide two pieces of information. The first is the connection URL and the second is the name of the database. You can pick any database name that you like.
 
-### Inserting a Document
+## Inserting a Document
 
 With the connection open, you're ready to insert documents into the database. Remember that a database is made up of collections, and collections are used to store documents. The code below inserts a new document into the "users" collection. db.collection is used to get a reference to the collection you're trying to manipulate. **insertOne** is used to insert a new document into that collection.
 
@@ -159,7 +159,7 @@ This has no error checking on the insertion of a user. We can add a callback fun
 
 > [ { name: 'James', age: 14, _id: 5ee576ec6f8dc60c6850a517 } ]
 
-### Inserting Documents
+## Inserting Documents
 
 We are now going to look at another way to insert documents into collections.
 
@@ -247,11 +247,11 @@ Insert 3 tasks into a tasks collection.
 >     completed: false,
 >     _id: 5ee5920e559538366c2b7750 } ]
 
-### The ObjectID
+## The ObjectID
 
 MongoDB uses **ObjectIDs** to create unique identifiers for all the documents in the database. It's different to the traditional auto-incrementing integer ID, but it comes with its own set of advantages.
 
-### Working with ObjectIDs
+## Working with ObjectIDs
 
 MongoDB provides ObjectID which can be used to generate new ObjectIDs. The example below generates a new ID and prints it to the console.
 
@@ -353,11 +353,11 @@ We can actually see the binary data when we create a new GUID with the following
 
 We need to know about ObjectID because we are going to use them to search for or delete a document.
 
-### Querying Documents
+## Querying Documents
 
 We are going to learn how to read data from MongoDB. This will allow you to fetch the documents that you had previously inserted.
 
-### Finding Documents
+## Finding Documents
 
 You can search for documents in a given collection using find or findOne. find can be used to fetch multiple documents, while findOne can be used to fetch a single document.
  
@@ -423,7 +423,7 @@ What happens if I put the wrong age in?
 
 I get a ``null`` back because what I am doing is completely valid but it doesn't return any results.
 
-### Updating Documents
+## Updating Documents
 
 We are now going to update documents stored in MongoDB.
 
@@ -569,7 +569,7 @@ Use updateMany to complete all tasks.
 >     "completed" : true
 > }
 
-### Deleting Documents
+## Deleting Documents
 
 You can delete documents from MongoDB using ``deleteOne`` or ``deleteMany``. Both accept an object as the first argument. This object is used to filter just the documents you want to delete.
 

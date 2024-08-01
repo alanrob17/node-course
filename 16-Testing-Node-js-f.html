@@ -38,6 +38,12 @@ blockquote {
     padding-left: 1rem;
     page-break-inside: avoid;
 }
+:target:before {
+  content: "";
+  display: block;
+  height: 80px; /* adjust this value to your needs */
+  margin: -80px 0 0; /* this should be a negative value of the height above */
+}
 </style>
 </head>
 <body>
@@ -69,18 +75,18 @@ blockquote {
     <div class="starter-template">
 
 
-<h2 id="testing-nodejs">Testing Node.js</h2>
-<h3 id="section-intro">Section Intro</h3>
+<h1 id="testing-nodejs">Testing Node.js</h1>
+<h2 id="section-intro">Section Intro</h2>
 <p>We are going to learn how to test our Node.js applications. Setting up an automated test suite makes it easy to check that your application is always working as expected.</p>
-<h3 id="jest-testing-framework">Jest Testing Framework</h3>
+<h2 id="jest-testing-framework">Jest Testing Framework</h2>
 <p>We will be using the Jest testing framework. Jest gives you everything you need to create a test suite for your Node.js applications.</p>
-<h3 id="setting-up-jest">Setting up Jest</h3>
+<h2 id="setting-up-jest">Setting up Jest</h2>
 <p>Install the module.</p>
 <pre class="prettyprint">    npm i jest
 </pre>
 <p>Next, create a test script in package.json. The script itself is jest. This allows you to use <strong>npm test</strong> to run the Jest test suite.</p>
 <p>Now, you'll need to create a test suite. This is a file in your project that ends with <strong>.test.js</strong>. The file extension allows Jest to find and run the test suites for your project.</p>
-<h3 id="creating-a-test-case">Creating a Test Case</h3>
+<h2 id="creating-a-test-case">Creating a Test Case</h2>
 <p>You can add a test case to a test suite using the test function. Jest provides various functions as global variables in your test suite files. test is one of them. The first argument to test is the name of your test case. The second argument to test is the test function itself.</p>
 <p>If the test function throws an error, the test cast will fail. If the test function doesn't throw an error, the test case will pass.</p>
 <p>The test case below would always pass, as no error is thrown.</p>
@@ -97,10 +103,10 @@ blockquote {
 </pre>
 <p>These are the results.</p>
 <p><img src="assets/images/jest-test-01.jpg" alt="Jest test results 1" title="Jest test results 1"></p>
-<h3 id="writing-tests-and-assertions">Writing Tests and Assertions</h3>
+<h2 id="writing-tests-and-assertions">Writing Tests and Assertions</h2>
 <p>We can add assertions to our test cases. Assertions allow you to check if a given value is what you're expecting or not.</p>
 <p>Create our function.</p>
-<h5 id="srcmathjs">src/math.js</h5>
+<h4 id="srcmathjs">src/math.js</h4>
 <pre class="prettyprint">    const calculateTip = (total, tipPercent) =&gt; {
         const tip = total * tipPercent;
         return total + tip;
@@ -109,7 +115,7 @@ blockquote {
     module.exports = { calculateTip }
 </pre>
 <p>Create our test.</p>
-<h5 id="testsmathtestjs">tests/math.test.js</h5>
+<h4 id="testsmathtestjs">tests/math.test.js</h4>
 <pre class="prettyprint">    const { calculateTip } = require('../src/math');
 
     test('Should calculate total with tip.', () =&gt; {
@@ -162,7 +168,7 @@ blockquote {
 <p>When we run the tests we get the following results.</p>
 <p><img src="assets/images/default-value-test.jpg" alt="Default value test" title="Default value test"></p>
 <p>In this case both tests run correctly.</p>
-<h5 id="challenge">Challenge</h5>
+<h4 id="challenge">Challenge</h4>
 <p>Test temperature conversion functions</p>
 <ol>
 <li>Export both functions and load them into the test suite.</li>
@@ -191,13 +197,13 @@ blockquote {
 </pre>
 <p>I then rerun all of my tests to make sure I haven't broken my functions and I should get the same results as above.</p>
 <p>We can set Jest up to run every time our code changes.</p>
-<h5 id="packagejson-partial">package.json (partial)</h5>
+<h4 id="packagejson-partial">package.json (partial)</h4>
 <pre class="prettyprint">        &quot;dev&quot;: &quot;env-cmd -f ./config/dev.env nodemon src/index.js&quot;,
         &quot;test&quot;: &quot;jest --watch&quot;
       },
       &quot;dependencies&quot;: {
 </pre>
-<h3 id="testing-asynchronous-code">Testing Asynchronous Code</h3>
+<h2 id="testing-asynchronous-code">Testing Asynchronous Code</h2>
 <p>We need to test asynchronous code. This will be necessary to test the Express API endpoints.</p>
 <p>let's create a <code>setTimeout()</code> callback function.</p>
 <pre class="prettyprint">    test('Async test demo.', () =&gt; {
@@ -246,11 +252,11 @@ blockquote {
 </pre>
 <p>This works because Jest will wait for a promise to finish. We don't have to use the dummy <code>done()</code> function.</p>
 <p>Both of the tests above perform the same task but it is preferable to use the <strong>async/await</strong> syntax.</p>
-<h3 id="testing-an-express-application-part-i">Testing an Express Application: Part I</h3>
+<h2 id="testing-an-express-application-part-i">Testing an Express Application: Part I</h2>
 <p>We are going to set up the Express API to be easily testable. This involves settings up a test environment as well as configuring Jest to work with Node.</p>
-<h4 id="creating-a-test-environment">Creating a Test Environment</h4>
+<h3 id="creating-a-test-environment">Creating a Test Environment</h3>
 <p>Creating the test environment requires <strong>test.env</strong> to be added to the <strong>config</strong> directory. The contents will be identical to <strong>dev.env</strong>, with the exception of the MongoDB connection string. The test environment should use a separate database such as <strong>task-manager-api-test</strong>. This will prevent the test cases from messing with development data.</p>
-<h5 id="testenv">test.env</h5>
+<h4 id="testenv">test.env</h4>
 <pre class="prettyprint">PORT=3000
 SENDGRID_API_KEY=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
 MONGODB_URL=mongodb://127.0.0.1:27017/task-manager-api-test
@@ -259,7 +265,7 @@ JWT_SECRET=thisismynodecourse
 <p>We have only made one change to our test.env from our dev.env variables and that is a different database name.</p>
 <p>Why don't we just use the development environment for our testing? We don't want to fill our development database with seed data so we need to create a new test database.</p>
 <p>With the environment in place, update the test script to load the environment file in. That would be <strong>env-cmd .f ./config/test.env jest --watch --runInBand</strong>.</p>
-<h4 id="configuring-jest">Configuring Jest</h4>
+<h3 id="configuring-jest">Configuring Jest</h3>
 <p>By default, Jest is expecting to run in the browser. You can use Jest with Node, but you'll need to configure Jest to enable support. Jest can be configured by adding a <strong>jest</strong> property in package.json. The configuration below sets testEnv to node to ensure that Jest runs correctly in Node.js.</p>
 <pre class="prettyprint">{
     &quot;jest&quot;: {
@@ -268,15 +274,15 @@ JWT_SECRET=thisismynodecourse
 }
 </pre>
 <p>For more information check out <a href="https://jestjs.io/docs/en/configuration" title="configuring Jest.">configuring Jest.</a></p>
-<h3 id="testing-an-express-application-part-ii">Testing an Express Application: Part II</h3>
+<h2 id="testing-an-express-application-part-ii">Testing an Express Application: Part II</h2>
 <p>We are now ready to add tests for the Express API. Each test case will focus on testing a specific endpoint, making assertions about the response from the server.</p>
-<h4 id="testing-with-supertest">Testing with Supertest</h4>
+<h3 id="testing-with-supertest">Testing with Supertest</h3>
 <p>Supertest was created by the Express team to allow you to easily test your Express apps.</p>
 <p>First up, install the module.</p>
 <pre class="prettyprint">    npm i supertest --save-dev
 </pre>
 <p>We also need to make changes to our application to allow it to work in the test environment. Our test app doesn't need to run the express application so we don't need to use <code>app.listen()</code>. We are going to set up an <strong>app.js</strong> file to run our test environment and will leave our <strong>index.js</strong> file for development and production.</p>
-<h5 id="appj">app.j</h5>
+<h4 id="appj">app.j</h4>
 <pre class="prettyprint">    const express = require('express');
     const userRouter = require('./routers/user');
     const taskRouter = require('./routers/task');
@@ -291,7 +297,7 @@ JWT_SECRET=thisismynodecourse
     module.exports = app;
 </pre>
 <p>We have take most of the code from <strong>index.js</strong> and will call <strong>app.js</strong> in <strong>index.js</strong> to stop us from repeating a lot of the code.</p>
-<h5 id="indexjs">index.js</h5>
+<h4 id="indexjs">index.js</h4>
 <pre class="prettyprint">    'use strict';
 
     const app = require('./app');
@@ -304,7 +310,7 @@ JWT_SECRET=thisismynodecourse
 </pre>
 <p>Now, supertest can be used to test an endpoint. The test case below tests that new users can sign up for accounts. All the account data provided is valid, so a new account should be created.</p>
 <p>Step one is to pass the express <strong>app</strong> to <strong>request</strong>. Next, supertest methods can be chained together to fit the needs of your tests. <strong>post</strong> is used to make an HTTP POST request to <strong>/users</strong>. <strong>send</strong> is used to send the correct JSON data to the server. <strong>expect</strong> is used to assert that the response status code is correct. In this case, a successful signup should result in a <strong>201</strong> status code.</p>
-<h5 id="testsusertestjs">/tests/user.test.js</h5>
+<h4 id="testsusertestjs">/tests/user.test.js</h4>
 <pre class="prettyprint">    const request = require('supertest');
 
     const app = require('../src/app');
@@ -325,9 +331,9 @@ JWT_SECRET=thisismynodecourse
 <p><img src="assets/images/mongo-db-new-user.jpg" alt="New user in the MongoDB test database" title="New user in the MongoDB test database"></p>
 <p>There is a minor problem with our code. If I rerun the test (type <code>a</code> in the terminal kicks it off again) I get a <strong>401</strong> bad request because the user record is already in the database.</p>
 <p>In this case we need to tell Jest to wipe the database before we run our tests again.</p>
-<h3 id="jest-setup-and-teardown">Jest Setup and Teardown</h3>
+<h2 id="jest-setup-and-teardown">Jest Setup and Teardown</h2>
 <p>We need to configure Jest to add test data into the database. This will allow you to test operations that require existing data, such as the login operation. You can't log in if there isn't a user account in the database to login to.</p>
-<h4 id="seeding-database">Seeding Database</h4>
+<h3 id="seeding-database">Seeding Database</h3>
 <p>Jest provides lifecycle functions that you can use to configure your test suite. There are four:</p>
 <ol>
 <li>beforeEach - Run some code before each test case</li>
@@ -346,7 +352,7 @@ JWT_SECRET=thisismynodecourse
 <p>Once again we are using promises to make sure all users are deleted before we continue on to the tests.</p>
 <p>This time when we run the tests we will see that they are passing again.</p>
 <p>What if we need to add a user for particular tests? We can add one after we delete all users in <code>beforeEach()</code>. This can then be used for any tests ,like login() that require a user to be available for testing.</p>
-<h5 id="challenge">Challenge</h5>
+<h4 id="challenge">Challenge</h4>
 <p>Test login failure</p>
 <ol>
 <li>Create &quot;Should not login non-existent user&quot;.</li>
@@ -363,7 +369,7 @@ JWT_SECRET=thisismynodecourse
 </pre>
 <p>Results.</p>
 <p><img src="assets/images/cant-login-non-existent-user.jpg" alt="Can't login non existent user" title="Can't login non existent user"></p>
-<h5 id="challenge">Challenge</h5>
+<h4 id="challenge">Challenge</h4>
 <p>Test Delete account.</p>
 <ol>
 <li>Create &quot;Should delete account for user&quot; - Setup auth header and expect correct status code.</li>
@@ -386,7 +392,7 @@ JWT_SECRET=thisismynodecourse
     });
 </pre>
 <p>These tests pass.</p>
-<h3 id="advanced-assertions">Advanced Assertions</h3>
+<h2 id="advanced-assertions">Advanced Assertions</h2>
 <p>We can test the information that is being created when we test creating a new user. We can create a variable for the response and test what was sent back. In the case below we are testing to see that the user has a name value.</p>
 <pre class="prettyprint">    test('Should sign up a new user.', async () =&gt; {
         const response = await request(app).post('/users').send({
@@ -427,7 +433,7 @@ JWT_SECRET=thisismynodecourse
         expect(user.password).not.toBe('alan@123');
     });
 </pre>
-<h5 id="challenge">Challenge</h5>
+<h4 id="challenge">Challenge</h4>
 <p>Validate new token is being saved.</p>
 <ol>
 <li>Fetch the user from the database.</li>
@@ -446,7 +452,7 @@ JWT_SECRET=thisismynodecourse
     });
 </pre>
 <p>Tests pass.</p>
-<h3 id="challenge">Challenge</h3>
+<h2 id="challenge">Challenge</h2>
 <p>Validate user is removed.</p>
 <ol>
 <li>Fetch the user from the database.</li>
@@ -465,12 +471,12 @@ JWT_SECRET=thisismynodecourse
     });
 </pre>
 <p>Tests pass.</p>
-<h3 id="mocking-libraries">Mocking Libraries</h3>
+<h2 id="mocking-libraries">Mocking Libraries</h2>
 <p>We are now going to learn how to mock npm modules. Jest lets you mock npm modules so you can override module functionality in your test environment.</p>
-<h3 id="mocking-sendgrid">Mocking SendGrid</h3>
+<h2 id="mocking-sendgrid">Mocking SendGrid</h2>
 <p>You can mock an npm module by creating a <strong>__mocks__</strong> directory in the tests folder. A module can be mocked by creating a file in the <strong>__mocks__</strong> folder. The file name should match up with the module name, so <strong>tests/__mocks__/express.js</strong> can be used to mock the Express library. If the npm module uses a scope like <strong>@sendgrid/mail</strong>, then a <strong>@sendgrid</strong> folder would be created with a <strong>mail.js</strong> file inside.</p>
 <p>The job of the mock file is to provide mocked versions of the library features. The SendGrid mock below defines and exports <strong>setApiKey</strong> and <strong>send</strong>. This ensures that our code still works even though emails will no longer be sent for the tests.</p>
-<h5 id="srctestsmockssendgridmailjs">/src/tests/__mocks__/@sendgrid/mail.js</h5>
+<h4 id="srctestsmockssendgridmailjs">/src/tests/__mocks__/@sendgrid/mail.js</h4>
 <pre class="prettyprint">    module.exports = {
         setApiKey() {
 
@@ -480,7 +486,7 @@ JWT_SECRET=thisismynodecourse
         }
     }
 </pre>
-<h3 id="wrapping-up-user-tests">Wrapping up User Tests</h3>
+<h2 id="wrapping-up-user-tests">Wrapping up User Tests</h2>
 <p>We need to create a test to upload an avatar. To do this we create a folder named <strong>fixtures</strong> in <strong>tests</strong>. This is where we put assets we need for our testing.</p>
 <p>We will put our profile picture in this folder.</p>
 <pre class="prettyprint">    test('Should upload avatar image.', async() =&gt; {
@@ -506,14 +512,14 @@ JWT_SECRET=thisismynodecourse
 </pre>
 <p><strong>Note:</strong> we are using <code>toEqual()</code> instead of <code>toBe()</code>. <code>toBe()</code> does a strict equality test and because we are checking an object the strict equality test would fail. This is where we have to use <code>toEqual</code> and what we are testing is to see that the field <code>user.avatar</code> contains a buffer. As long as there is a buffer it means that we have uploaded an image and stored it in <code>user.avatar</code>.</p>
 <p>Once we save we see that our tests have passed.</p>
-<h5 id="challenge">Challenge</h5>
+<h4 id="challenge">Challenge</h4>
 <p>Test user updates.</p>
 <ol>
 <li>Create &quot;Should update valid user fields&quot;. - Update the name of the test user. - Check the data to confirm it has changed.</li>
 <li>Create &quot;Should not update invalid user fields&quot;. - Update a &quot;location&quot; field and expect a status error code.</li>
 <li>test your work.</li>
 </ol>
-<h5 id="test-1">Test 1.</h5>
+<h4 id="test-1">Test 1.</h4>
 <pre class="prettyprint">    test('Should update valid user fields.', async() =&gt; {
         await request(app)
             .patch('/users/me')
@@ -527,7 +533,7 @@ JWT_SECRET=thisismynodecourse
         expect(user.name).toEqual('Charley');
     });
 </pre>
-<h5 id="test-2">Test 2.</h5>
+<h4 id="test-2">Test 2.</h4>
 <pre class="prettyprint">    test('Should not update invalid user fields.', async() =&gt; {
         await request(app)
             .patch('/users/me')
@@ -539,9 +545,9 @@ JWT_SECRET=thisismynodecourse
             .expect(400);
     });
 </pre>
-<h3 id="setup-task-test-suite">Setup Task Test Suite</h3>
+<h2 id="setup-task-test-suite">Setup Task Test Suite</h2>
 <p>Before we can set up the Task tests we need to change the setup of our testing code.</p>
-<h5 id="testsfixturesdbjs">tests/fixtures/db.js</h5>
+<h4 id="testsfixturesdbjs">tests/fixtures/db.js</h4>
 <pre class="prettyprint">    const jwt = require('jsonwebtoken');
     const mongoose = require('mongoose');
     const User = require('../../src/models/user');
@@ -570,7 +576,7 @@ JWT_SECRET=thisismynodecourse
     }
 </pre>
 <p>The <strong>db.js</strong> file takes out code from the <strong>user.test.js</strong> files so we can use our new user in our <strong>task.test.js</strong> file. This makes our test user available to both sets of tests.</p>
-<h5 id="testsusertestjs-setup">tests/user.test.js (setup)</h5>
+<h4 id="testsusertestjs-setup">tests/user.test.js (setup)</h4>
 <pre class="prettyprint">    const request = require('supertest');
 
     const app = require('../src/app');
@@ -580,7 +586,7 @@ JWT_SECRET=thisismynodecourse
 
     beforeEach(setupDatabase);
 </pre>
-<h5 id="teststasktestjs-setup">tests/task.test.js (setup)</h5>
+<h4 id="teststasktestjs-setup">tests/task.test.js (setup)</h4>
 <pre class="prettyprint">    const request = require('supertest');
     const app = require('../src/app');
     const Task = require('../src/models/task');
@@ -608,9 +614,9 @@ JWT_SECRET=thisismynodecourse
     });
 </pre>
 <p>In the test above we can create a new task and then test that it is not null and also test that the completed field is <strong>false</strong>.</p>
-<h3 id="testing-with-task-data">Testing with Task Data</h3>
+<h2 id="testing-with-task-data">Testing with Task Data</h2>
 <p>Testing tasks will require that some test tasks exist in the database. Like with users, tasks can be added to the database using <code>beforeEach</code>. The test case below fetches all tasks for the user. It also asserts that the status code is a <strong>200</strong> and the tasks are sent back correctly.</p>
-<h5 id="challenge">Challenge</h5>
+<h4 id="challenge">Challenge</h4>
 <p>Test delete Task security (one user should not be able to delete another user's tasks).</p>
 <ol>
 <li>Attempt to have the second user delete the first task (should fail). - setup necessary exports from db.js.</li>
@@ -629,7 +635,7 @@ JWT_SECRET=thisismynodecourse
             expect(task).not.toBeNull();
     });
 </pre>
-<h4 id="more-user-tests">More user tests</h4>
+<h3 id="more-user-tests">More user tests</h3>
 <p>The following lists are extra tests you could create.</p>
 <pre>    User Test Ideas
 

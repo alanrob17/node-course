@@ -1,10 +1,10 @@
-## Application Deployment
+# Application Deployment
 
-### Setting up SSH Keys
+## Setting up SSH Keys
 
 We need to set up SSH on our machine. SSH is the protocol used to securely transfer code between your machine and GitHub/Heroku.
 
-### Creating SSH Keys
+## Creating SSH Keys
 
 Windows users won't have access to the necessary SSH commands from the command prompt. Make sure to use Git Bash for the following commands.
 
@@ -32,7 +32,7 @@ The command below is for Linux users and Windows users.
     ssh-add ~/.ssh/id_rsa
 ```
 
-### Adding the ssh key to GitHub
+## Adding the ssh key to GitHub
 
 You need to copy the ssh key to GitHub.
 
@@ -50,7 +50,7 @@ Select the **SSH and GPG Keys** tab. Click on the **ssh keys** section to add a 
 
 Add a name for the machine the key was created on (e.g. Home Desktop) and paste the key that you copied from your ~/.ssh key, id_rsa.pub. This should add the ssh key to GitHub.
 
-## Using Heroku
+# Using Heroku
 
 Install command line tools.
 
@@ -149,7 +149,7 @@ Now, we can push our changes to GitHub and then push our changes to Heroku.
     git push heroku master
 ```
 
-### New Feature Deployment Workflow
+## New Feature Deployment Workflow
 
 We'll go through the process of adding a new feature to the application. This includes committing the changes, pushing them to GitHub, and deploying them to Heroku.
 
@@ -209,7 +209,7 @@ To deploy, the workflow is:
     git push heroku master
 ```
 
-### Avoiding Global Modules
+## Avoiding Global Modules
 
 Now, we are going to refactor our application to remove the use of global modules. This ensures that your application installs all the dependencies you need to run.
 

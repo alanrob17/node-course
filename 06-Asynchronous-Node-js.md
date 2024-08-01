@@ -1,10 +1,10 @@
-## Asynchronous Node.js
+# Asynchronous Node.js
 
-### Section Intro
+## Section Intro
 
 It's time to connect our application with the outside world. In this section, we'll explore the asynchronous nature of Node.js. We'll learn how to use asynchronous programming to make HTTP API requests to third-party HTTP APIs. This will allow you to pull in data, like real-time weather data, into your app.
 
-### Asynchronous Basics
+## Asynchronous Basics
 
 When running asynchronous code, your code won't always execute in the order you might expect. To get started with asynchronous development, let's use setTimeout. setTimeout is a function that allows you to run some code after a specific amount of time has passed. setTimeout accepts two arguments. The first is a callback function. This function will run after the specified amount of time has passed. The second argument is the amount of time in milliseconds to wait.
 
@@ -29,7 +29,7 @@ Notice that "Stopping" prints before "2 Second Timer". That's because **setTimeo
 
 This asynchronous and non-blocking nature makes Node.js ideal for backend development. Your server can wait for data from a database while also processing an incoming HTTP request.
 
-### Making HTTP Requests
+## Making HTTP Requests
 
 We are going to learn how to make HTTP requests from Node. This will enable your app to communicate with other APIs and  servers to do a wide variety of things. Everything from fetching real-time weather data to sending text messages to users.
 
@@ -75,7 +75,7 @@ We can refine this further with
     console.log(data.current);
 ```
 
-##### Results
+#### Results
 
 ```
     {
@@ -149,9 +149,9 @@ This is another example using Open Weathermap.
     });
 ```
 
-### Customizing HTTP Requests
+## Customizing HTTP Requests
 
-#### Request Options
+### Request Options
 
 The request library comes with plenty of options to make your life easier. One is the json option. Set json to true and request will automatically parse the JSON into a JavaScript object for you.
 
@@ -165,7 +165,7 @@ The request library comes with plenty of options to make your life easier. One i
     });
 ```
 
-##### Challenge
+#### Challenge
 
 Print a small forecast for the user.
 
@@ -187,9 +187,9 @@ Print a small forecast for the user.
 
 > It is currently 10 degrees out. It is Overcast and there is 0% chance of rain.
 
-### An HTTP Request Challenge
+## An HTTP Request Challenge
 
-#### Geocoding
+### Geocoding
 
 We use the mapbox.com api to forward geocode.
 
@@ -207,7 +207,7 @@ We use the mapbox.com api to forward geocode.
 
 > The town is Melbourne, Victoria, Australia. Its latitude is -37.8142 and longitude is 144.9632.
 
-### Handling Errors
+## Handling Errors
 
 There are plenty of reasons an HTTP request can fail. Maybe your machine doesn't have an internet connection, or maybe the URL is incorrect. Regardless of what goes wrong, you need to be able to handle errors that occur when making HTTP requests.
 
@@ -259,7 +259,7 @@ I remove the latitude and longitude from the API call to generate an error. This
 
 > Please specify a valid location identifier using the query parameter.
 
-##### Challenge
+#### Challenge
 
 Do the same error checking for the Geocoding request.
 
@@ -285,7 +285,7 @@ I removed the town in the API request to generate an error.
 
 > Error: Not Found.
 
-### The Callback Function
+## The Callback Function
 
 A callback function is a function that's passed as an argument to another function. Imagine you have FunctionA which gets passed as an argument to FunctionB. FunctionB will do some work and then call FunctionA at some point in the future.
 
@@ -386,7 +386,7 @@ This immediately returns before the 2 seconds are up.
 The call to **geocode** provides both arguments, the address and the callback function. Notice that the callback function is expecting a single parameter which it has called **data**. This is where the callback function will get access to the results of the asynchronous operation. You can see where **callback** is called with the data inside the **geocode**
 function.
 
-##### Challenge
+#### Challenge
 
 Try out the callback pattern
 
@@ -401,7 +401,7 @@ Try out the callback pattern
     })
 ```
 
-##### Finished code
+#### Finished code
 
 ```
     const add = (num1, num2, callback) => {
@@ -417,7 +417,7 @@ Try out the callback pattern
 
 > 5
 
-### Callback Abstraction
+## Callback Abstraction
 
 Callback functions can be used to abstract complex asynchronous code into a simple reusable function.
 
@@ -440,7 +440,7 @@ Returns.
 
 > New%20York
 
-##### app.js
+#### app.js
 
 ```
     const geocode = require('./utils/geocode');
@@ -453,7 +453,7 @@ Returns.
 
 We have abstracted out the ``geocode()`` function and put it in the utils folder. We can now use **geocode.js** as a JavaScript module.
 
-##### geocode.js
+#### geocode.js
 
 ```
     const request = require('postman-request');
@@ -479,7 +479,7 @@ We have abstracted out the ``geocode()`` function and put it in the utils folder
     module.exports = geocode;
 ```
 
-##### Results
+#### Results
 
 > Error undefined
 > Data { latitude: -37.5623,
@@ -487,7 +487,7 @@ We have abstracted out the ``geocode()`` function and put it in the utils folder
 >   location: 'Ballarat, Victoria, Australia' }
 
 
-##### Challenge
+#### Challenge
 
 Create a reusable function for getting the forecast
 
@@ -503,7 +503,7 @@ Create a reusable function for getting the forecast
 //   console.log('Data', data);
 // });
 
-##### app.js
+#### app.js
 
 ```
     const geocode = require('./utils/geocode');
@@ -520,7 +520,7 @@ Create a reusable function for getting the forecast
     });
 ```
 
-##### forecast.js
+#### forecast.js
 
 ```
     const request = require('postman-request');
@@ -545,12 +545,12 @@ Create a reusable function for getting the forecast
     module.exports = forecast;
 ```
 
-##### Results for forecast
+#### Results for forecast
 
 > Error undefined
 > Data It is currently 9 degrees out. It is Partly cloudy and there is 0% chance of rain.
 
-### Callback Chaining
+## Callback Chaining
 
 We'll learn how to run one asynchronous operation only after another asynchronous operation is complete. That'll allow you to use the output from geocoding as the input for fetching the weather.
 
@@ -607,7 +607,7 @@ What happens if ``geocode()`` fails first? We need to add error handling so ``fo
 
 There were two options for error handling. The first is to use ``if/else`` statements but it is preferable to use an ``if`` statement to **return** the error immediately.
 
-##### Challenge
+#### Challenge
 
 Accept location via a command line argument.
 
@@ -643,25 +643,25 @@ Accept location via a command line argument.
     });
 ```
 
-##### test 1
+#### test 1
 
 node app "Sydney, NSW"
 
 > Sydney, New South Wales, Australia
 > It is currently 15 degrees out. It is Partly cloudy and there is 0.1% chance of rain.
 
-##### test 2
+#### test 2
 
 node app "London, UK"
 
 > London, Greater London, England, United Kingdom
 > It is currently 12 degrees out. It is Overcast and there is 0.1% chance of rain.
 
-### ES6 Aside: Object Property Shorthand and Destructuring
+## ES6 Aside: Object Property Shorthand and Destructuring
 
 ES6 has done wonders making JavaScript easier to use. We will explore a couple of features that make it easier to work with objects.
 
-#### Property Shorthand
+### Property Shorthand
 
 The property shorthand makes it easier to define properties when creating a new object. It provides a shortcut for defining a property whose value comes from a variable of the same name. You can see this in the example below where a user object is created. The name property gets its value from a variable also called name.
 
@@ -702,7 +702,7 @@ On the first property ``name`` we are using the ES6 object property shorthand.
 
 > { name: 'Alan', age: 68, location: 'Ballarat' }
 
-#### Object Destructuring
+### Object Destructuring
 
 The second ES6 feature is object destructuring. Object destructuring gives you a syntax for pulling properties off of objects and into standalone variables. This is useful when working with the same object properties throughout your code. Instead of writing ``user.name`` a dozen times, you could destructure the property into a name variable.
 
@@ -822,7 +822,7 @@ or we could just destructure a couple of properties.
 
 > order Red notebook 201
 
-##### Challenge
+#### Challenge
 
 Use destructuring and object property shorthand in the weather app.
 
@@ -830,7 +830,7 @@ Use destructuring and object property shorthand in the weather app.
 2. Use property shorthand in forecast.js and geocode.js.
 3. Test your work and make sure the app still works.
 
-##### app.js
+#### app.js
 
 ```
     const geocode = require('./utils/geocode');
@@ -867,7 +867,7 @@ In the ``geocode()`` call we have destructured the **data** object to,
 
 This saves us having to call each property by *data.latitude*, etc.
 
-##### geocode.js
+#### geocode.js
 
 ```
     const request = require('postman-request');
@@ -909,7 +909,7 @@ we simplify **url** property and change **response** to call the only property w
 
 We do the same changes to forecast.js.
 
-##### forecast.js
+#### forecast.js
 
 ```
     const request = require('postman-request');
@@ -939,11 +939,11 @@ We do the same changes to forecast.js.
     module.exports = forecast;
 ```
 
-### HTTP Requests Without a Library
+## HTTP Requests Without a Library
 
 While the request library is great, it's not necessary if you want to make HTTP requests from Node. We will now make an HTTP request without request.
 
-#### The HTTP Module
+### The HTTP Module
 
 Node.js provides two core modules for making HTTP requests. The http module can be used to make http requests and the https module can be used to make https requests. One great feature about **request** is that it provides a single module that can make both http and https requests.
 

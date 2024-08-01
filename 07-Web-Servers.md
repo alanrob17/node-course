@@ -1,10 +1,10 @@
-## Web Servers
+# Web Servers
 
 Node.js is commonly used as a web server to serve up websites, JSON, and more. In this
 section, you'll be creating your first Node server with Express. This will allow users to
 interact with your application by visiting a URL in the browser.
 
-### Hello Express!
+## Hello Express
 
 Serving up websites and JSON data is easy with Express. We are going to learn how to
 create our first web server with Express. Once the server is up and running, users will be
@@ -12,7 +12,7 @@ able to interact with our application via the browser.
 
 First, we are going to create a new folder.
 
-**web-server**
+### web-server
 
 Initialise the project.
 
@@ -103,7 +103,7 @@ Set up two new routes.
     });
 ```
 
-### Serving up HTML and JSON
+## Serving up HTML and JSON
 
 With the basics out of the way, it's time to serve up HTML and JSON with Express. That'll let you serve up a static website or create an HTTP REST API designed to be consumed by a web or mobile application.
 
@@ -153,7 +153,7 @@ Update Routes
     });
 ```
 
-### Serving up Static Assets
+## Serving up Static Assets
 
 Express can serve up all the assets needed for your website. This includes HTML, CSS, JavaScript, images, and more. In this lesson, you'll learn how to serve up an entire directory with Express.
 
@@ -258,7 +258,7 @@ Create two more HTML pages.
     });
 ```
 
-### Serving up CSS, JS, Images, and More
+## Serving up CSS, JS, Images, and More
 
 We will use the Express server to serve up a webpage with images, styles, and scripts.
 
@@ -281,7 +281,7 @@ All files in public are exposed via the Express server. This is where your site 
     </html>
 ```
 
-### Dynamic Pages with Templating
+## Dynamic Pages with Templating
 
 Your web pages don't have to be static. Express supports templating engines that allow you to render dynamic HTML pages. In this lesson, you'll learn how to set up the Handlebars templating engine with Express.
 
@@ -380,7 +380,7 @@ Create a template for the Help page.
     });
 ```
 
-### Customizing the Views Directory
+## Customizing the Views Directory
 
 We are going to customize the name and location of the views directory.
 
@@ -403,7 +403,7 @@ You can customize the location of the views directory by providing Express with 
     app.use(express.static(publicDirectoryPath));
 ```
 
-### Advanced Templating
+## Advanced Templating
 
 We will now learn how to work with Handlebars partials. As the name suggests, partials are just part of a web page. Partials are great for things you need to show on multiple pages like headers, footers, and navigation bars.
 
@@ -546,7 +546,7 @@ Create a partial for the footer.
     </body>
 ```
 
-### 404 Pages
+## 404 Pages
 
 We will now set up a 404 page. The 404 page will show when a user tries to visit a page that doesn't exist.
 
@@ -554,7 +554,7 @@ We will now set up a 404 page. The 404 page will show when a user tries to visit
 
 Express has support for ``*`` in route paths. This is a special character which matches anything. This can be used to create a route handler that matches all requests. The 404 page should be set up just before the call to **app.listen**. This ensures that requests for valid pages still get the correct response.
 
-### Accessing API from Browser
+## Accessing API from Browser
 
 #### Section Intro
 
@@ -635,7 +635,7 @@ Update weather endpoint to accept address
 
 > { "address": "Melbourne" }
 
-### Building a JSON HTTP Endpoint
+## Building a JSON HTTP Endpoint
 
 The weather application already has the code in place to fetch the weather for a given address. we are going to wire up the route handler to fetch the weather and send it back to the browser.
 
@@ -695,7 +695,7 @@ Wire up weather
 > "address": "Ballarat, Vic"
 > }
 
-### ES6 Aside: Default Function Parameters
+## ES6 Aside: Default Function Parameters
 
 ES6 provides a new syntax to set default values for function arguments. we will use this new syntax to improve and clean up the application code.
 
@@ -744,7 +744,6 @@ The code above doesn't cause an exception error.
 
 We can now use the default syntax in our *web-server* application. If we run the app with the following.
 
-
 ```
     http://localhost:3000/weather?address=!
 ```
@@ -761,7 +760,7 @@ We can fix this by adding an empty default object.
     geocode(req.query.address, (error, { latitude, longitude, location } = {}) => {
 ```
 
-### Browser HTTP Requests with Fetch
+## Browser HTTP Requests with Fetch
 
 In this lesson, you'll learn how to make HTTP AJAX requests from the browser. This will allow the web application to request the forecast from the Node.js server.
 
@@ -800,7 +799,7 @@ to either print the forecast or the error message.
 
 **Note:** The fetch API will not work in Node.js. We need to use it in a page script file.
 
-### Creating a Search Form
+## Creating a Search Form
 
 We can now set up the weather search form. This will allow a visitor to type in a location, click submit and then see their real time information.
 
@@ -851,7 +850,7 @@ We can now set up the weather search form. This will allow a visitor to type in 
     });
 ```
 
-### Wiring up the User Interface
+## Wiring up the User Interface
 
 Now, we will learn how to manipulate the text content of HTML elements from JavaScript. That will allow the weather application to render the forecast data to the browser instead of the console.
 
@@ -946,4 +945,3 @@ Rendering content to paragraphs.
         padding: 8px;
     }
 ```
-

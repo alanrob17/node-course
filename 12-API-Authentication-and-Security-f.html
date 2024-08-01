@@ -38,6 +38,12 @@ blockquote {
     padding-left: 1rem;
     page-break-inside: avoid;
 }
+:target:before {
+  content: "";
+  display: block;
+  height: 80px; /* adjust this value to your needs */
+  margin: -80px 0 0; /* this should be a negative value of the height above */
+}
 </style>
 </head>
 <body>
@@ -68,13 +74,13 @@ blockquote {
 <div class="container">
     <div class="starter-template">
 
-<h2 id="api-authentication-and-security">API Authentication and Security</h2>
-<h3 id="securely-storing-passwords-part-i">Securely Storing Passwords: Part I</h3>
+<h1 id="api-authentication-and-security">API Authentication and Security</h1>
+<h2 id="securely-storing-passwords-part-i">Securely Storing Passwords: Part I</h2>
 <p>We are going to learn how to securely store user passwords by hashing and salting the password before storing it in the database.</p>
-<h4 id="hashing-passwords">Hashing Passwords</h4>
+<h3 id="hashing-passwords">Hashing Passwords</h3>
 <p>Storing plain text passwords is a bad idea. Most folks reuse passwords for multiple accounts online. That means if your database gets compromised, the hacker can reuse those credentials on other sites such as credit cards or bank accounts. We don't want to leave our users open to further attacks.</p>
 <p>The solution is to hash passwords using a secure one-way hashing algorithm. Users passwords will stay hidden and secure, even if the database is compromised.</p>
-<h4 id="hashing-passwords-with-bcrypt">Hashing Passwords with Bcrypt</h4>
+<h3 id="hashing-passwords-with-bcrypt">Hashing Passwords with Bcrypt</h3>
 <p>First up, install the library.</p>
 <pre class="prettyprint">npm i bcryptjs
 </pre>
@@ -133,9 +139,9 @@ $2a$08$9pHmqFNVD37bB1H2gDKzPOePz9W6tGuOtnLVrpLXjY0j/.jAtsIna</p>
 <blockquote>
 <p>Passwords matched!</p>
 </blockquote>
-<h3 id="securely-storing-passwords-part-ii">Securely Storing Passwords: Part II</h3>
+<h2 id="securely-storing-passwords-part-ii">Securely Storing Passwords: Part II</h2>
 <p>We are now going to learn how to use Mongoose middleware. Middleware will allow you to automatically hash a user's password before the user is saved to the database.</p>
-<h4 id="mongoose-middleware">Mongoose Middleware</h4>
+<h3 id="mongoose-middleware">Mongoose Middleware</h3>
 <p>Middleware allows you to register some code to run before or after a lifecycle event for your model. As an example, you could use middleware to register some code to run just after a user is deleted. You could also use middleware to register some code to run just before the user is saved. This can be used to hash passwords just before saving users to
 the database.</p>
 <p>The example below calls <strong>pre</strong> with the <code>'save'</code> lifecycle event. This registers a function to run just before users are saved. The function itself checks if the password has been altered. If the password has been altered, the plain text password is overwritten with a hashed version.</p>
@@ -291,9 +297,9 @@ the database.</p>
 <li>Test your work by updating a task in Postman.</li>
 </ol>
 <p><img src="assets/images/postman-update-task-middleware.jpg" alt="Postman Update task to allow for middleware" title="Postman Update task to allow for middleware"></p>
-<h3 id="logging-in-users">Logging in Users</h3>
+<h2 id="logging-in-users">Logging in Users</h2>
 <p>We need the ability for users to log into their existing accounts.</p>
-<h4 id="logging-in-users">Logging in Users</h4>
+<h3 id="logging-in-users">Logging in Users</h3>
 <p>Logging in a user is a two-step process. The user provides their email and password, and the first thing to do is fetch the user by their email. From there, bcrypt is used to verify the password provided matches the hashed password stored in the database. If either step fails, the users won't be able to log in. If both steps succeed, then you know the user is
 who they say they are.</p>
 <p>We need to create a route that allows a user to enter their credentials and then validate that they are indeed that user.</p>
@@ -357,9 +363,9 @@ tulsa@123</p>
 </blockquote>
 <p>In Postman I run the user login with the credentials above and I get.</p>
 <p><img src="assets/images/postman-successful-login.jpg" alt="Postman successful login" title="Postman successful login"></p>
-<h3 id="json-web-tokens">JSON Web Tokens</h3>
+<h2 id="json-web-tokens">JSON Web Tokens</h2>
 <p>We are now going to explore JWT's (JSON Web Tokens). JWT's provide a nice system for issuing and validating authentication tokens. The authentication token will ensure that the client doesn't need to log in every time they want to perform an operation on the server.</p>
-<h4 id="json-web-tokens">JSON Web Tokens</h4>
+<h3 id="json-web-tokens">JSON Web Tokens</h3>
 <p>First up, install the library.</p>
 <pre class="prettyprint">    npm i jsonwebtoken
 </pre>
@@ -407,9 +413,9 @@ tulsa@123</p>
 <p>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxMjM0IiwiaWF0IjoxNTkyODgwMDIzfQ.eeb2SR1IGZtXnox-tiRPgKEmtQG0IZoVvx52D1o0Kf4<br>
 { _id: '1234', iat: 1592880023 }</p>
 </blockquote>
-<h3 id="generating-authentication-tokens">Generating Authentication Tokens</h3>
+<h2 id="generating-authentication-tokens">Generating Authentication Tokens</h2>
 <p>We are now going to integrate JWT's into the application. This will allow the app to issue an authentication token when a user signs up or logs in.</p>
-<h4 id="generating-and-storing-auth-tokens">Generating and Storing Auth Tokens</h4>
+<h3 id="generating-and-storing-auth-tokens">Generating and Storing Auth Tokens</h3>
 <p>Authentication tokens for a user can be stored in the database. This provides a way for users to log out. All generated authentication tokens will be stored as part of the user
 profile. If a user logs out, that token will be removed from the user profile. A token would only be considered valid if it's a valid JWT and it's still stored as part of the user profile. A
 user could be logged out of all sessions by simply deleting all the tokens stored in their user profile.</p>
@@ -526,12 +532,12 @@ user could be logged out of all sessions by simply deleting all the tokens store
         &quot;__v&quot; : 0
     }
 </pre>
-<h3 id="express-middleware">Express Middleware</h3>
+<h2 id="express-middleware">Express Middleware</h2>
 <p>We are now going to explore Express middleware. When working with middleware, you'll have more control over how your server processes requests. This will be used to check that a user is authenticated before performing specific operations.</p>
 <p><a href="http://expressjs.com/th/guide/using-middleware.html" title="Express Middleware web page">Express Middleware web page</a>.</p>
-<h4 id="exploring-express-middleware">Exploring Express Middleware</h4>
+<h3 id="exploring-express-middleware">Exploring Express Middleware</h3>
 <p>Express middleware is nothing more than a function that runs as Express handles a given request. You can customize the function to do whatever you want it to do, and you can have it run whenever you want it to.</p>
-<h4 id="how-middleware-works">How middleware works</h4>
+<h3 id="how-middleware-works">How middleware works</h3>
 <blockquote>
 <p>Without middleware --&gt; new request --&gt; run route handler</p>
 <p>With middleware --&gt; new request --&gt; do something --&gt; run route handler</p>
@@ -545,7 +551,7 @@ user could be logged out of all sessions by simply deleting all the tokens store
 <p>Register your function as middleware for the application.</p>
 <pre class="prettyprint">    app.use(loggerMiddleware);
 </pre>
-<h4 id="a-middleware-function-for-task-app">A middleware function for Task app</h4>
+<h3 id="a-middleware-function-for-task-app">A middleware function for Task app</h3>
 <p>This function is going to be used in <strong>index.js</strong>. It <strong>must</strong> be placed before all other <code>app.use()</code> statements.</p>
 <pre class="prettyprint">    app.use((req, resp, next) =&gt; {
         console.log(req.method, req.path);
@@ -597,9 +603,9 @@ user could be logged out of all sessions by simply deleting all the tokens store
 <p>This results in the following Postman message.</p>
 <p><img src="assets/images/postman-site-down.jpg" alt="Postman Site is down message" title="Postman Site is down message"></p>
 <p>These middleware requests will run for every route handler and we can also create middleware for specific requests only.</p>
-<h3 id="accepting-authentication-tokens">Accepting Authentication Tokens</h3>
+<h2 id="accepting-authentication-tokens">Accepting Authentication Tokens</h2>
 <p>Now we can use Express middleware to put specific routes behind authentication. That will require the client to be authenticated before the operation can be performed.</p>
-<h4 id="accepting-and-validating-tokens">Accepting and Validating Tokens</h4>
+<h3 id="accepting-and-validating-tokens">Accepting and Validating Tokens</h3>
 <p>The goal of the authentication middleware is to validate the authentication token and then fetch the profile for that user.<strong>auth</strong> below shows how you can get this done. Notice that the user profile is added onto <strong>req.user</strong>. This allows route handler functions to access the user profile without needing to fetch it again.</p>
 <p>To do this we are going to create a new folder named middleware in src. We will create a new file for each piece of middleware for each task we create. In our case <code>auth.js</code> will be used for authentication.</p>
 <p>We are going to add <strong>auth</strong> to the GET users route handler, i.e. you have to be authenticated to use this route handler.</p>
@@ -684,10 +690,10 @@ user could be logged out of all sessions by simply deleting all the tokens store
 <p>Now, we can test this out again in Postman but first let's rename the request to <strong>Read profile</strong>.</p>
 <p><img src="assets/images/postman-read-profile.jpg" alt="Postman Read profile" title="Postman Read profile">;</p>
 <p>Now as you can see it is only sending the authorised users profile information.</p>
-<h3 id="advanced-postman">Advanced Postman</h3>
+<h2 id="advanced-postman">Advanced Postman</h2>
 <p>Postman has environment variables and we can use these to swap out our localhost variable for our live web address when we deploy our API to Heroku.</p>
-<h4 id="local-environment">Local environment</h4>
-<h4 id="create-url-variable">Create url variable</h4>
+<h3 id="local-environment">Local environment</h3>
+<h3 id="create-url-variable">Create url variable</h3>
 <p>We can create a local environment to keep variables for that environment.</p>
 <p>We will create a <strong>url</strong> variable with a value of <em>localhost:3000</em>.</p>
 <p><img src="assets/images/postman-local-environment.jpg" alt="Postman Local environment" title="Postman Local environment">;</p>
@@ -706,7 +712,7 @@ user could be logged out of all sessions by simply deleting all the tokens store
 <p>Now click on <strong>Edit</strong> Task collection and click on the <strong>Authorization</strong> tab and then select <strong>Bearer Token</strong>. Once again add your token in here. Go back to <strong>Read profile</strong> and try to read the user's profile. If this works you know that you have set it up properly.</p>
 <p>Both <em>Create user</em> and <em>Login user</em> don't require authorization so open both of those tabs up and set <strong>Authorization</strong> to <strong>No Auth</strong>.</p>
 <p>All of the other logins are set to <strong>Inherit auth from parent</strong> which is what we require.</p>
-<h4 id="create-authtoken-to-automate-authorization-process">Create authToken to automate authorization process</h4>
+<h3 id="create-authtoken-to-automate-authorization-process">Create authToken to automate authorization process</h3>
 <p>We can also automate the one manual task that we do and we can do this with a bit of JavaScript. That is every time we want to authenticate a user we have to add their token into the collection.</p>
 <p>Go back to Edit the Task App collection and click on the <strong>Authorization</strong> tab. Remove the token and replace it with <code>{{authToken}}</code>.</p>
 <p>Go back to the <strong>Login user</strong> request and click on the <strong>Tests</strong> tab. Type the following code into the edit box.</p>
@@ -733,7 +739,7 @@ user could be logged out of all sessions by simply deleting all the tokens store
 </pre>
 <p>We set the status to 201 which is the code we get back for saving a user and knowing that things went well.</p>
 <p>We have now got a completely automated setup and the only thing we have to do is login once and all of the other routes that need authorization will use the token from the current logged in user.</p>
-<h3 id="logging-out">Logging Out</h3>
+<h2 id="logging-out">Logging Out</h2>
 <p>We are now going to create a way for users to log out of the app. We can do this with a new route.</p>
 <p>This route will require authentication to logout.</p>
 <p>We have to make a minor addition to <strong>auth.js</strong></p>
@@ -814,9 +820,9 @@ user could be logged out of all sessions by simply deleting all the tokens store
 }</p>
 </blockquote>
 <p>This means that we have logged the user out of all current logins.</p>
-<h3 id="hiding-private-data">Hiding Private Data</h3>
+<h2 id="hiding-private-data">Hiding Private Data</h2>
 <p>We need to limit what data gets sent to the client. This will allow us to hide authentication tokens and hashed passwords from server responses.</p>
-<h4 id="hiding-private-data">Hiding Private Data</h4>
+<h3 id="hiding-private-data">Hiding Private Data</h3>
 <p>When a Mongoose document is passed to <code>res.send</code>, Mongoose converts the object into JSON. You can customize this by adding <code>toJSON</code> as a method on the object. The method below removes the <strong>password</strong> and <strong>tokens</strong> properties before sending the response back.</p>
 <pre class="prettyprint">    userSchema.methods.toJSON = function () {
         const user = this;
@@ -832,7 +838,7 @@ user could be logged out of all sessions by simply deleting all the tokens store
 <p><img src="assets/images/postman-hide-data.jpg" alt="Postman Hide current user data" title="Postman Hide current user data">;</p>
 <p>If I go to the <strong>Read profile</strong> request I can see that I am also hiding data here as well.</p>
 <p><img src="assets/images/postman-read-profile-hide-data.jpg" alt="Postman Read profile also hides data" title="Postman Read profile also hides data">;</p>
-<h3 id="authenticating-user-endpoints">Authenticating User Endpoints</h3>
+<h2 id="authenticating-user-endpoints">Authenticating User Endpoints</h2>
 <p>We are now going to add authentication to the other user endpoints.</p>
 <p>The first thing we need to do is remove the following route handler.</p>
 <pre class="prettyprint">    router.get('/users/:id', async (req, res) =&gt; {
@@ -906,9 +912,9 @@ user could be logged out of all sessions by simply deleting all the tokens store
 <p>PATCH /users/me</p>
 </blockquote>
 <p>Make sure Authorization is set to <em>inherit auth from parent</em>.</p>
-<h3 id="the-usertask-relationship">The User/Task Relationship</h3>
+<h2 id="the-usertask-relationship">The User/Task Relationship</h2>
 <p>We need to create a relationship between a user and tasks. This will make it possible to know which tasks a user created.</p>
-<h4 id="mongoose-relationships">Mongoose Relationships</h4>
+<h3 id="mongoose-relationships">Mongoose Relationships</h3>
 <p>To set up the relationship, both the user and task model will be changed. First up, a new field needs to be added onto the task. This will store the ID of the user who created it.</p>
 <h5 id="srcmodelstaskjs">/src/models/task.js</h5>
 <pre class="prettyprint">'use strict';
@@ -1028,7 +1034,7 @@ owner: 5ef6cac296c9c94198cd0b16,<br>
 __v: 0 } ]</p>
 </blockquote>
 <p>We have created a couple of temporary functions in index.js and now we need to add these to our API.</p>
-<h3 id="authenticating-task-endpoints">Authenticating Task Endpoints</h3>
+<h2 id="authenticating-task-endpoints">Authenticating Task Endpoints</h2>
 <p>We need to add authentication to our final four task endpoints.</p>
 <p>The first task endpoint to change is the <em>Read a task</em> by id. We have to make sure they are authenticated and that the task they want to fetch is one that they created.</p>
 <pre class="prettyprint">    router.get('/tasks/:id', auth, async (req, res) =&gt; {
@@ -1148,9 +1154,9 @@ __v: 0 } ]</p>
 <p><img src="assets/images/postman-delete-user-task.jpg" alt="Postman User deletes a task they created." title="Postman User deletes a task they created.">;</p>
 <p>I was able to successfully delete a task that I had created.</p>
 <p>I now try to delete a task created by another user _id. I end up getting a 404 error as I expected.</p>
-<h3 id="cascade-delete-tasks">Cascade Delete Tasks</h3>
+<h2 id="cascade-delete-tasks">Cascade Delete Tasks</h2>
 <p>We will now use Mongoose middleware to clean up a user's tasks when they close their account. This will make sure that all their data is securely removed from the database.</p>
-<h4 id="deleting-a-users-tasks">Deleting a User's Tasks</h4>
+<h3 id="deleting-a-users-tasks">Deleting a User's Tasks</h3>
 <p>The middleware function below is registered using <strong>pre</strong>. It will run just before <code>remove</code> fires for the user. The function itself deletes all tasks created by that user. Now when a user closes their account, their other data will get deleted too.</p>
 <pre class="prettyprint">    const Task = require('./task');
 

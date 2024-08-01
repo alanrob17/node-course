@@ -1,6 +1,6 @@
-## File System and Command Line Arguments
+# File System and Command Line Arguments
 
-### Getting Input from Users
+## Getting Input from Users
 
 I can't think of a single useful application that doesn't get input from the users. Whether it's
 their email, location, or age, getting input is essential for creating real-world apps. We need to learn how to set up command line arguments that allow users to pass data into our application.
@@ -63,7 +63,7 @@ Run again.
 > $ node app remove
 > Removing note...
 
-### Argument Parsing with Yargs - Part 1
+## Argument Parsing with Yargs - Part 1
 
 Node.js provides a bare-bones way to access command line arguments. While it's a good start, it doesn't provide any way to parse more complex command line arguments. We are going to use Yargs to easily set up a more complex set of arguments for
 your application.
@@ -255,7 +255,7 @@ Now run the help command.
 >   app list    List all notes.
 >   app read    read current note.
 
-### Argument Parsing with Yargs - Part II
+## Argument Parsing with Yargs - Part II
 
 We will continue to explore Yargs. The goal is to allow users to pass in the title and body of their notes using command line options. This same technique could be used to allow users to pass in data such as their name, email, or address.
 
@@ -463,7 +463,7 @@ Run.
 >
 > Missing required argument: body
 
-### Storing Data with JSON
+## Storing Data with JSON
 
 We need to learn how to work with JSON. JSON, which stands for JavaScript Object Notation, is a lightweight data format. JSON makes it easy to store or transfer data. 
 
@@ -593,7 +593,7 @@ Run.
 
 > {"name":"Alan","planet":"Mars","age":68}
 
-### Adding a note
+## Adding a note
 
 ##### app.js
 
@@ -697,7 +697,7 @@ This is how we export multiple functions from this file to be used in other Java
 
 In the ``addNote()`` function we are checking the title field for duplicate titles. If one is found we are going to ignore it. We filter through the existing notes to see if the title already exists in the notes.json.
 
-### Removing a note
+## Removing a note
 
 ##### Challenge
 
@@ -749,7 +749,7 @@ Setup command option and function
 
 In *notes.js* we are going to select all of the notes that don't match the title we want to remove. Once we get these we can save the notes and the note that we wanted to remove will be left out of *notes.json*.
 
-### More notes on arrow functions
+## More notes on arrow functions
 
 We are going to create an object with a standard function.
 

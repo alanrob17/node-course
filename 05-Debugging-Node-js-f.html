@@ -38,6 +38,12 @@ blockquote {
     padding-left: 1rem;
     page-break-inside: avoid;
 }
+:target:before {
+  content: "";
+  display: block;
+  height: 80px; /* adjust this value to your needs */
+  margin: -80px 0 0; /* this should be a negative value of the height above */
+}
 </style>
 </head>
 <body>
@@ -68,30 +74,29 @@ blockquote {
 <div class="container">
     <div class="starter-template">
 
-
-<h2 class="code-line" data-line-start=0 data-line-end=1><a id="Debugging_Nodejs_0"></a>Debugging Node.js</h2>
-<p class="has-line-data" data-line-start="2" data-line-end="3">Node comes with a great set of tools for getting to the bottom of any bug or programming issue.</p>
-<h3 class="code-line" data-line-start=4 data-line-end=5><a id="Consolelog_4"></a>Console.log</h3>
-<p class="has-line-data" data-line-start="6" data-line-end="7">While it's nice to have advanced debugging tools at the ready, there's nothing wrong with using <strong>console.log</strong> to debug your application. It's not the fanciest technique, but it works.</p>
-<p class="has-line-data" data-line-start="8" data-line-end="9">When in doubt, use a few calls to <strong>console.log</strong> to figure out what's going on. It's great for dumping a variable to the terminal so you can check its value. It also works for figuring out what order your code is running in.</p>
-<h3 class="code-line" data-line-start=10 data-line-end=11><a id="Node_Debugger_10"></a>Node Debugger</h3>
-<p class="has-line-data" data-line-start="12" data-line-end="13">Printing values to the console with <strong>console.log</strong> is a good start, but there are often times where we need a more complete debugging solution. For that, Node.js ships with a built-in debugger. It builds off of the developer tools that Chrome and V8 use when debugging JavaScript code in the browser.</p>
-<p class="has-line-data" data-line-start="14" data-line-end="15">Start your application with inspect to use the debugger.</p>
-<pre class="prettyprint">    node inspect app.js
-</pre>
-<p class="has-line-data" data-line-start="20" data-line-end="21">This isn't working in Windows at the moment, use this instead.</p>
-<pre class="prettyprint">    node --inspect-brk app.js
-</pre>
-<p class="has-line-data" data-line-start="26" data-line-end="27">Next, visit <strong>chrome://inspect</strong> in the Chrome browser. There, you'll see a list of all the Node.js processes that you're able to debug. Click "inspect" next to your Node.js process to open up the developer tools. From there, you can click the blue "play" button near the top-right of the "sources" tab to start up the application.</p>
-<p class="has-line-data" data-line-start="28" data-line-end="29">When running the app in debug mode, you can add breakpoints into your application to stop it at a specific point in the code. This gives you a chance to explore the application state and figure out what's going wrong.</p>
-<pre class="prettyprint">    console.log('Thing one');
+<h1 id="debugging-nodejs">Debugging Node.js</h1>
+<p>Node comes with a great set of tools for getting to the bottom of any bug or programming issue.</p>
+<h2 id="consolelog">Console.log</h2>
+<p>While it's nice to have advanced debugging tools at the ready, there's nothing wrong with using <strong>console.log</strong> to debug your application. It's not the fanciest technique, but it works.</p>
+<p>When in doubt, use a few calls to <strong>console.log</strong> to figure out what's going on. It's great for dumping a variable to the terminal so you can check its value. It also works for figuring out what order your code is running in.</p>
+<h2 id="node-debugger">Node Debugger</h2>
+<p>Printing values to the console with <strong>console.log</strong> is a good start, but there are often times where we need a more complete debugging solution. For that, Node.js ships with a built-in debugger. It builds off of the developer tools that Chrome and V8 use when debugging JavaScript code in the browser.</p>
+<p>Start your application with inspect to use the debugger.</p>
+<pre class="prettyprint"><code><div>    node inspect app.js
+</div></code></pre>
+<p>This isn't working in Windows at the moment, use this instead.</p>
+<pre class="prettyprint"><code><div>    node --inspect-brk app.js
+</div></code></pre>
+<p>Next, visit <strong>chrome://inspect</strong> in the Chrome browser. There, you'll see a list of all the Node.js processes that you're able to debug. Click &quot;inspect&quot; next to your Node.js process to open up the developer tools. From there, you can click the blue &quot;play&quot; button near the top-right of the &quot;sources&quot; tab to start up the application.</p>
+<p>When running the app in debug mode, you can add breakpoints into your application to stop it at a specific point in the code. This gives you a chance to explore the application state and figure out what's going wrong.</p>
+<pre class="prettyprint"><code><div>    console.log('Thing one');
 
     debugger; // Debug tools will pause here until your click play again
 
     console.log('Thing two');
-</pre>
-<p class="has-line-data" data-line-start="38" data-line-end="39"><img src="assets/images/debugging.jpg" alt="Chrome debugging tools" title="Chrome debugging tools"></p>
-<p class="has-line-data" data-line-start="40" data-line-end="41"><strong>Note:</strong> To get the <strong>console</strong> open you press the <code>escape</code> key.</p>
+</div></code></pre>
+<p><img src="assets/images/debugging.jpg" alt="Chrome debugging tools" title="Chrome debugging tools"></p>
+<p><strong>Note:</strong> To get the <strong>console</strong> open you press the <code>escape</code> key.</p>
 
 
 

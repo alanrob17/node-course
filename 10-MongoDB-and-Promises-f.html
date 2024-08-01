@@ -38,6 +38,12 @@ blockquote {
     padding-left: 1rem;
     page-break-inside: avoid;
 }
+:target:before {
+  content: "";
+  display: block;
+  height: 80px; /* adjust this value to your needs */
+  margin: -80px 0 0; /* this should be a negative value of the height above */
+}
 </style>
 </head>
 <body>
@@ -68,59 +74,58 @@ blockquote {
 <div class="container">
     <div class="starter-template">
 
-
-<h2 class="code-line" data-line-start=0 data-line-end=1><a id="MongoDB_and_Promises_0"></a>MongoDB and Promises</h2>
-<h3 class="code-line" data-line-start=2 data-line-end=3><a id="Mongo_database_terminology_2"></a>Mongo database terminology</h3>
-<p class="has-line-data" data-line-start="4" data-line-end="5"><img src="assets/images/no-sql-database-terminology.jpg" alt="MongoDB Terminology" title="MongoDB Terminology"></p>
-<p class="has-line-data" data-line-start="6" data-line-end="7">In MongoDB:</p>
-<p class="has-line-data" data-line-start="8" data-line-end="9">A table is called a <code>collection</code>.</p>
-<p class="has-line-data" data-line-start="10" data-line-end="11">A row or record is called a <code>document</code>.</p>
-<p class="has-line-data" data-line-start="12" data-line-end="13">A column is called a <code>field</code>.</p>
-<h3 class="code-line" data-line-start=14 data-line-end=15><a id="Installing_MongoDB_on_Windows_14"></a>Installing MongoDB on Windows</h3>
-<p class="has-line-data" data-line-start="16" data-line-end="17">We will install MongoDB on Windows.</p>
-<p class="has-line-data" data-line-start="18" data-line-end="19">You can download the MongoDB Community Server from the MongoDB download page.</p>
-<p class="has-line-data" data-line-start="20" data-line-end="21"><a href="https://www.mongodb.com/try/download/community" title="MongoDB Community Server">MongoDB Community Server</a></p>
-<p class="has-line-data" data-line-start="22" data-line-end="23">This uses an installer and you can select the folder that you want to store your data in.</p>
-<p class="has-line-data" data-line-start="24" data-line-end="25">My data folder is:</p>
-<pre class="prettyprint">    d:\MongoDB\Data
-</pre>
-<p class="has-line-data" data-line-start="30" data-line-end="31">This installation automatically starts the server as a service and always runs on your PC.</p>
-<h3 class="code-line" data-line-start=32 data-line-end=33><a id="Installing_Database_GUI_Viewer_32"></a>Installing Database GUI Viewer</h3>
-<p class="has-line-data" data-line-start="34" data-line-end="35">Robo 3T is a MongoDB admin tool that makes it easy to manage and visualize the data in your database.</p>
-<p class="has-line-data" data-line-start="36" data-line-end="37">Robo 3T is a completely free MongoDB admin tool. Grab the installer from here and get it installed on your machine.</p>
-<p class="has-line-data" data-line-start="38" data-line-end="39"><a href="https://robomongo.org/download" title="Rbo 3T Admin Tool">Robo 3T Admin Tool</a></p>
-<p class="has-line-data" data-line-start="40" data-line-end="41"><img src="assets/images/robo-3t.jpg" alt="Robo 3T settings" title="Robo 3T settings"></p>
-<p class="has-line-data" data-line-start="42" data-line-end="43"><strong>Note</strong> The default port for MongoDB is <strong>27017</strong>.</p>
-<p class="has-line-data" data-line-start="44" data-line-end="45">To open a shell you can <code>right-click</code> on the connection you created (MongoDB Database) and select <strong>Open Shell</strong>.</p>
-<p class="has-line-data" data-line-start="46" data-line-end="47"><img src="assets/images/open-shell.jpg" alt="Open database shell" title="Open database shell"></p>
-<p class="has-line-data" data-line-start="48" data-line-end="49">This allows you to enter a query.</p>
-<pre class="prettyprint">    db.version()
-</pre>
-<p class="has-line-data" data-line-start="54" data-line-end="55">Will show you your database version number.</p>
+<h1 id="mongodb-and-promises">MongoDB and Promises</h1>
+<h2 id="mongo-database-terminology">Mongo database terminology</h2>
+<p><img src="assets/images/no-sql-database-terminology.jpg" alt="MongoDB Terminology" title="MongoDB Terminology"></p>
+<p>In MongoDB:</p>
+<p>A table is called a <code>collection</code>.</p>
+<p>A row or record is called a <code>document</code>.</p>
+<p>A column is called a <code>field</code>.</p>
+<h2 id="installing-mongodb-on-windows">Installing MongoDB on Windows</h2>
+<p>We will install MongoDB on Windows.</p>
+<p>You can download the MongoDB Community Server from the MongoDB download page.</p>
+<p><a href="https://www.mongodb.com/try/download/community" title="MongoDB Community Server">MongoDB Community Server</a></p>
+<p>This uses an installer and you can select the folder that you want to store your data in.</p>
+<p>My data folder is:</p>
+<pre class="prettyprint"><code><div>    d:\MongoDB\Data
+</div></code></pre>
+<p>This installation automatically starts the server as a service and always runs on your PC.</p>
+<h2 id="installing-database-gui-viewer">Installing Database GUI Viewer</h2>
+<p>Robo 3T is a MongoDB admin tool that makes it easy to manage and visualize the data in your database.</p>
+<p>Robo 3T is a completely free MongoDB admin tool. Grab the installer from here and get it installed on your machine.</p>
+<p><a href="https://robomongo.org/download" title="Rbo 3T Admin Tool">Robo 3T Admin Tool</a></p>
+<p><img src="assets/images/robo-3t.jpg" alt="Robo 3T settings" title="Robo 3T settings"></p>
+<p><strong>Note</strong> The default port for MongoDB is <strong>27017</strong>.</p>
+<p>To open a shell you can <code>right-click</code> on the connection you created (MongoDB Database) and select <strong>Open Shell</strong>.</p>
+<p><img src="assets/images/open-shell.jpg" alt="Open database shell" title="Open database shell"></p>
+<p>This allows you to enter a query.</p>
+<pre class="prettyprint"><code><div>    db.version()
+</div></code></pre>
+<p>Will show you your database version number.</p>
 <blockquote>
-<p class="has-line-data" data-line-start="56" data-line-end="57">4.2.7</p>
+<p>4.2.7</p>
 </blockquote>
-<p class="has-line-data" data-line-start="58" data-line-end="59">This confirms MongoDB and Robo 3&amp; are working correctly.</p>
-<p class="has-line-data" data-line-start="60" data-line-end="61">When we are working with MongoDB in Robo 3T we are querying in JavaScript.</p>
-<h3 class="code-line" data-line-start=62 data-line-end=63><a id="Connecting_and_Inserting_Documents_62"></a>Connecting and Inserting Documents</h3>
-<p class="has-line-data" data-line-start="64" data-line-end="65">Now we are going to connect to our MongoDB database from our Node.js application. We will learn how to insert documents into the database to save them for later.</p>
-<h3 class="code-line" data-line-start=66 data-line-end=67><a id="Connecting_to_MongoDB_66"></a>Connecting to MongoDB</h3>
-<p class="has-line-data" data-line-start="68" data-line-end="69">MongoDB provides a native driver that allows you to connect to your database from Node. You can grab the driver by installing the mongodb npm module as shown below.</p>
-<pre class="prettyprint">    npm i mongodb
-</pre>
-<p class="has-line-data" data-line-start="74" data-line-end="75">The document for this are at:</p>
-<p class="has-line-data" data-line-start="76" data-line-end="77"><a href="https://mongodb.github.io/node-mongodb-native/3.1/api/" title="Node MongoDB documentation">Node MongoDB documentation</a></p>
-<p class="has-line-data" data-line-start="78" data-line-end="79">Create a new folder <strong>task-manager</strong> and navigate to that folder.</p>
-<p class="has-line-data" data-line-start="80" data-line-end="81">Run.</p>
-<pre class="prettyprint">    npm i mongodb
-</pre>
-<p class="has-line-data" data-line-start="86" data-line-end="87">Now, initialise the project.</p>
-<pre class="prettyprint">    npm init -y
-</pre>
-<p class="has-line-data" data-line-start="92" data-line-end="93">With the driver installed, you can use the following code to connect to the database. You just need to provide two pieces of information. The first is the connection URL and the second is the name of the database. You can pick any database name that you like.</p>
-<h3 class="code-line" data-line-start=94 data-line-end=95><a id="Inserting_a_Document_94"></a>Inserting a Document</h3>
-<p class="has-line-data" data-line-start="96" data-line-end="97">With the connection open, you’re ready to insert documents into the database. Remember that a database is made up of collections, and collections are used to store documents. The code below inserts a new document into the "users" collection. db.collection is used to get a reference to the collection you’re trying to manipulate. <strong>insertOne</strong> is used to insert a new document into that collection.</p>
-<pre class="prettyprint">    const mongodb = require('mongodb');
+<p>This confirms MongoDB and Robo 3&amp; are working correctly.</p>
+<p>When we are working with MongoDB in Robo 3T we are querying in JavaScript.</p>
+<h2 id="connecting-and-inserting-documents">Connecting and Inserting Documents</h2>
+<p>Now we are going to connect to our MongoDB database from our Node.js application. We will learn how to insert documents into the database to save them for later.</p>
+<h2 id="connecting-to-mongodb">Connecting to MongoDB</h2>
+<p>MongoDB provides a native driver that allows you to connect to your database from Node. You can grab the driver by installing the mongodb npm module as shown below.</p>
+<pre class="prettyprint"><code><div>    npm i mongodb
+</div></code></pre>
+<p>The document for this are at:</p>
+<p><a href="https://mongodb.github.io/node-mongodb-native/3.1/api/" title="Node MongoDB documentation">Node MongoDB documentation</a></p>
+<p>Create a new folder <strong>task-manager</strong> and navigate to that folder.</p>
+<p>Run.</p>
+<pre class="prettyprint"><code><div>    npm i mongodb
+</div></code></pre>
+<p>Now, initialise the project.</p>
+<pre class="prettyprint"><code><div>    npm init -y
+</div></code></pre>
+<p>With the driver installed, you can use the following code to connect to the database. You just need to provide two pieces of information. The first is the connection URL and the second is the name of the database. You can pick any database name that you like.</p>
+<h2 id="inserting-a-document">Inserting a Document</h2>
+<p>With the connection open, you're ready to insert documents into the database. Remember that a database is made up of collections, and collections are used to store documents. The code below inserts a new document into the &quot;users&quot; collection. db.collection is used to get a reference to the collection you're trying to manipulate. <strong>insertOne</strong> is used to insert a new document into that collection.</p>
+<pre class="prettyprint"><code><div>    const mongodb = require('mongodb');
 
     const MongoClient = mongodb.MongoClient;
 
@@ -140,22 +145,22 @@ blockquote {
             age: 68
         });
     });
-</pre>
-<p class="has-line-data" data-line-start="121" data-line-end="122">Run this script and to ensure that our data was inserted correctly we go back to Robo 3T and right click on our connection name and click on the <strong>Refresh</strong> tab. This should now show our database named <strong>task-manager</strong>.</p>
-<p class="has-line-data" data-line-start="123" data-line-end="124"><img src="assets/images/users-collection.jpg" alt="Users collection" title="Users collection"></p>
-<p class="has-line-data" data-line-start="125" data-line-end="126">We can query inside the <code>task-manager</code> database.</p>
-<pre class="prettyprint">    db.getCollection('users').find({})
-</pre>
-<p class="has-line-data" data-line-start="131" data-line-end="132">In the image above we see a table mode view. We can also select a text view and this will show you the document we inserted.</p>
-<pre class="prettyprint">    /* 1 */
+</div></code></pre>
+<p>Run this script and to ensure that our data was inserted correctly we go back to Robo 3T and right click on our connection name and click on the <strong>Refresh</strong> tab. This should now show our database named <strong>task-manager</strong>.</p>
+<p><img src="assets/images/users-collection.jpg" alt="Users collection" title="Users collection"></p>
+<p>We can query inside the <code>task-manager</code> database.</p>
+<pre class="prettyprint"><code><div>    db.getCollection('users').find({})
+</div></code></pre>
+<p>In the image above we see a table mode view. We can also select a text view and this will show you the document we inserted.</p>
+<pre class="prettyprint"><code><div>    /* 1 */
     {
         &quot;_id&quot; : ObjectId(&quot;5ee562f327fe7441183a5348&quot;),
         &quot;name&quot; : &quot;Alan&quot;,
         &quot;age&quot; : 68
     }
-</pre>
-<p class="has-line-data" data-line-start="142" data-line-end="143">This has no error checking on the insertion of a user. We can add a callback function to our insertion.</p>
-<pre class="prettyprint">    db.collection('users').insertOne({
+</div></code></pre>
+<p>This has no error checking on the insertion of a user. We can add a callback function to our insertion.</p>
+<pre class="prettyprint"><code><div>    db.collection('users').insertOne({
         name: 'James',
         age: 14
     }, (error, result) =&gt; {
@@ -165,15 +170,15 @@ blockquote {
 
         console.log(result.ops);
     });
-</pre>
-<p class="has-line-data" data-line-start="157" data-line-end="158"><code>result.ops</code> returns the following.</p>
+</div></code></pre>
+<p><code>result.ops</code> returns the following.</p>
 <blockquote>
-<p class="has-line-data" data-line-start="159" data-line-end="160">[ { name: ‘James’, age: 14, _id: 5ee576ec6f8dc60c6850a517 } ]</p>
+<p>[ { name: 'James', age: 14, _id: 5ee576ec6f8dc60c6850a517 } ]</p>
 </blockquote>
-<h3 class="code-line" data-line-start=161 data-line-end=162><a id="Inserting_Documents_161"></a>Inserting Documents</h3>
-<p class="has-line-data" data-line-start="163" data-line-end="164">We are now going to look at another way to insert documents into collections.</p>
-<p class="has-line-data" data-line-start="165" data-line-end="166">You already know that <code>insertOne</code> can be used to insert a single document. You can also use <code>insertMany</code> to insert multiple documents at once. The example below inserts three documents into "users" collection. <code>insertMany</code> expects an array of objects, an array of the documents you want to insert.</p>
-<pre class="prettyprint">    db.collection('users').insertMany(
+<h2 id="inserting-documents">Inserting Documents</h2>
+<p>We are now going to look at another way to insert documents into collections.</p>
+<p>You already know that <code>insertOne</code> can be used to insert a single document. You can also use <code>insertMany</code> to insert multiple documents at once. The example below inserts three documents into &quot;users&quot; collection. <code>insertMany</code> expects an array of objects, an array of the documents you want to insert.</p>
+<pre class="prettyprint"><code><div>    db.collection('users').insertMany(
     [{
         name: 'Charley',
         age: 8
@@ -190,21 +195,21 @@ blockquote {
 
         console.log(result.ops);
     });
-</pre>
-<p class="has-line-data" data-line-start="187" data-line-end="188">Returns:</p>
+</div></code></pre>
+<p>Returns:</p>
 <blockquote>
-<p class="has-line-data" data-line-start="189" data-line-end="192">[ { name: ‘Charley’, age: 8, _id: 5ee583506c959709b019fe8a },<br>
-{ name: ‘Ethan’, age: 34, _id: 5ee583506c959709b019fe8b },<br>
-{ name: ‘Justin’, age: 29, _id: 5ee583506c959709b019fe8c } ]</p>
+<p>[ { name: 'Charley', age: 8, _id: 5ee583506c959709b019fe8a },<br>
+{ name: 'Ethan', age: 34, _id: 5ee583506c959709b019fe8b },<br>
+{ name: 'Justin', age: 29, _id: 5ee583506c959709b019fe8c } ]</p>
 </blockquote>
-<h5 class="code-line" data-line-start=193 data-line-end=194><a id="Challenge_193"></a>Challenge</h5>
-<p class="has-line-data" data-line-start="195" data-line-end="196">Insert 3 tasks into a tasks collection.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Insert 3 tasks into a tasks collection.</p>
 <ol>
-<li class="has-line-data" data-line-start="197" data-line-end="198">Use insertMany to insert 3 documents. description - string, completed - boolean.</li>
-<li class="has-line-data" data-line-start="198" data-line-end="199">Setup the callback to print the error or the ops.</li>
-<li class="has-line-data" data-line-start="199" data-line-end="201">Run the script.</li>
+<li>Use insertMany to insert 3 documents. description - string, completed - boolean.</li>
+<li>Setup the callback to print the error or the ops.</li>
+<li>Run the script.</li>
 </ol>
-<pre class="prettyprint">    const mongodb = require('mongodb');
+<pre class="prettyprint"><code><div>    const mongodb = require('mongodb');
 
     const MongoClient = mongodb.MongoClient;
 
@@ -237,34 +242,34 @@ blockquote {
             console.log(result.ops);
         });
     });
-</pre>
-<h5 class="code-line" data-line-start=237 data-line-end=238><a id="Results_237"></a>Results</h5>
+</div></code></pre>
+<h5 id="results">Results</h5>
 <blockquote>
-<p class="has-line-data" data-line-start="239" data-line-end="248">[ { description: ‘Take out the rubbish’,<br>
+<p>[ { description: 'Take out the rubbish',<br>
 completed: true,<br>
 _id: 5ee5920e559538366c2b774e },<br>
-{ description: ‘Clean computer room’,<br>
+{ description: 'Clean computer room',<br>
 completed: false,<br>
 _id: 5ee5920e559538366c2b774f },<br>
-{ description: ‘Mow the lawn’,<br>
+{ description: 'Mow the lawn',<br>
 completed: false,<br>
 _id: 5ee5920e559538366c2b7750 } ]</p>
 </blockquote>
-<h3 class="code-line" data-line-start=249 data-line-end=250><a id="The_ObjectID_249"></a>The ObjectID</h3>
-<p class="has-line-data" data-line-start="251" data-line-end="252">MongoDB uses <strong>ObjectIDs</strong> to create unique identifiers for all the documents in the database. It’s different to the traditional auto-incrementing integer ID, but it comes with its own set of advantages.</p>
-<h3 class="code-line" data-line-start=253 data-line-end=254><a id="Working_with_ObjectIDs_253"></a>Working with ObjectIDs</h3>
-<p class="has-line-data" data-line-start="255" data-line-end="256">MongoDB provides ObjectID which can be used to generate new ObjectIDs. The example below generates a new ID and prints it to the console.</p>
-<pre class="prettyprint">    const mongodb = require('mongodb');
+<h2 id="the-objectid">The ObjectID</h2>
+<p>MongoDB uses <strong>ObjectIDs</strong> to create unique identifiers for all the documents in the database. It's different to the traditional auto-incrementing integer ID, but it comes with its own set of advantages.</p>
+<h2 id="working-with-objectids">Working with ObjectIDs</h2>
+<p>MongoDB provides ObjectID which can be used to generate new ObjectIDs. The example below generates a new ID and prints it to the console.</p>
+<pre class="prettyprint"><code><div>    const mongodb = require('mongodb');
     const MongoClient = mongodb.MongoClient;
     const ObjectID = mongodb.ObjectId;
-</pre>
-<p class="has-line-data" data-line-start="263" data-line-end="264">We can destructure this code to make it simpler.</p>
-<pre class="prettyprint">    const { MongoClient, ObjectID } = require('mongodb')
+</div></code></pre>
+<p>We can destructure this code to make it simpler.</p>
+<pre class="prettyprint"><code><div>    const { MongoClient, ObjectID } = require('mongodb')
     const id = new ObjectID()
     console.log(id) // Print new id to the console
-</pre>
-<p class="has-line-data" data-line-start="271" data-line-end="272">We are going to take this code and add it to our database connection code.</p>
-<pre class="prettyprint">    const { MongoClient, ObjectID } = require('mongodb')
+</div></code></pre>
+<p>We are going to take this code and add it to our database connection code.</p>
+<pre class="prettyprint"><code><div>    const { MongoClient, ObjectID } = require('mongodb')
 
     const connectionUrl = 'mongodb://127.0.0.1:27017';
 
@@ -277,15 +282,15 @@ _id: 5ee5920e559538366c2b7750 } ]</p>
 
     // The first 4 characters of a GUID are the timestamp and we can get this by,
     console.log(id.getTimestamp());
-</pre>
-<p class="has-line-data" data-line-start="289" data-line-end="290">Creates a GUID and a timestamp.</p>
+</div></code></pre>
+<p>Creates a GUID and a timestamp.</p>
 <blockquote>
-<p class="has-line-data" data-line-start="291" data-line-end="293">5ee59a61df878024acd06f1e<br>
+<p>5ee59a61df878024acd06f1e<br>
 2020-06-14T03:32:49.000Z</p>
 </blockquote>
-<p class="has-line-data" data-line-start="294" data-line-end="295">An ObjectID is a GUID (Globally Unique Identifier). GUIDs are generated randomly via an algorithm to ensure uniqueness. These ID’s can be generated on the server, but as seen in the snippet above, they can be generated on the client as well. That means a client can generate the ID for a document it’s about to insert into the database.</p>
-<p class="has-line-data" data-line-start="296" data-line-end="297">We can use this <code>id</code> as the id when we insert a new document into our database.</p>
-<pre class="prettyprint">    const { MongoClient, ObjectID } = require('mongodb')
+<p>An ObjectID is a GUID (Globally Unique Identifier). GUIDs are generated randomly via an algorithm to ensure uniqueness. These ID's can be generated on the server, but as seen in the snippet above, they can be generated on the client as well. That means a client can generate the ID for a document it's about to insert into the database.</p>
+<p>We can use this <code>id</code> as the id when we insert a new document into our database.</p>
+<pre class="prettyprint"><code><div>    const { MongoClient, ObjectID } = require('mongodb')
 
     const connectionUrl = 'mongodb://127.0.0.1:27017';
 
@@ -314,87 +319,87 @@ _id: 5ee5920e559538366c2b7750 } ]</p>
             console.log(result.ops);
         });
     });
-</pre>
-<p class="has-line-data" data-line-start="330" data-line-end="331">We can see that the id that we created is the one going into the database.</p>
+</div></code></pre>
+<p>We can see that the id that we created is the one going into the database.</p>
 <blockquote>
-<p class="has-line-data" data-line-start="332" data-line-end="334">5ee59b9775802a3f30f59749<br>
-[ { _id: 5ee59b9775802a3f30f59749, name: ‘Fred’, age: 21 } ]</p>
+<p>5ee59b9775802a3f30f59749<br>
+[ { _id: 5ee59b9775802a3f30f59749, name: 'Fred', age: 21 } ]</p>
 </blockquote>
-<p class="has-line-data" data-line-start="335" data-line-end="336">The ObjectId is stored in the database as a binary id so it is half the size of a string id.</p>
-<p class="has-line-data" data-line-start="337" data-line-end="338">We can actually see the binary data when we create a new GUID with the following code.</p>
-<pre class="prettyprint">    const id = new ObjectID();
+<p>The ObjectId is stored in the database as a binary id so it is half the size of a string id.</p>
+<p>We can actually see the binary data when we create a new GUID with the following code.</p>
+<pre class="prettyprint"><code><div>    const id = new ObjectID();
 
     console.log(id);
     console.log(id.id);
     console.log(id.id.length); // the number of bytes to store a GUID.
-</pre>
-<p class="has-line-data" data-line-start="347" data-line-end="348"><code>id.id</code> shows the data in binary format.</p>
+</div></code></pre>
+<p><code>id.id</code> shows the data in binary format.</p>
 <blockquote>
-<p class="has-line-data" data-line-start="349" data-line-end="352">5ee5a2d12290551d1c067de4<br>
+<p>5ee5a2d12290551d1c067de4<br>
 &lt;Buffer 5e e5 a2 d1 22 90 55 1d 1c 06 7d e4&gt;<br>
 12</p>
 </blockquote>
-<p class="has-line-data" data-line-start="353" data-line-end="354">We need to know about ObjectID because we are going to use them to search for or delete a document.</p>
-<h3 class="code-line" data-line-start=355 data-line-end=356><a id="Querying_Documents_355"></a>Querying Documents</h3>
-<p class="has-line-data" data-line-start="357" data-line-end="358">We are going to learn how to read data from MongoDB. This will allow you to fetch the documents that you had previously inserted.</p>
-<h3 class="code-line" data-line-start=359 data-line-end=360><a id="Finding_Documents_359"></a>Finding Documents</h3>
-<p class="has-line-data" data-line-start="361" data-line-end="362">You can search for documents in a given collection using find or findOne. find can be used to fetch multiple documents, while findOne can be used to fetch a single document.</p>
-<p class="has-line-data" data-line-start="363" data-line-end="364">The example below uses find to search for documents in the tasks collection. You can provide an object as the first argument to find to filter the documents. The example below sets completed equal to false to fetch only those tasks that haven’t been completed.</p>
-<pre class="prettyprint">    db.collection('tasks').find({ completed: false }).toArray((error, tasks) =&gt; {
+<p>We need to know about ObjectID because we are going to use them to search for or delete a document.</p>
+<h2 id="querying-documents">Querying Documents</h2>
+<p>We are going to learn how to read data from MongoDB. This will allow you to fetch the documents that you had previously inserted.</p>
+<h2 id="finding-documents">Finding Documents</h2>
+<p>You can search for documents in a given collection using find or findOne. find can be used to fetch multiple documents, while findOne can be used to fetch a single document.</p>
+<p>The example below uses find to search for documents in the tasks collection. You can provide an object as the first argument to find to filter the documents. The example below sets completed equal to false to fetch only those tasks that haven't been completed.</p>
+<pre class="prettyprint"><code><div>    db.collection('tasks').find({ completed: false }).toArray((error, tasks) =&gt; {
         console.log(tasks);
     });
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="371" data-line-end="377">[ { _id: 5ee5920e559538366c2b774f,<br>
-description: ‘Clean computer room’,<br>
+<p>[ { _id: 5ee5920e559538366c2b774f,<br>
+description: 'Clean computer room',<br>
 completed: false },<br>
 { _id: 5ee5920e559538366c2b7750,<br>
-description: ‘Mow the lawn’,<br>
+description: 'Mow the lawn',<br>
 completed: false } ]</p>
 </blockquote>
-<p class="has-line-data" data-line-start="378" data-line-end="379">There are a number of other things we can do with <code>find</code>. First thing is to look at the API documentation. <code>find</code> doesn’t use a callback function like <code>findOne</code>, it just returns a cursor. You can use a number of search options on the end of your <code>find</code> query like only bringing back the first 5 documents. Another option is to get the number of documents that match the search criteria.</p>
-<pre class="prettyprint">    db.collection('tasks').find({ completed: false  }).count((error, count) =&gt; {
+<p>There are a number of other things we can do with <code>find</code>. First thing is to look at the API documentation. <code>find</code> doesn't use a callback function like <code>findOne</code>, it just returns a cursor. You can use a number of search options on the end of your <code>find</code> query like only bringing back the first 5 documents. Another option is to get the number of documents that match the search criteria.</p>
+<pre class="prettyprint"><code><div>    db.collection('tasks').find({ completed: false  }).count((error, count) =&gt; {
         console.log(count);
     });
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="386" data-line-end="387">2</p>
+<p>2</p>
 </blockquote>
-<p class="has-line-data" data-line-start="388" data-line-end="389"><code>find</code> allows us to find multiple documents in a collection. <code>findOne</code> only brings back one document in a search query.</p>
-<pre class="prettyprint">    db.collection('tasks').findOne({ _id: new
+<p><code>find</code> allows us to find multiple documents in a collection. <code>findOne</code> only brings back one document in a search query.</p>
+<pre class="prettyprint"><code><div>    db.collection('tasks').findOne({ _id: new
         ObjectID(&quot;5ee5920e559538366c2b7750&quot;) }, (error, task) =&gt; {
             console.log(task);
     });
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="397" data-line-end="400">{ _id: 5ee5920e559538366c2b7750,<br>
-description: ‘Mow the lawn’,<br>
+<p>{ _id: 5ee5920e559538366c2b7750,<br>
+description: 'Mow the lawn',<br>
 completed: false }</p>
 </blockquote>
-<p class="has-line-data" data-line-start="401" data-line-end="402">Do a search by name.</p>
-<pre class="prettyprint">    db.collection('users').findOne({ name: 'Charley' }, (error, user) =&gt; {
+<p>Do a search by name.</p>
+<pre class="prettyprint"><code><div>    db.collection('users').findOne({ name: 'Charley' }, (error, user) =&gt; {
             console.log(user);
     });
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="409" data-line-end="410">{ _id: 5ee583506c959709b019fe8a, name: ‘Charley’, age: 8 }</p>
+<p>{ _id: 5ee583506c959709b019fe8a, name: 'Charley', age: 8 }</p>
 </blockquote>
-<p class="has-line-data" data-line-start="411" data-line-end="412">I can do a search on two fields.</p>
-<pre class="prettyprint">    db.collection('users').findOne({ name: 'Charley', age: 8 }, (error, user) =&gt; {
+<p>I can do a search on two fields.</p>
+<pre class="prettyprint"><code><div>    db.collection('users').findOne({ name: 'Charley', age: 8 }, (error, user) =&gt; {
         console.log(user);
     });
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="419" data-line-end="420">{ _id: 5ee583506c959709b019fe8a, name: ‘Charley’, age: 8 }</p>
+<p>{ _id: 5ee583506c959709b019fe8a, name: 'Charley', age: 8 }</p>
 </blockquote>
-<p class="has-line-data" data-line-start="421" data-line-end="422">What happens if I put the wrong age in?</p>
-<p class="has-line-data" data-line-start="423" data-line-end="424">I get a <code>null</code> back because what I am doing is completely valid but it doesn’t return any results.</p>
-<h3 class="code-line" data-line-start=425 data-line-end=426><a id="Updating_Documents_425"></a>Updating Documents</h3>
-<p class="has-line-data" data-line-start="427" data-line-end="428">We are now going to update documents stored in MongoDB.</p>
-<p class="has-line-data" data-line-start="429" data-line-end="430">You can update documents in a collection using <code>updateOne</code> or <code>updateMany</code>. The first argument for both <code>updateOne</code> and <code>updateMany</code> is similar to the first argument used with <code>find</code> or <code>findOne</code>. It’s an object that allows you to filter down all the documents to just the ones you want to update.</p>
-<p class="has-line-data" data-line-start="431" data-line-end="432">The update calls require a second argument as well. This is an object where you define the updates you want to make. For this, you need to use one of the supported update operators.</p>
-<h5 class="code-line" data-line-start=433 data-line-end=434><a id="Update_example_433"></a>Update example</h5>
-<pre class="prettyprint">    const { MongoClient, ObjectID } = require('mongodb')
+<p>What happens if I put the wrong age in?</p>
+<p>I get a <code>null</code> back because what I am doing is completely valid but it doesn't return any results.</p>
+<h2 id="updating-documents">Updating Documents</h2>
+<p>We are now going to update documents stored in MongoDB.</p>
+<p>You can update documents in a collection using <code>updateOne</code> or <code>updateMany</code>. The first argument for both <code>updateOne</code> and <code>updateMany</code> is similar to the first argument used with <code>find</code> or <code>findOne</code>. It's an object that allows you to filter down all the documents to just the ones you want to update.</p>
+<p>The update calls require a second argument as well. This is an object where you define the updates you want to make. For this, you need to use one of the supported update operators.</p>
+<h5 id="update-example">Update example</h5>
+<pre class="prettyprint"><code><div>    const { MongoClient, ObjectID } = require('mongodb')
 
     const connectionUrl = 'mongodb://127.0.0.1:27017';
 
@@ -419,25 +424,25 @@ completed: false }</p>
             console.log(error);
         });
     });
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="463" data-line-end="467">CommandResult {<br>
+<p>CommandResult {<br>
 result: { n: 1, nModified: 1, ok: 1 },<br>
 connection:<br>
-…</p>
+...</p>
 </blockquote>
-<p class="has-line-data" data-line-start="468" data-line-end="469">The result is a lot of detail.</p>
-<p class="has-line-data" data-line-start="470" data-line-end="471">If I look in the database.</p>
+<p>The result is a lot of detail.</p>
+<p>If I look in the database.</p>
 <blockquote>
-<p class="has-line-data" data-line-start="472" data-line-end="478">/* 1 */<br>
+<p>/* 1 */<br>
 {<br>
-"_id" : ObjectId("5ee562f327fe7441183a5348"),<br>
-"name" : "Johnny",<br>
-"age" : 68<br>
+&quot;_id&quot; : ObjectId(&quot;5ee562f327fe7441183a5348&quot;),<br>
+&quot;name&quot; : &quot;Johnny&quot;,<br>
+&quot;age&quot; : 68<br>
 }</p>
 </blockquote>
-<p class="has-line-data" data-line-start="479" data-line-end="480">The <code>db.collection</code> code above can be chained to make it simpler.</p>
-<pre class="prettyprint">    db.collection('users').updateOne({ _id: new ObjectID('5ee562f327fe7441183a5348') }, {
+<p>The <code>db.collection</code> code above can be chained to make it simpler.</p>
+<pre class="prettyprint"><code><div>    db.collection('users').updateOne({ _id: new ObjectID('5ee562f327fe7441183a5348') }, {
         $set: {
             name: 'Julie'
         }
@@ -446,20 +451,20 @@ connection:<br>
     }).catch((error) =&gt; {
         console.log(error);
     });
-</pre>
-<p class="has-line-data" data-line-start="493" data-line-end="494">In the database.</p>
+</div></code></pre>
+<p>In the database.</p>
 <blockquote>
-<p class="has-line-data" data-line-start="495" data-line-end="501">/* 1 */<br>
+<p>/* 1 */<br>
 {<br>
-"_id" : ObjectId("5ee562f327fe7441183a5348"),<br>
-"name" : "Julie",<br>
-"age" : 68<br>
+&quot;_id&quot; : ObjectId(&quot;5ee562f327fe7441183a5348&quot;),<br>
+&quot;name&quot; : &quot;Julie&quot;,<br>
+&quot;age&quot; : 68<br>
 }</p>
 </blockquote>
-<h4 class="code-line" data-line-start=502 data-line-end=503><a id="Update_operators_502"></a>Update operators</h4>
-<p class="has-line-data" data-line-start="504" data-line-end="505"><a href="https://docs.mongodb.com/manual/reference/operator/update/" title="MongoDB Update Operators">MongoDB Update Operators</a></p>
-<p class="has-line-data" data-line-start="506" data-line-end="507">Increment the age by 1.</p>
-<pre class="prettyprint">    db.collection('users').updateOne({ _id: new ObjectID('5ee562f327fe7441183a5348') }, {
+<h4 id="update-operators">Update operators</h4>
+<p><a href="https://docs.mongodb.com/manual/reference/operator/update/" title="MongoDB Update Operators">MongoDB Update Operators</a></p>
+<p>Increment the age by 1.</p>
+<pre class="prettyprint"><code><div>    db.collection('users').updateOne({ _id: new ObjectID('5ee562f327fe7441183a5348') }, {
         $inc: {
             age: 1
         }
@@ -468,24 +473,24 @@ connection:<br>
     }).catch((error) =&gt; {
         console.log(error);
     });
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="520" data-line-end="526">/* 1 */<br>
+<p>/* 1 */<br>
 {<br>
-"_id" : ObjectId("5ee562f327fe7441183a5348"),<br>
-"name" : "Julie",<br>
-"age" : 69<br>
+&quot;_id&quot; : ObjectId(&quot;5ee562f327fe7441183a5348&quot;),<br>
+&quot;name&quot; : &quot;Julie&quot;,<br>
+&quot;age&quot; : 69<br>
 }</p>
 </blockquote>
-<h5 class="code-line" data-line-start=527 data-line-end=528><a id="Challenge_527"></a>Challenge</h5>
-<p class="has-line-data" data-line-start="529" data-line-end="530">Use updateMany to complete all tasks.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Use updateMany to complete all tasks.</p>
 <ol>
-<li class="has-line-data" data-line-start="531" data-line-end="532">Check the documentation for updateMany.</li>
-<li class="has-line-data" data-line-start="532" data-line-end="533">Setup the call with the query and the updates.</li>
-<li class="has-line-data" data-line-start="533" data-line-end="534">Use promise methods to setup success/error hendlers.</li>
-<li class="has-line-data" data-line-start="534" data-line-end="536">Test your work.</li>
+<li>Check the documentation for updateMany.</li>
+<li>Setup the call with the query and the updates.</li>
+<li>Use promise methods to setup success/error hendlers.</li>
+<li>Test your work.</li>
 </ol>
-<pre class="prettyprint">    db.collection('tasks').updateMany({
+<pre class="prettyprint"><code><div>    db.collection('tasks').updateMany({
         completed: false
     }, {
         $set: {
@@ -496,108 +501,56 @@ connection:<br>
     }).catch((error) =&gt; {
         console.log(error);
     });
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="550" data-line-end="556">/* 1 */<br>
+<p>/* 1 */<br>
 {<br>
-"_id" : ObjectId("5ee5920e559538366c2b774e"),<br>
-"description" : "Take out the rubbish",<br>
-"completed" : true<br>
+&quot;_id&quot; : ObjectId(&quot;5ee5920e559538366c2b774e&quot;),<br>
+&quot;description&quot; : &quot;Take out the rubbish&quot;,<br>
+&quot;completed&quot; : true<br>
 }</p>
-<p class="has-line-data" data-line-start="557" data-line-end="563">/* 2 */<br>
+<p>/* 2 */<br>
 {<br>
-"_id" : ObjectId("5ee5920e559538366c2b774f"),<br>
-"description" : "Clean computer room",<br>
-"completed" : true<br>
+&quot;_id&quot; : ObjectId(&quot;5ee5920e559538366c2b774f&quot;),<br>
+&quot;description&quot; : &quot;Clean computer room&quot;,<br>
+&quot;completed&quot; : true<br>
 }</p>
-<p class="has-line-data" data-line-start="564" data-line-end="570">/* 3 */<br>
+<p>/* 3 */<br>
 {<br>
-"_id" : ObjectId("5ee5920e559538366c2b7750"),<br>
-"description" : "Mow the lawn",<br>
-"completed" : true<br>
+&quot;_id&quot; : ObjectId(&quot;5ee5920e559538366c2b7750&quot;),<br>
+&quot;description&quot; : &quot;Mow the lawn&quot;,<br>
+&quot;completed&quot; : true<br>
 }</p>
 </blockquote>
-<h3 class="code-line" data-line-start=571 data-line-end=572><a id="Deleting_Documents_571"></a>Deleting Documents</h3>
-<p class="has-line-data" data-line-start="573" data-line-end="574">You can delete documents from MongoDB using <code>deleteOne</code> or <code>deleteMany</code>. Both accept an object as the first argument. This object is used to filter just the documents you want to delete.</p>
-<p class="has-line-data" data-line-start="575" data-line-end="576">The example below uses <code>deleteMany</code> to delete all users whose age field is 21.</p>
-<pre class="prettyprint">    db.collection('users').deleteMany({
+<h2 id="deleting-documents">Deleting Documents</h2>
+<p>You can delete documents from MongoDB using <code>deleteOne</code> or <code>deleteMany</code>. Both accept an object as the first argument. This object is used to filter just the documents you want to delete.</p>
+<p>The example below uses <code>deleteMany</code> to delete all users whose age field is 21.</p>
+<pre class="prettyprint"><code><div>    db.collection('users').deleteMany({
             age: 21
     }).then((result) =&gt; {
         console.log(result);
     }).catch((error) =&gt; {
         console.log(error);
     });
-</pre>
-<p class="has-line-data" data-line-start="587" data-line-end="588">Deleted 2 documents.</p>
-<h5 class="code-line" data-line-start=589 data-line-end=590><a id="Challenge_589"></a>Challenge</h5>
-<p class="has-line-data" data-line-start="591" data-line-end="592">Use deleteOne to delete a task.</p>
+</div></code></pre>
+<p>Deleted 2 documents.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Use deleteOne to delete a task.</p>
 <ol>
-<li class="has-line-data" data-line-start="593" data-line-end="594">Grab the description for the task you want to remove.</li>
-<li class="has-line-data" data-line-start="594" data-line-end="595">Setup the call with the query.</li>
-<li class="has-line-data" data-line-start="595" data-line-end="596">Use promise methods to set up the success/error handlers.</li>
-<li class="has-line-data" data-line-start="596" data-line-end="598">Test your work.</li>
+<li>Grab the description for the task you want to remove.</li>
+<li>Setup the call with the query.</li>
+<li>Use promise methods to set up the success/error handlers.</li>
+<li>Test your work.</li>
 </ol>
-<pre class="prettyprint">    db.collection('tasks').deleteOne({
+<pre class="prettyprint"><code><div>    db.collection('tasks').deleteOne({
             description: 'Mow the lawn'
     }).then((result) =&gt; {
         console.log(result);
     }).catch((error) =&gt; {
         console.log(error);
     });
-</pre>
-<p class="has-line-data" data-line-start="608" data-line-end="609">Deleted one document.</p>
-<h3 class="code-line" data-line-start=610 data-line-end=611><a id="Mongo_shell_610"></a>Mongo shell</h3>
-<p class="has-line-data" data-line-start="612" data-line-end="613">Mongo has a command shell and it is useful to have a quick look at your databases. I have added some of the main commands down below.</p>
-<p class="has-line-data" data-line-start="614" data-line-end="615">To change databases.</p>
-<pre class="prettyprint">    use task-manager
-</pre>
-<p class="has-line-data" data-line-start="620" data-line-end="621">to query.</p>
-<pre class="prettyprint">    db.users.find({name: 'Alan'}).pretty()
-</pre>
-<blockquote>
-<p class="has-line-data" data-line-start="626" data-line-end="631">{<br>
-"_id" : ObjectId("5ee562f327fe7441183a5348"),<br>
-"name" : "Alan",<br>
-"age" : 68<br>
-}</p>
-</blockquote>
-<pre class="prettyprint">    db.users.find().pretty()
-</pre>
-<p class="has-line-data" data-line-start="636" data-line-end="637">Will show all documents within a collection.</p>
-<pre class="prettyprint">    show collections
-</pre>
-<blockquote>
-<p class="has-line-data" data-line-start="642" data-line-end="644">tasks<br>
-users</p>
-</blockquote>
-<pre class="prettyprint">    db.getMongo()
-</pre>
-<blockquote>
-<p class="has-line-data" data-line-start="649" data-line-end="650">connection to 127.0.0.1:27017</p>
-</blockquote>
-<pre class="prettyprint">    db.stats()
-</pre>
-<blockquote>
-<p class="has-line-data" data-line-start="655" data-line-end="671">{<br>
-"db" : "task-manager",<br>
-"collections" : 2,<br>
-"views" : 0,<br>
-"objects" : 9,<br>
-"avgObjSize" : 54.44444444444444,<br>
-"dataSize" : 490,<br>
-"storageSize" : 57344,<br>
-"numExtents" : 0,<br>
-"indexes" : 2,<br>
-"indexSize" : 57344,<br>
-"scaleFactor" : 1,<br>
-"fsUsedSize" : 1659692355584,<br>
-"fsTotalSize" : 2097151995904,<br>
-"ok" : 1<br>
-}</p>
-</blockquote>
-<pre class="prettyprint">    db.help()
-</pre>
-<p class="has-line-data" data-line-start="676" data-line-end="677">Shows help file.</p>
+</div></code></pre>
+<p>Deleted one document.</p>
 
 
 

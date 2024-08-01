@@ -38,6 +38,12 @@ blockquote {
     padding-left: 1rem;
     page-break-inside: avoid;
 }
+:target:before {
+  content: "";
+  display: block;
+  height: 80px; /* adjust this value to your needs */
+  margin: -80px 0 0; /* this should be a negative value of the height above */
+}
 </style>
 </head>
 <body>
@@ -69,12 +75,12 @@ blockquote {
     <div class="starter-template">
 
 
-<h2 class="code-line" data-line-start=0 data-line-end=1><a id="Asynchronous_Nodejs_0"></a>Asynchronous Node.js</h2>
-<h3 class="code-line" data-line-start=2 data-line-end=3><a id="Section_Intro_2"></a>Section Intro</h3>
-<p class="has-line-data" data-line-start="4" data-line-end="5">It's time to connect our application with the outside world. In this section, we'll explore the asynchronous nature of Node.js. We'll learn how to use asynchronous programming to make HTTP API requests to third-party HTTP APIs. This will allow you to pull in data, like real-time weather data, into your app.</p>
-<h3 class="code-line" data-line-start=6 data-line-end=7><a id="Asynchronous_Basics_6"></a>Asynchronous Basics</h3>
-<p class="has-line-data" data-line-start="8" data-line-end="9">When running asynchronous code, your code won't always execute in the order you might expect. To get started with asynchronous development, let's use setTimeout. setTimeout is a function that allows you to run some code after a specific amount of time has passed. setTimeout accepts two arguments. The first is a callback function. This function will run after the specified amount of time has passed. The second argument is the amount of time in milliseconds to wait.</p>
-<pre class="prettyprint">    console.log('Starting')
+<h1 id="asynchronous-nodejs">Asynchronous Node.js</h1>
+<h2 id="section-intro">Section Intro</h2>
+<p>It's time to connect our application with the outside world. In this section, we'll explore the asynchronous nature of Node.js. We'll learn how to use asynchronous programming to make HTTP API requests to third-party HTTP APIs. This will allow you to pull in data, like real-time weather data, into your app.</p>
+<h2 id="asynchronous-basics">Asynchronous Basics</h2>
+<p>When running asynchronous code, your code won't always execute in the order you might expect. To get started with asynchronous development, let's use setTimeout. setTimeout is a function that allows you to run some code after a specific amount of time has passed. setTimeout accepts two arguments. The first is a callback function. This function will run after the specified amount of time has passed. The second argument is the amount of time in milliseconds to wait.</p>
+<pre class="prettyprint"><code><div>    console.log('Starting')
 
     // Wait 2 seconds before running the function
     setTimeout(() =&gt; {
@@ -82,33 +88,33 @@ blockquote {
     }, 2000);
 
     console.log('Stopping');
-</pre>
-<p class="has-line-data" data-line-start="21" data-line-end="22">Run the script and you'll see the logs in the following order.</p>
+</div></code></pre>
+<p>Run the script and you'll see the logs in the following order.</p>
 <blockquote>
-<p class="has-line-data" data-line-start="23" data-line-end="26">Starting<br>
+<p>Starting<br>
 Stopping<br>
 2 Second Timer</p>
 </blockquote>
-<p class="has-line-data" data-line-start="27" data-line-end="28">Notice that "Stopping" prints before "2 Second Timer". That's because <strong>setTimeout</strong> is asynchronous and non-blocking. The <strong>setTimeout</strong> call doesn't block Node.js from running other code while it's waiting for the 2 seconds to pass.</p>
-<p class="has-line-data" data-line-start="29" data-line-end="30">This asynchronous and non-blocking nature makes Node.js ideal for backend development. Your server can wait for data from a database while also processing an incoming HTTP request.</p>
-<h3 class="code-line" data-line-start=31 data-line-end=32><a id="Making_HTTP_Requests_31"></a>Making HTTP Requests</h3>
-<p class="has-line-data" data-line-start="33" data-line-end="34">We are going to learn how to make HTTP requests from Node. This will enable your app to communicate with other APIs and servers to do a wide variety of things. Everything from fetching real-time weather data to sending text messages to users.</p>
-<p class="has-line-data" data-line-start="35" data-line-end="36">There are several libraries that make it easy to fire off HTTP requests. We will use <strong>postman-request</strong>. You can install it using the command below.</p>
-<pre class="prettyprint">    npm i postman-request
-</pre>
-<p class="has-line-data" data-line-start="41" data-line-end="42">Before you use the library in your app, you'll need to figure out which URL you're trying to fetch. To fetch real-time weather data, you'll need to sign up for a free Webstack API account.</p>
-<p class="has-line-data" data-line-start="43" data-line-end="44">Below is an example URL</p>
-<pre class="prettyprint">    const request = require('postman-request');
+<p>Notice that &quot;Stopping&quot; prints before &quot;2 Second Timer&quot;. That's because <strong>setTimeout</strong> is asynchronous and non-blocking. The <strong>setTimeout</strong> call doesn't block Node.js from running other code while it's waiting for the 2 seconds to pass.</p>
+<p>This asynchronous and non-blocking nature makes Node.js ideal for backend development. Your server can wait for data from a database while also processing an incoming HTTP request.</p>
+<h2 id="making-http-requests">Making HTTP Requests</h2>
+<p>We are going to learn how to make HTTP requests from Node. This will enable your app to communicate with other APIs and  servers to do a wide variety of things. Everything from fetching real-time weather data to sending text messages to users.</p>
+<p>There are several libraries that make it easy to fire off HTTP requests. We will use <strong>postman-request</strong>. You can install it using the command below.</p>
+<pre class="prettyprint"><code><div>    npm i postman-request
+</div></code></pre>
+<p>Before you use the library in your app, you'll need to figure out which URL you're trying to fetch. To fetch real-time weather data, you'll need to sign up for a free Webstack API account.</p>
+<p>Below is an example URL</p>
+<pre class="prettyprint"><code><div>    const request = require('postman-request');
 
     const url = 'http://api.weatherstack.com/current?access_key=f41e35407998bf659423ffd2ac284503&amp;query=-37.6158588,143.7173154&amp; units=m';
 
     request({url: url}, (error, response) =&gt; {
         console.log(response);
     });
-</pre>
-<p class="has-line-data" data-line-start="55" data-line-end="56">This request brings back way too much information but right at the bottom you see the weather JSON.</p>
-<p class="has-line-data" data-line-start="57" data-line-end="58">We can refine this code.</p>
-<pre class="prettyprint">    const request = require('postman-request');
+</div></code></pre>
+<p>This request brings back way too much information but right at the bottom you see the weather JSON.</p>
+<p>We can refine this code.</p>
+<pre class="prettyprint"><code><div>    const request = require('postman-request');
 
     const url = 'http://api.weatherstack.com/current?access_key=f41e35407998bf659423ffd2ac284503&amp;query=-37.6158588,143.7173154&amp; units=m';
 
@@ -117,12 +123,12 @@ Stopping<br>
 
         console.log(data);
     });
-</pre>
-<p class="has-line-data" data-line-start="71" data-line-end="72">We can refine this further with</p>
-<pre class="prettyprint">    console.log(data.current);
-</pre>
-<h5 class="code-line" data-line-start=77 data-line-end=78><a id="Results_77"></a>Results</h5>
-<pre class="prettyprint">    {
+</div></code></pre>
+<p>We can refine this further with</p>
+<pre class="prettyprint"><code><div>    console.log(data.current);
+</div></code></pre>
+<h4 id="results">Results</h4>
+<pre class="prettyprint"><code><div>    {
       &quot;request&quot;: {
         &quot;type&quot;: &quot;LatLon&quot;,
         &quot;query&quot;: &quot;Lat -37.62 and Lon 143.72&quot;,
@@ -163,50 +169,50 @@ Stopping<br>
         &quot;is_day&quot;: &quot;yes&quot;
       }
     }
-</pre>
-<p class="has-line-data" data-line-start="123" data-line-end="124">This is another example using Open Weathermap.</p>
-<pre class="prettyprint">    const unirest = require(&quot;unirest&quot;);
+</div></code></pre>
+<p>This is another example using Open Weathermap.</p>
+<pre class="prettyprint"><code><div>    const unirest = require(&quot;unirest&quot;);
 
     const req = unirest(&quot;GET&quot;, &quot;https://community-open-weather-map.p.rapidapi.com/weather&quot;);
 
     req.query({
-        &quot;callback&quot;: &quot;test&quot;,
-        &quot;id&quot;: &quot;2172797&quot;,
-        &quot;units&quot;: &quot;metric&quot;,
-        &quot;mode&quot;: &quot;xml%2C html&quot;,
-        &quot;q&quot;: &quot;Haddon,au&quot;
+    	&quot;callback&quot;: &quot;test&quot;,
+    	&quot;id&quot;: &quot;2172797&quot;,
+    	&quot;units&quot;: &quot;metric&quot;,
+    	&quot;mode&quot;: &quot;xml%2C html&quot;,
+    	&quot;q&quot;: &quot;Haddon,au&quot;
     });
 
     req.headers({
-        &quot;x-rapidapi-host&quot;: &quot;community-open-weather-map.p.rapidapi.com&quot;,
-        &quot;x-rapidapi-key&quot;: &quot;9cb79bc01cmsh36974c8d075a759p1b66c1jsn5c64f069e269&quot;,
-        &quot;useQueryString&quot;: true
+    	&quot;x-rapidapi-host&quot;: &quot;community-open-weather-map.p.rapidapi.com&quot;,
+    	&quot;x-rapidapi-key&quot;: &quot;9cb79bc01cmsh36974c8d075a759p1b66c1jsn5c64f069e269&quot;,
+    	&quot;useQueryString&quot;: true
     });
 
     req.end(function (res) {
-        if (res.error) throw new Error(res.error);
+    	if (res.error) throw new Error(res.error);
 
-        console.log(res.body);
+    	console.log(res.body);
     });
-</pre>
-<h3 class="code-line" data-line-start=151 data-line-end=152><a id="Customizing_HTTP_Requests_151"></a>Customizing HTTP Requests</h3>
-<h4 class="code-line" data-line-start=153 data-line-end=154><a id="Request_Options_153"></a>Request Options</h4>
-<p class="has-line-data" data-line-start="155" data-line-end="156">The request library comes with plenty of options to make your life easier. One is the json option. Set json to true and request will automatically parse the JSON into a JavaScript object for you.</p>
-<pre class="prettyprint">    const request = require('postman-request');
+</div></code></pre>
+<h2 id="customizing-http-requests">Customizing HTTP Requests</h2>
+<h3 id="request-options">Request Options</h3>
+<p>The request library comes with plenty of options to make your life easier. One is the json option. Set json to true and request will automatically parse the JSON into a JavaScript object for you.</p>
+<pre class="prettyprint"><code><div>    const request = require('postman-request');
 
     const url = 'http://api.weatherstack.com/current?access_key=f41e35407998bf659423ffd2ac284503&amp;query=-37.6158588,143.7173154&amp; units=m';
 
     request({url: url, json: true}, (error, response) =&gt; {
         console.log(response.body.current);
     });
-</pre>
-<h5 class="code-line" data-line-start=167 data-line-end=168><a id="Challenge_167"></a>Challenge</h5>
-<p class="has-line-data" data-line-start="169" data-line-end="170">Print a small forecast for the user.</p>
+</div></code></pre>
+<h4 id="challenge">Challenge</h4>
+<p>Print a small forecast for the user.</p>
 <ol>
-<li class="has-line-data" data-line-start="171" data-line-end="172">Print "It is currently 7 degrees out. There is 0% chance of rain."</li>
-<li class="has-line-data" data-line-start="172" data-line-end="174">Test your work.</li>
+<li>Print &quot;It is currently 7 degrees out. There is 0% chance of rain.&quot;</li>
+<li>Test your work.</li>
 </ol>
-<pre class="prettyprint">    const request = require('postman-request');
+<pre class="prettyprint"><code><div>    const request = require('postman-request');
 
     const url = 'http://api.weatherstack.com/current?access_key=f41e35407998bf659423ffd2ac284503&amp;query=-37.6158588,143.7173154&amp; units=m';
 
@@ -216,14 +222,14 @@ Stopping<br>
         const description = response.body.current.weather_descriptions;
         console.log(`It is currently ${temperature} degrees out. It is ${description} and there is ${precipitation}% chance of  rain.`);
     });
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="187" data-line-end="188">It is currently 10 degrees out. It is Overcast and there is 0% chance of rain.</p>
+<p>It is currently 10 degrees out. It is Overcast and there is 0% chance of rain.</p>
 </blockquote>
-<h3 class="code-line" data-line-start=189 data-line-end=190><a id="An_HTTP_Request_Challenge_189"></a>An HTTP Request Challenge</h3>
-<h4 class="code-line" data-line-start=191 data-line-end=192><a id="Geocoding_191"></a>Geocoding</h4>
-<p class="has-line-data" data-line-start="193" data-line-end="194">We use the <a href="https://mapbox.com">mapbox.com</a> api to forward geocode.</p>
-<pre class="prettyprint">    const locationUrl = 'https://api.mapbox.com/geocoding/v5/mapbox.places/melbourne.json?access_token=pk.  eyJ1IjoiYWxhbnJvYjE3IiwiYSI6ImNrYjM0cWJmaDBoaXUycXFwNWhmc21yZHoifQ.fmtQdmsoTDNr6JWInac8kA';
+<h2 id="an-http-request-challenge">An HTTP Request Challenge</h2>
+<h3 id="geocoding">Geocoding</h3>
+<p>We use the mapbox.com api to forward geocode.</p>
+<pre class="prettyprint"><code><div>    const locationUrl = 'https://api.mapbox.com/geocoding/v5/mapbox.places/melbourne.json?access_token=pk.  eyJ1IjoiYWxhbnJvYjE3IiwiYSI6ImNrYjM0cWJmaDBoaXUycXFwNWhmc21yZHoifQ.fmtQdmsoTDNr6JWInac8kA';
 
     request({url: locationUrl, json: true}, (error, response) =&gt; {
         const location = response.body.features[0].place_name;
@@ -232,15 +238,15 @@ Stopping<br>
 
         console.log(`The town is ${location}. Its latitude is ${lat} and longitude is ${long}.`);
     });
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="207" data-line-end="208">The town is Melbourne, Victoria, Australia. Its latitude is -37.8142 and longitude is 144.9632.</p>
+<p>The town is Melbourne, Victoria, Australia. Its latitude is -37.8142 and longitude is 144.9632.</p>
 </blockquote>
-<h3 class="code-line" data-line-start=209 data-line-end=210><a id="Handling_Errors_209"></a>Handling Errors</h3>
-<p class="has-line-data" data-line-start="211" data-line-end="212">There are plenty of reasons an HTTP request can fail. Maybe your machine doesn't have an internet connection, or maybe the URL is incorrect. Regardless of what goes wrong, you need to be able to handle errors that occur when making HTTP requests.</p>
-<p class="has-line-data" data-line-start="213" data-line-end="214">Handling errors is important. It would be nice if we could always provide the user with a forecast for their location, but that's not going to happen. When things fail, you should aim to provide users with clear and useful messages in plain English so they know what's going on.</p>
-<p class="has-line-data" data-line-start="215" data-line-end="216">The callback function you pass to request expects an <strong>error</strong> and <strong>response</strong> argument to be provided. Either <strong>error</strong> or <strong>response</strong> will have a value, never both. If <strong>error</strong> has a value, that means things went wrong. In this case, <strong>response</strong> will be undefined, as there is no response. If <strong>response</strong> has a value, things went well. In this case, <strong>error</strong> will be undefined, as no error occurred.</p>
-<pre class="prettyprint">    const url = `http://api.weatherstack.com/current?access_key=f41e35407998bf659423ffd2ac284503&amp;query=-37.8142,144.9632&amp;   units=m`;
+<h2 id="handling-errors">Handling Errors</h2>
+<p>There are plenty of reasons an HTTP request can fail. Maybe your machine doesn't have an internet connection, or maybe the URL is incorrect. Regardless of what goes wrong, you need to be able to handle errors that occur when making HTTP requests.</p>
+<p>Handling errors is important. It would be nice if we could always provide the user with a forecast for their location, but that's not going to happen. When things fail, you should aim to provide users with clear and useful messages in plain English so they know what's going on.</p>
+<p>The callback function you pass to request expects an <strong>error</strong> and <strong>response</strong> argument to be provided. Either <strong>error</strong> or <strong>response</strong> will have a value, never both. If <strong>error</strong> has a value, that means things went wrong. In this case, <strong>response</strong> will be undefined, as there is no response. If <strong>response</strong> has a value, things went well. In this case, <strong>error</strong> will be undefined, as no error occurred.</p>
+<pre class="prettyprint"><code><div>    const url = `http://api.weatherstack.com/current?access_key=f41e35407998bf659423ffd2ac284503&amp;query=-37.8142,144.9632&amp;   units=m`;
 
     request({url: url, json: true}, (error, response) =&gt; {
         if (error) {
@@ -252,14 +258,14 @@ Stopping<br>
             console.log(`It is currently ${temperature} degrees out. It is ${description} and there is ${precipitation}%    chance of rain.`);
         }
     });
-</pre>
-<p class="has-line-data" data-line-start="232" data-line-end="233">I have turned the internet off to test the error handling.</p>
+</div></code></pre>
+<p>I have turned the internet off to test the error handling.</p>
 <blockquote>
-<p class="has-line-data" data-line-start="234" data-line-end="235">An error occurred: Error: getaddrinfo ENOTFOUND <a href="http://api.weatherstack.com">api.weatherstack.com</a> <a href="http://api.weatherstack.com:80">api.weatherstack.com:80</a>.</p>
+<p>An error occurred: Error: getaddrinfo ENOTFOUND api.weatherstack.com api.weatherstack.com:80.</p>
 </blockquote>
-<p class="has-line-data" data-line-start="236" data-line-end="237">This isn't enough error checking. <strong>error</strong> only brings back a low level error message. It will tell us if the internet can't connect but if we provide a faulty latitude or longitude we just get an exception.</p>
-<p class="has-line-data" data-line-start="238" data-line-end="239">We can check to see if an error was returned in the response.</p>
-<pre class="prettyprint">    const url = `http://api.weatherstack.com/current?access_key=f41e35407998bf659423ffd2ac284503&amp;query=-37.8142,144.9632&amp;   units=m`;
+<p>This isn't enough error checking. <strong>error</strong> only brings back a low level error message. It will tell us if the internet can't connect but if we provide a faulty latitude or longitude we just get an exception.</p>
+<p>We can check to see if an error was returned in the response.</p>
+<pre class="prettyprint"><code><div>    const url = `http://api.weatherstack.com/current?access_key=f41e35407998bf659423ffd2ac284503&amp;query=-37.8142,144.9632&amp;   units=m`;
 
     request({url: url, json: true}, (error, response) =&gt; {
         if (error) {
@@ -273,14 +279,14 @@ Stopping<br>
             console.log(`It is currently ${temperature} degrees out. It is ${description} and there is ${precipitation}%    chance of rain.`);
         }
     });
-</pre>
-<p class="has-line-data" data-line-start="257" data-line-end="258">I remove the latitude and longitude from the API call to generate an error. This is the error message we get back in the response.</p>
+</div></code></pre>
+<p>I remove the latitude and longitude from the API call to generate an error. This is the error message we get back in the response.</p>
 <blockquote>
-<p class="has-line-data" data-line-start="259" data-line-end="260">Please specify a valid location identifier using the query parameter.</p>
+<p>Please specify a valid location identifier using the query parameter.</p>
 </blockquote>
-<h5 class="code-line" data-line-start=261 data-line-end=262><a id="Challenge_261"></a>Challenge</h5>
-<p class="has-line-data" data-line-start="263" data-line-end="264">Do the same error checking for the Geocoding request.</p>
-<pre class="prettyprint">    const locationUrl = 'https://api.mapbox.com/geocoding/v5/mapbox.places/ballarat.json?access_token=pk.   eyJ1IjoiYWxhbnJvYjE3IiwiYSI6ImNrYjM0cWJmaDBoaXUycXFwNWhmc21yZHoifQ.fmtQdmsoTDNr6JWInac8kA';
+<h4 id="challenge">Challenge</h4>
+<p>Do the same error checking for the Geocoding request.</p>
+<pre class="prettyprint"><code><div>    const locationUrl = 'https://api.mapbox.com/geocoding/v5/mapbox.places/ballarat.json?access_token=pk.   eyJ1IjoiYWxhbnJvYjE3IiwiYSI6ImNrYjM0cWJmaDBoaXUycXFwNWhmc21yZHoifQ.fmtQdmsoTDNr6JWInac8kA';
 
     request({url: locationUrl, json: true}, (error, response) =&gt; {
         if (error) {
@@ -295,35 +301,35 @@ Stopping<br>
             console.log(`The town is ${location}. Its latitude is ${lat} and longitude is ${long}.`);
         }
     });
-</pre>
-<p class="has-line-data" data-line-start="283" data-line-end="284">I removed the town in the API request to generate an error.</p>
+</div></code></pre>
+<p>I removed the town in the API request to generate an error.</p>
 <blockquote>
-<p class="has-line-data" data-line-start="285" data-line-end="286">Error: Not Found.</p>
+<p>Error: Not Found.</p>
 </blockquote>
-<h3 class="code-line" data-line-start=287 data-line-end=288><a id="The_Callback_Function_287"></a>The Callback Function</h3>
-<p class="has-line-data" data-line-start="289" data-line-end="290">A callback function is a function that's passed as an argument to another function. Imagine you have FunctionA which gets passed as an argument to FunctionB. FunctionB will do some work and then call FunctionA at some point in the future.</p>
-<p class="has-line-data" data-line-start="291" data-line-end="292">Callback functions are at the core of asynchronous development. When you perform an asynchronous operation, you'll provide Node with a callback function. Node will then call the callback when the async operation is complete. This is how you get access to the results of the async operation, whether it's an HTTP request for JSON data or a query to a database for a user's profile.</p>
-<pre class="prettyprint">    setTimeout(() =&gt; {
+<h2 id="the-callback-function">The Callback Function</h2>
+<p>A callback function is a function that's passed as an argument to another function. Imagine you have FunctionA which gets passed as an argument to FunctionB. FunctionB will do some work and then call FunctionA at some point in the future.</p>
+<p>Callback functions are at the core of asynchronous development. When you perform an asynchronous operation, you'll provide Node with a callback function. Node will then call the callback when the async operation is complete. This is how you get access to the results of the async operation, whether it's an HTTP request for JSON data or a query to a database for a user's profile.</p>
+<pre class="prettyprint"><code><div>    setTimeout(() =&gt; {
         console.log('The two seconds are up.');
     }, 2000);
-</pre>
-<p class="has-line-data" data-line-start="299" data-line-end="300">The code above is an example of a callback function. The <code>setTimeout()</code> function contains a callback arrow function.</p>
-<p class="has-line-data" data-line-start="301" data-line-end="302">A callback function is nothing more than a function argument that we provide. We know that <code>setTimeout()</code> will call the function sometime in the future to print out a message.</p>
-<p class="has-line-data" data-line-start="303" data-line-end="304">In this case <code>setTimeout()</code> is a Node.js function so it is being called asynchronously. This doesn't mean that all callback functions will run asynchronously.</p>
-<p class="has-line-data" data-line-start="305" data-line-end="306">The code below contains a callback function. We have used this pattern before.</p>
-<pre class="prettyprint">    const names = ['Alan', 'James', 'Charley'];
+</div></code></pre>
+<p>The code above is an example of a callback function. The <code>setTimeout()</code> function contains a callback arrow function.</p>
+<p>A callback function is nothing more than a function argument that we provide. We know that <code>setTimeout()</code> will call the function sometime in the future to print out a message.</p>
+<p>In this case <code>setTimeout()</code> is a Node.js function so it is being called asynchronously. This doesn't mean that all callback functions will run asynchronously.</p>
+<p>The code below contains a callback function. We have used this pattern before.</p>
+<pre class="prettyprint"><code><div>    const names = ['Alan', 'James', 'Charley'];
 
     const shortNames = names.filter((name) =&gt; {
         return name.length &lt;= 4;
     });
 
     console.log(shortNames);
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="317" data-line-end="318">[ ‘Alan' ]</p>
+<p>[ 'Alan' ]</p>
 </blockquote>
-<p class="has-line-data" data-line-start="319" data-line-end="320">The code below is a synchronous callback.</p>
-<pre class="prettyprint">    const geocode = (address, callback) =&gt; {
+<p>The code below is a synchronous callback.</p>
+<pre class="prettyprint"><code><div>    const geocode = (address, callback) =&gt; {
         const data = {
             latitude: 0,
             longitude: 0
@@ -335,12 +341,12 @@ Stopping<br>
     const data = geocode('Melbourne');
 
     console.log(data);
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="336" data-line-end="337">{ latitude: 0, longitude: 0 }</p>
+<p>{ latitude: 0, longitude: 0 }</p>
 </blockquote>
-<p class="has-line-data" data-line-start="338" data-line-end="339">Suppose we were going to use some geocoding method to get the actual coordinates back. We will use <code>setTimeout()</code> to simulate a HTTP request.</p>
-<pre class="prettyprint">    const geocode = (address, callback) =&gt; {
+<p>Suppose we were going to use some geocoding method to get the actual coordinates back. We will use <code>setTimeout()</code> to simulate a HTTP request.</p>
+<pre class="prettyprint"><code><div>    const geocode = (address, callback) =&gt; {
         setTimeout(() =&gt; {
             const data = {
                 latitude: 0,
@@ -355,14 +361,14 @@ Stopping<br>
     const data = geocode('Melbourne');
 
     console.log(data);
-</pre>
-<p class="has-line-data" data-line-start="358" data-line-end="359">This immediately returns before the 2 seconds are up.</p>
+</div></code></pre>
+<p>This immediately returns before the 2 seconds are up.</p>
 <blockquote>
-<p class="has-line-data" data-line-start="360" data-line-end="361">undefined</p>
+<p>undefined</p>
 </blockquote>
-<p class="has-line-data" data-line-start="362" data-line-end="363"><code>geocode()</code> is synchronous so runs immediately, returning an undefined because the data didn't have time to return.</p>
-<p class="has-line-data" data-line-start="364" data-line-end="365"><code>return</code> is no longer going to work for us inside a synchronous call. This is where callbacks are going to work for us.</p>
-<pre class="prettyprint">    const geocode = (address, callback) =&gt; {
+<p><code>geocode()</code> is synchronous so runs immediately, returning an undefined because the data didn't have time to return.</p>
+<p><code>return</code> is no longer going to work for us inside a synchronous call. This is where callbacks are going to work for us.</p>
+<pre class="prettyprint"><code><div>    const geocode = (address, callback) =&gt; {
         setTimeout(() =&gt; {
             const data = {
                 latitude: 0,
@@ -376,26 +382,26 @@ Stopping<br>
     geocode('Melbourne', (data) =&gt; {
         console.log(data);
     });
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="383" data-line-end="384">{ latitude: 0, longitude: 0 }</p>
+<p>{ latitude: 0, longitude: 0 }</p>
 </blockquote>
-<p class="has-line-data" data-line-start="385" data-line-end="387">The call to <strong>geocode</strong> provides both arguments, the address and the callback function. Notice that the callback function is expecting a single parameter which it has called <strong>data</strong>. This is where the callback function will get access to the results of the asynchronous operation. You can see where <strong>callback</strong> is called with the data inside the <strong>geocode</strong><br>
+<p>The call to <strong>geocode</strong> provides both arguments, the address and the callback function. Notice that the callback function is expecting a single parameter which it has called <strong>data</strong>. This is where the callback function will get access to the results of the asynchronous operation. You can see where <strong>callback</strong> is called with the data inside the <strong>geocode</strong><br>
 function.</p>
-<h5 class="code-line" data-line-start=388 data-line-end=389><a id="Challenge_388"></a>Challenge</h5>
-<p class="has-line-data" data-line-start="390" data-line-end="391">Try out the callback pattern</p>
+<h4 id="challenge">Challenge</h4>
+<p>Try out the callback pattern</p>
 <ol>
-<li class="has-line-data" data-line-start="392" data-line-end="393">Define an add function that accepts the correct arguments</li>
-<li class="has-line-data" data-line-start="393" data-line-end="394">Use setTimeout to simulate a 2 second delay</li>
-<li class="has-line-data" data-line-start="394" data-line-end="395">After 2 seconds are up, call the callback function with the sum</li>
-<li class="has-line-data" data-line-start="395" data-line-end="397">Test your work!</li>
+<li>Define an add function that accepts the correct arguments</li>
+<li>Use setTimeout to simulate a 2 second delay</li>
+<li>After 2 seconds are up, call the callback function with the sum</li>
+<li>Test your work!</li>
 </ol>
-<pre class="prettyprint">    add(1, 4, (sum) =&gt; {
+<pre class="prettyprint"><code><div>    add(1, 4, (sum) =&gt; {
         console.log(sum) // Should print: 5
     })
-</pre>
-<h5 class="code-line" data-line-start=403 data-line-end=404><a id="Finished_code_403"></a>Finished code</h5>
-<pre class="prettyprint">    const add = (num1, num2, callback) =&gt; {
+</div></code></pre>
+<h4 id="finished-code">Finished code</h4>
+<pre class="prettyprint"><code><div>    const add = (num1, num2, callback) =&gt; {
         setTimeout(() =&gt; {
             callback(num1 + num2);
         }, 2000);
@@ -404,37 +410,37 @@ function.</p>
     add(4, 1, (sum) =&gt; {
         console.log(sum);
     });
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="417" data-line-end="418">5</p>
+<p>5</p>
 </blockquote>
-<h3 class="code-line" data-line-start=419 data-line-end=420><a id="Callback_Abstraction_419"></a>Callback Abstraction</h3>
-<p class="has-line-data" data-line-start="421" data-line-end="422">Callback functions can be used to abstract complex asynchronous code into a simple reusable function.</p>
-<p class="has-line-data" data-line-start="423" data-line-end="425">Imagine you want to geocode an address from multiple places in your application. You have two options. Option one, you can duplicate the code responsible for making the request. This includes the call to request along with all the code responsible for handling errors. However, this isn't ideal. Duplicating code makes your application unnecessarily<br>
+<h2 id="callback-abstraction">Callback Abstraction</h2>
+<p>Callback functions can be used to abstract complex asynchronous code into a simple reusable function.</p>
+<p>Imagine you want to geocode an address from multiple places in your application. You have two options. Option one, you can duplicate the code responsible for making the request. This includes the call to request along with all the code responsible for handling errors. However, this isn't ideal. Duplicating code makes your application unnecessarily<br>
 complex and difficult to maintain. The solution is to create a single reusable function that can be called whenever you need to geocode an address.</p>
-<p class="has-line-data" data-line-start="426" data-line-end="427">As an example we are going to refactor the <code>app.js</code> code so that we have a reusable component that can be called as many times as we want rather than writing the same code with different locations.</p>
-<p class="has-line-data" data-line-start="428" data-line-end="429">In the following example we are going to encode the address in case it contains spaces or other characters.</p>
-<pre class="prettyprint">    const address = 'New York';
+<p>As an example we are going to refactor the <code>app.js</code> code so that we have a reusable component that can be called as many times as we want rather than writing the same code with different locations.</p>
+<p>In the following example we are going to encode the address in case it contains spaces or other characters.</p>
+<pre class="prettyprint"><code><div>    const address = 'New York';
 
     const encodedAdress = encodeURIComponent(address);
 
     console.log(encodedAdress);
-</pre>
-<p class="has-line-data" data-line-start="438" data-line-end="439">Returns.</p>
+</div></code></pre>
+<p>Returns.</p>
 <blockquote>
-<p class="has-line-data" data-line-start="440" data-line-end="441">New%20York</p>
+<p>New%20York</p>
 </blockquote>
-<h5 class="code-line" data-line-start=442 data-line-end=443><a id="appjs_442"></a>app.js</h5>
-<pre class="prettyprint">    const geocode = require('./utils/geocode');
+<h4 id="appjs">app.js</h4>
+<pre class="prettyprint"><code><div>    const geocode = require('./utils/geocode');
 
     geocode('Ballarat', (error, data) =&gt; {
         console.log('Error', error);
         console.log('Data', data);
     });
-</pre>
-<p class="has-line-data" data-line-start="453" data-line-end="454">We have abstracted out the <code>geocode()</code> function and put it in the utils folder. We can now use <strong>geocode.js</strong> as a JavaScript module.</p>
-<h5 class="code-line" data-line-start=455 data-line-end=456><a id="geocodejs_455"></a>geocode.js</h5>
-<pre class="prettyprint">    const request = require('postman-request');
+</div></code></pre>
+<p>We have abstracted out the <code>geocode()</code> function and put it in the utils folder. We can now use <strong>geocode.js</strong> as a JavaScript module.</p>
+<h4 id="geocodejs">geocode.js</h4>
+<pre class="prettyprint"><code><div>    const request = require('postman-request');
 
     const geocode = (address, callback) =&gt; {
         const url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(address) + '.json?    access_token=pk.eyJ1IjoiYWxhbnJvYjE3IiwiYSI6ImNrYjM0cWJmaDBoaXUycXFwNWhmc21yZHoifQ.fmtQdmsoTDNr6JWInac8kA';
@@ -455,33 +461,33 @@ complex and difficult to maintain. The solution is to create a single reusable f
     }
 
     module.exports = geocode;
-</pre>
-<h5 class="code-line" data-line-start=481 data-line-end=482><a id="Results_481"></a>Results</h5>
+</div></code></pre>
+<h4 id="results">Results</h4>
 <blockquote>
-<p class="has-line-data" data-line-start="483" data-line-end="487">Error undefined<br>
+<p>Error undefined<br>
 Data { latitude: -37.5623,<br>
 longitude: 143.8607,<br>
-location: ‘Ballarat, Victoria, Australia' }</p>
+location: 'Ballarat, Victoria, Australia' }</p>
 </blockquote>
-<h5 class="code-line" data-line-start=489 data-line-end=490><a id="Challenge_489"></a>Challenge</h5>
-<p class="has-line-data" data-line-start="491" data-line-end="492">Create a reusable function for getting the forecast</p>
+<h4 id="challenge">Challenge</h4>
+<p>Create a reusable function for getting the forecast</p>
 <ol>
-<li class="has-line-data" data-line-start="493" data-line-end="494">Setup the "forecast" function in utils/forecast.js</li>
-<li class="has-line-data" data-line-start="494" data-line-end="495">Require the function in app.js and call it as shown below</li>
-<li class="has-line-data" data-line-start="495" data-line-end="500">The forecast function should have three potential calls to callback:
+<li>Setup the &quot;forecast&quot; function in utils/forecast.js</li>
+<li>Require the function in app.js and call it as shown below</li>
+<li>The forecast function should have three potential calls to callback:
 <ul>
-<li class="has-line-data" data-line-start="496" data-line-end="497">Low level error, pass string for error</li>
-<li class="has-line-data" data-line-start="497" data-line-end="498">Coordinate error, pass string for error</li>
-<li class="has-line-data" data-line-start="498" data-line-end="500">Success, pass forecast string for data (same format as from before)</li>
+<li>Low level error, pass string for error</li>
+<li>Coordinate error, pass string for error</li>
+<li>Success, pass forecast string for data (same format as from before)</li>
 </ul>
 </li>
 </ol>
-<p class="has-line-data" data-line-start="500" data-line-end="504">// forecast(-75.7088, 44.1545, (error, data) =&gt; {<br>
-// console.log(‘Error', error);<br>
-// console.log(‘Data', data);<br>
+<p>// forecast(-75.7088, 44.1545, (error, data) =&gt; {<br>
+//   console.log('Error', error);<br>
+//   console.log('Data', data);<br>
 // });</p>
-<h5 class="code-line" data-line-start=505 data-line-end=506><a id="appjs_505"></a>app.js</h5>
-<pre class="prettyprint">    const geocode = require('./utils/geocode');
+<h4 id="appjs">app.js</h4>
+<pre class="prettyprint"><code><div>    const geocode = require('./utils/geocode');
     const forecast = require('./utils/forecast');
 
     geocode('Ballarat', (error, data) =&gt; {
@@ -493,9 +499,9 @@ location: ‘Ballarat, Victoria, Australia' }</p>
       console.log('Error', error);
       console.log('Data', data);
     });
-</pre>
-<h5 class="code-line" data-line-start=522 data-line-end=523><a id="forecastjs_522"></a>forecast.js</h5>
-<pre class="prettyprint">    const request = require('postman-request');
+</div></code></pre>
+<h4 id="forecastjs">forecast.js</h4>
+<pre class="prettyprint"><code><div>    const request = require('postman-request');
 
     const forecast = (latitude, longitude, callback) =&gt;  {
         const url = 'http://api.weatherstack.com/current?access_key=f41e35407998bf659423ffd2ac284503&amp;query=' + latitude + ','   + longitude + '&amp;units=m';
@@ -515,18 +521,18 @@ location: ‘Ballarat, Victoria, Australia' }</p>
     }
 
     module.exports = forecast;
-</pre>
-<h5 class="code-line" data-line-start=547 data-line-end=548><a id="Results_for_forecast_547"></a>Results for forecast</h5>
+</div></code></pre>
+<h4 id="results-for-forecast">Results for forecast</h4>
 <blockquote>
-<p class="has-line-data" data-line-start="549" data-line-end="551">Error undefined<br>
+<p>Error undefined<br>
 Data It is currently 9 degrees out. It is Partly cloudy and there is 0% chance of rain.</p>
 </blockquote>
-<h3 class="code-line" data-line-start=552 data-line-end=553><a id="Callback_Chaining_552"></a>Callback Chaining</h3>
-<p class="has-line-data" data-line-start="554" data-line-end="555">We'll learn how to run one asynchronous operation only after another asynchronous operation is complete. That'll allow you to use the output from geocoding as the input for fetching the weather.</p>
-<p class="has-line-data" data-line-start="556" data-line-end="558">When working with async code, you'll often find out that you need to use the results from one async operation as the input for another async operation. This is something we need to do in the weather application too. Step one is to geocode the address. Step two is to use the coordinates to fetch the weather forecast. You can't start step two until step one is<br>
+<h2 id="callback-chaining">Callback Chaining</h2>
+<p>We'll learn how to run one asynchronous operation only after another asynchronous operation is complete. That'll allow you to use the output from geocoding as the input for fetching the weather.</p>
+<p>When working with async code, you'll often find out that you need to use the results from one async operation as the input for another async operation. This is something we need to do in the weather application too. Step one is to geocode the address. Step two is to use the coordinates to fetch the weather forecast. You can't start step two until step one is<br>
 complete.</p>
-<p class="has-line-data" data-line-start="559" data-line-end="560">You can start one operation after another finishes by using callback chaining. You can see an example of this in the code below.</p>
-<pre class="prettyprint">    const geocode = require('./utils/geocode');
+<p>You can start one operation after another finishes by using callback chaining. You can see an example of this in the code below.</p>
+<pre class="prettyprint"><code><div>    const geocode = require('./utils/geocode');
     const forecast = require('./utils/forecast');
 
     geocode('Cairns', (error, data) =&gt; {
@@ -537,17 +543,17 @@ complete.</p>
           console.log('Data', data);
         });
     });
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="575" data-line-end="581">Error undefined<br>
+<p>Error undefined<br>
 Data { latitude: -16.9205,<br>
 longitude: 145.7719,<br>
-location: ‘Cairns, Queensland, Australia' }<br>
+location: 'Cairns, Queensland, Australia' }<br>
 Error undefined<br>
 Data It is currently 24 degrees out. It is Partly cloudy and there is 0% chance of rain.</p>
 </blockquote>
-<p class="has-line-data" data-line-start="582" data-line-end="583">What happens if <code>geocode()</code> fails first? We need to add error handling so <code>forecast()</code> doesn't run.</p>
-<pre class="prettyprint">    const geocode = require('./utils/geocode');
+<p>What happens if <code>geocode()</code> fails first? We need to add error handling so <code>forecast()</code> doesn't run.</p>
+<pre class="prettyprint"><code><div>    const geocode = require('./utils/geocode');
     const forecast = require('./utils/forecast');
 
     geocode('Ballarat', (error, data) =&gt; {
@@ -564,21 +570,21 @@ Data It is currently 24 degrees out. It is Partly cloudy and there is 0% chance 
         console.log(forecastData);
       });
     });
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="604" data-line-end="606">Ballarat, Victoria, Australia<br>
+<p>Ballarat, Victoria, Australia<br>
 It is currently 5 degrees out. It is Partly cloudy and there is 0% chance of rain.</p>
 </blockquote>
-<p class="has-line-data" data-line-start="607" data-line-end="608">There were two options for error handling. The first is to use <code>if/else</code> statements but it is preferable to use an <code>if</code> statement to <strong>return</strong> the error immediately.</p>
-<h5 class="code-line" data-line-start=609 data-line-end=610><a id="Challenge_609"></a>Challenge</h5>
-<p class="has-line-data" data-line-start="611" data-line-end="612">Accept location via a command line argument.</p>
+<p>There were two options for error handling. The first is to use <code>if/else</code> statements but it is preferable to use an <code>if</code> statement to <strong>return</strong> the error immediately.</p>
+<h4 id="challenge">Challenge</h4>
+<p>Accept location via a command line argument.</p>
 <ol>
-<li class="has-line-data" data-line-start="613" data-line-end="614">Access the command line argument without yargs.</li>
-<li class="has-line-data" data-line-start="614" data-line-end="615">Use the string value as the input for geocode.</li>
-<li class="has-line-data" data-line-start="615" data-line-end="616">Only geocode if a command line was provided.</li>
-<li class="has-line-data" data-line-start="616" data-line-end="618">Test your work with a couple of locations.</li>
+<li>Access the command line argument without yargs.</li>
+<li>Use the string value as the input for geocode.</li>
+<li>Only geocode if a command line was provided.</li>
+<li>Test your work with a couple of locations.</li>
 </ol>
-<pre class="prettyprint">    const geocode = require('./utils/geocode');
+<pre class="prettyprint"><code><div>    const geocode = require('./utils/geocode');
     const forecast = require('./utils/forecast');
 
     // test for input
@@ -602,24 +608,24 @@ It is currently 5 degrees out. It is Partly cloudy and there is 0% chance of rai
         console.log(forecastData);
       });
     });
-</pre>
-<h5 class="code-line" data-line-start=645 data-line-end=646><a id="test_1_645"></a>test 1</h5>
-<p class="has-line-data" data-line-start="647" data-line-end="648">node app "Sydney, NSW"</p>
+</div></code></pre>
+<h4 id="test-1">test 1</h4>
+<p>node app &quot;Sydney, NSW&quot;</p>
 <blockquote>
-<p class="has-line-data" data-line-start="649" data-line-end="651">Sydney, New South Wales, Australia<br>
+<p>Sydney, New South Wales, Australia<br>
 It is currently 15 degrees out. It is Partly cloudy and there is 0.1% chance of rain.</p>
 </blockquote>
-<h5 class="code-line" data-line-start=652 data-line-end=653><a id="test_2_652"></a>test 2</h5>
-<p class="has-line-data" data-line-start="654" data-line-end="655">node app "London, UK"</p>
+<h4 id="test-2">test 2</h4>
+<p>node app &quot;London, UK&quot;</p>
 <blockquote>
-<p class="has-line-data" data-line-start="656" data-line-end="658">London, Greater London, England, United Kingdom<br>
+<p>London, Greater London, England, United Kingdom<br>
 It is currently 12 degrees out. It is Overcast and there is 0.1% chance of rain.</p>
 </blockquote>
-<h3 class="code-line" data-line-start=659 data-line-end=660><a id="ES6_Aside_Object_Property_Shorthand_and_Destructuring_659"></a>ES6 Aside: Object Property Shorthand and Destructuring</h3>
-<p class="has-line-data" data-line-start="661" data-line-end="662">ES6 has done wonders making JavaScript easier to use. We will explore a couple of features that make it easier to work with objects.</p>
-<h4 class="code-line" data-line-start=663 data-line-end=664><a id="Property_Shorthand_663"></a>Property Shorthand</h4>
-<p class="has-line-data" data-line-start="665" data-line-end="666">The property shorthand makes it easier to define properties when creating a new object. It provides a shortcut for defining a property whose value comes from a variable of the same name. You can see this in the example below where a user object is created. The name property gets its value from a variable also called name.</p>
-<pre class="prettyprint">    const name = 'Alan';
+<h2 id="es6-aside-object-property-shorthand-and-destructuring">ES6 Aside: Object Property Shorthand and Destructuring</h2>
+<p>ES6 has done wonders making JavaScript easier to use. We will explore a couple of features that make it easier to work with objects.</p>
+<h3 id="property-shorthand">Property Shorthand</h3>
+<p>The property shorthand makes it easier to define properties when creating a new object. It provides a shortcut for defining a property whose value comes from a variable of the same name. You can see this in the example below where a user object is created. The name property gets its value from a variable also called name.</p>
+<pre class="prettyprint"><code><div>    const name = 'Alan';
     const userAge = 68;
 
     const user = {
@@ -629,14 +635,14 @@ It is currently 12 degrees out. It is Overcast and there is 0.1% chance of rain.
     }
 
     console.log(user);
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="680" data-line-end="681">{ name: ‘Alan', age: 68, location: ‘Ballarat' }</p>
+<p>{ name: 'Alan', age: 68, location: 'Ballarat' }</p>
 </blockquote>
-<p class="has-line-data" data-line-start="682" data-line-end="683">We can use the ES6 object property shorthand.</p>
-<p class="has-line-data" data-line-start="684" data-line-end="685">On the first property <code>name</code> we are using the ES6 object property shorthand.</p>
-<p class="has-line-data" data-line-start="686" data-line-end="687"><strong>Note:</strong> The variable names have to match the names in the object. This is why the object property shorthand doesn't work for the <code>age</code> property.</p>
-<pre class="prettyprint">    // Object property shorthand
+<p>We can use the ES6 object property shorthand.</p>
+<p>On the first property <code>name</code> we are using the ES6 object property shorthand.</p>
+<p><strong>Note:</strong> The variable names have to match the names in the object. This is why the object property shorthand doesn't work for the <code>age</code> property.</p>
+<pre class="prettyprint"><code><div>    // Object property shorthand
     const name = 'Alan';
     const userAge = 68;
 
@@ -647,13 +653,13 @@ It is currently 12 degrees out. It is Overcast and there is 0.1% chance of rain.
     }
 
     console.log(user);
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="702" data-line-end="703">{ name: ‘Alan', age: 68, location: ‘Ballarat' }</p>
+<p>{ name: 'Alan', age: 68, location: 'Ballarat' }</p>
 </blockquote>
-<h4 class="code-line" data-line-start=704 data-line-end=705><a id="Object_Destructuring_704"></a>Object Destructuring</h4>
-<p class="has-line-data" data-line-start="706" data-line-end="707">The second ES6 feature is object destructuring. Object destructuring gives you a syntax for pulling properties off of objects and into standalone variables. This is useful when working with the same object properties throughout your code. Instead of writing <code>user.name</code> a dozen times, you could destructure the property into a name variable.</p>
-<pre class="prettyprint">    // Object destructuring
+<h3 id="object-destructuring">Object Destructuring</h3>
+<p>The second ES6 feature is object destructuring. Object destructuring gives you a syntax for pulling properties off of objects and into standalone variables. This is useful when working with the same object properties throughout your code. Instead of writing <code>user.name</code> a dozen times, you could destructure the property into a name variable.</p>
+<pre class="prettyprint"><code><div>    // Object destructuring
     const product = {
         label: 'Red notebook',
         price: 5,
@@ -671,15 +677,15 @@ It is currently 12 degrees out. It is Overcast and there is 0.1% chance of rain.
     console.log(price);
     console.log(stock);
     console.log(salePrice);
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="729" data-line-end="733">Red notebook<br>
+<p>Red notebook<br>
 5<br>
 201<br>
 undefined</p>
 </blockquote>
-<p class="has-line-data" data-line-start="734" data-line-end="735">We can rename the variables.</p>
-<pre class="prettyprint">// Object destructuring
+<p>We can rename the variables.</p>
+<pre class="prettyprint"><code><div>// Object destructuring
 const product = {
     label: 'Red notebook',
     price: 5,
@@ -693,10 +699,10 @@ console.log(productLabel);
 console.log(price);
 console.log(stockLevel);
 console.log(salePrice);
-</pre>
-<p class="has-line-data" data-line-start="753" data-line-end="754">Produces the same result as above.</p>
-<p class="has-line-data" data-line-start="755" data-line-end="756">We can also add a default value into a property if a value is undefined.</p>
-<pre class="prettyprint">    // Object destructuring
+</div></code></pre>
+<p>Produces the same result as above.</p>
+<p>We can also add a default value into a property if a value is undefined.</p>
+<pre class="prettyprint"><code><div>    // Object destructuring
     const product = {
         label: 'Red notebook',
         price: 5,
@@ -710,16 +716,16 @@ console.log(salePrice);
     console.log(price);
     console.log(stockLevel);
     console.log(salePrice);
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="774" data-line-end="778">Red notebook<br>
+<p>Red notebook<br>
 5<br>
 201<br>
 5</p>
 </blockquote>
-<p class="has-line-data" data-line-start="779" data-line-end="780"><strong>Note:</strong> It is important to note that the default value will only be used if a property is undefined, otherwise it will use the value entered.</p>
-<p class="has-line-data" data-line-start="781" data-line-end="782">We can use a shorthand for destructuring.</p>
-<pre class="prettyprint">    // Object destructuring
+<p><strong>Note:</strong> It is important to note that the default value will only be used if a property is undefined, otherwise it will use the value entered.</p>
+<p>We can use a shorthand for destructuring.</p>
+<pre class="prettyprint"><code><div>    // Object destructuring
     const product = {
         label: 'Red notebook',
         price: 5,
@@ -738,9 +744,9 @@ console.log(salePrice);
     }
 
     transaction('order', product);
-</pre>
-<p class="has-line-data" data-line-start="805" data-line-end="806">or we could just destructure a couple of properties.</p>
-<pre class="prettyprint">    const product = {
+</div></code></pre>
+<p>or we could just destructure a couple of properties.</p>
+<pre class="prettyprint"><code><div>    const product = {
         label: 'Red notebook',
         price: 5,
         stock: 201,
@@ -752,19 +758,19 @@ console.log(salePrice);
     }
 
     transaction('order', product);
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="822" data-line-end="823">order Red notebook 201</p>
+<p>order Red notebook 201</p>
 </blockquote>
-<h5 class="code-line" data-line-start=824 data-line-end=825><a id="Challenge_824"></a>Challenge</h5>
-<p class="has-line-data" data-line-start="826" data-line-end="827">Use destructuring and object property shorthand in the weather app.</p>
+<h4 id="challenge">Challenge</h4>
+<p>Use destructuring and object property shorthand in the weather app.</p>
 <ol>
-<li class="has-line-data" data-line-start="828" data-line-end="829">Use destructuring in app.js, forecast.js and geocode.js.</li>
-<li class="has-line-data" data-line-start="829" data-line-end="830">Use property shorthand in forecast.js and geocode.js.</li>
-<li class="has-line-data" data-line-start="830" data-line-end="832">Test your work and make sure the app still works.</li>
+<li>Use destructuring in app.js, forecast.js and geocode.js.</li>
+<li>Use property shorthand in forecast.js and geocode.js.</li>
+<li>Test your work and make sure the app still works.</li>
 </ol>
-<h5 class="code-line" data-line-start=832 data-line-end=833><a id="appjs_832"></a>app.js</h5>
-<pre class="prettyprint">    const geocode = require('./utils/geocode');
+<h4 id="appjs">app.js</h4>
+<pre class="prettyprint"><code><div>    const geocode = require('./utils/geocode');
     const forecast = require('./utils/forecast');
 
     // test for input
@@ -788,13 +794,13 @@ console.log(salePrice);
         console.log(forecastData);
       });
     });
-</pre>
-<p class="has-line-data" data-line-start="861" data-line-end="862">In the <code>geocode()</code> call we have destructured the <strong>data</strong> object to,</p>
-<pre class="prettyprint">    { latitude, longitude, location }
-</pre>
-<p class="has-line-data" data-line-start="867" data-line-end="868">This saves us having to call each property by <em>data.latitude</em>, etc.</p>
-<h5 class="code-line" data-line-start=869 data-line-end=870><a id="geocodejs_869"></a>geocode.js</h5>
-<pre class="prettyprint">    const request = require('postman-request');
+</div></code></pre>
+<p>In the <code>geocode()</code> call we have destructured the <strong>data</strong> object to,</p>
+<pre class="prettyprint"><code><div>    { latitude, longitude, location }
+</div></code></pre>
+<p>This saves us having to call each property by <em>data.latitude</em>, etc.</p>
+<h4 id="geocodejs">geocode.js</h4>
+<pre class="prettyprint"><code><div>    const request = require('postman-request');
 
     const geocode = (address, callback) =&gt; {
         const url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(address) + '.json?    access_token=pk.eyJ1IjoiYWxhbnJvYjE3IiwiYSI6ImNrYjRtMHR3bzBrYTIycm85bm9zNnhwb3oifQ.hVxBRq8r_RSiT8edHFeyzw';
@@ -815,17 +821,17 @@ console.log(salePrice);
     }
 
     module.exports = geocode;
-</pre>
-<p class="has-line-data" data-line-start="895" data-line-end="896">The places we use the property object is in the <strong>request</strong> call.</p>
-<pre class="prettyprint">    request({url: url, json: true}, (error, response) =&gt; {
-</pre>
-<p class="has-line-data" data-line-start="901" data-line-end="902">change to,</p>
-<pre class="prettyprint">    request({url, json: true}, (error, { body }) =&gt; {
-</pre>
-<p class="has-line-data" data-line-start="907" data-line-end="908">we simplify <strong>url</strong> property and change <strong>response</strong> to call the only property we require, <strong>body</strong>. Now instead of calling properties with <strong>response.body</strong> we only have to use <strong>body</strong>.</p>
-<p class="has-line-data" data-line-start="909" data-line-end="910">We do the same changes to forecast.js.</p>
-<h5 class="code-line" data-line-start=911 data-line-end=912><a id="forecastjs_911"></a>forecast.js</h5>
-<pre class="prettyprint">    const request = require('postman-request');
+</div></code></pre>
+<p>The places we use the property object is in the <strong>request</strong> call.</p>
+<pre class="prettyprint"><code><div>    request({url: url, json: true}, (error, response) =&gt; {
+</div></code></pre>
+<p>change to,</p>
+<pre class="prettyprint"><code><div>    request({url, json: true}, (error, { body }) =&gt; {
+</div></code></pre>
+<p>we simplify <strong>url</strong> property and change <strong>response</strong> to call the only property we require, <strong>body</strong>. Now instead of calling properties with <strong>response.body</strong> we only have to use <strong>body</strong>.</p>
+<p>We do the same changes to forecast.js.</p>
+<h4 id="forecastjs">forecast.js</h4>
+<pre class="prettyprint"><code><div>    const request = require('postman-request');
 
     const forecast = (latitude, longitude, callback) =&gt;  {
         const url = 'http://api.weatherstack.com/current?access_key=f41e35407998bf659423ffd2ac284503&amp;query=' + latitude + ','   + longitude + '&amp;units=m';
@@ -850,13 +856,13 @@ console.log(salePrice);
     }
 
     module.exports = forecast;
-</pre>
-<h3 class="code-line" data-line-start=941 data-line-end=942><a id="HTTP_Requests_Without_a_Library_941"></a>HTTP Requests Without a Library</h3>
-<p class="has-line-data" data-line-start="943" data-line-end="944">While the request library is great, it's not necessary if you want to make HTTP requests from Node. We will now make an HTTP request without request.</p>
-<h4 class="code-line" data-line-start=945 data-line-end=946><a id="The_HTTP_Module_945"></a>The HTTP Module</h4>
-<p class="has-line-data" data-line-start="947" data-line-end="948">Node.js provides two core modules for making HTTP requests. The http module can be used to make http requests and the https module can be used to make https requests. One great feature about <strong>request</strong> is that it provides a single module that can make both http and https requests.</p>
-<p class="has-line-data" data-line-start="949" data-line-end="950">The code below uses the http module to fetch the forecast from the Wetherstack. Notice there's a lot more required to get things working. Separate callbacks are required for incoming chunks of data, the end of the response, and the error for the request. This means you'll likely recreate your own function similar to <strong>request</strong> to make your life easier. It's best to stick with a tested and popular library like request.</p>
-<pre class="prettyprint">    const http = require('http');
+</div></code></pre>
+<h2 id="http-requests-without-a-library">HTTP Requests Without a Library</h2>
+<p>While the request library is great, it's not necessary if you want to make HTTP requests from Node. We will now make an HTTP request without request.</p>
+<h3 id="the-http-module">The HTTP Module</h3>
+<p>Node.js provides two core modules for making HTTP requests. The http module can be used to make http requests and the https module can be used to make https requests. One great feature about <strong>request</strong> is that it provides a single module that can make both http and https requests.</p>
+<p>The code below uses the http module to fetch the forecast from the Wetherstack. Notice there's a lot more required to get things working. Separate callbacks are required for incoming chunks of data, the end of the response, and the error for the request. This means you'll likely recreate your own function similar to <strong>request</strong> to make your life easier. It's best to stick with a tested and popular library like request.</p>
+<pre class="prettyprint"><code><div>    const http = require('http');
 
     const url = 'http://api.weatherstack.com/current?access_key=f41e35407998bf659423ffd2ac284503&amp;query=56.01681 -3.60891&amp;   units=m';;
 
@@ -879,33 +885,33 @@ console.log(salePrice);
     });
 
     request.end();
-</pre>
+</div></code></pre>
 <blockquote>
-<p class="has-line-data" data-line-start="977" data-line-end="1010">{ request:<br>
-{ type: ‘LatLon',<br>
-query: ‘Lat 56.02 and Lon -3.61',<br>
-language: ‘en',<br>
-unit: ‘m' },<br>
+<p>{ request:<br>
+{ type: 'LatLon',<br>
+query: 'Lat 56.02 and Lon -3.61',<br>
+language: 'en',<br>
+unit: 'm' },<br>
 location:<br>
-{ name: ‘Bo'ness',<br>
-country: ‘United Kingdom',<br>
-region: ‘Falkirk',<br>
-lat: ‘56.016',<br>
-lon: ‘-3.614',<br>
-timezone_id: ‘Europe/London',<br>
-localtime: ‘2020-06-08 08:20',<br>
+{ name: 'Bo'ness',<br>
+country: 'United Kingdom',<br>
+region: 'Falkirk',<br>
+lat: '56.016',<br>
+lon: '-3.614',<br>
+timezone_id: 'Europe/London',<br>
+localtime: '2020-06-08 08:20',<br>
 localtime_epoch: 1591604400,<br>
-utc_offset: ‘1.0' },<br>
+utc_offset: '1.0' },<br>
 current:<br>
-{ observation_time: ‘07:20 AM',<br>
+{ observation_time: '07:20 AM',<br>
 temperature: 9,<br>
 weather_code: 122,<br>
 weather_icons:<br>
-[ '<a href="https://assets.weatherstack.com/images/wsymbols01_png_64/wsymbol_0004_black_low_cloud.png">https://assets.weatherstack.com/images/wsymbols01_png_64/wsymbol_0004_black_low_cloud.png</a>' ],<br>
-weather_descriptions: [ ‘Overcast' ],<br>
+[ 'https://assets.weatherstack.com/images/wsymbols01_png_64/wsymbol_0004_black_low_cloud.png' ],<br>
+weather_descriptions: [ 'Overcast' ],<br>
 wind_speed: 9,<br>
 wind_degree: 80,<br>
-wind_dir: ‘E',<br>
+wind_dir: 'E',<br>
 pressure: 1020,<br>
 precip: 0,<br>
 humidity: 66,<br>
@@ -913,7 +919,7 @@ cloudcover: 100,<br>
 feelslike: 8,<br>
 uv_index: 5,<br>
 visibility: 10,<br>
-is_day: ‘yes' } }</p>
+is_day: 'yes' } }</p>
 </blockquote>
 
 

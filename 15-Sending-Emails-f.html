@@ -38,6 +38,12 @@ blockquote {
     padding-left: 1rem;
     page-break-inside: avoid;
 }
+:target:before {
+  content: "";
+  display: block;
+  height: 80px; /* adjust this value to your needs */
+  margin: -80px 0 0; /* this should be a negative value of the height above */
+}
 </style>
 </head>
 <body>
@@ -69,16 +75,16 @@ blockquote {
     <div class="starter-template">
 
 
-<h2 id="sending-emails">Sending Emails</h2>
-<h3 id="section-intro">Section Intro</h3>
+<h1 id="sending-emails">Sending Emails</h1>
+<h2 id="section-intro">Section Intro</h2>
 <p>We can add email sending to your Node.js application! This will allow you to communicate with users as they use the app. This could be useful for welcome emails, notifications, and more!</p>
-<h3 id="exploring-sendgrid">Exploring SendGrid</h3>
+<h2 id="exploring-sendgrid">Exploring SendGrid</h2>
 <p>We will integrate SendGrid into our Node app. SendGrid is one of many services that allow you to send emails from your application code.</p>
 <p>First up, install the module.</p>
 <pre class="prettyprint">    npm i sendgrid/mail
 </pre>
 <p>Next, create a free SendGrid account and get your API key. The code below shows what's necessary to get the SendGrid module configured. All you need to do is call setApiKey and set your API key.</p>
-<h5 id="emailsaccountjs">emails/account.js</h5>
+<h4 id="emailsaccountjs">emails/account.js</h4>
 <pre class="prettyprint">    const sgMail = require('@sendgrid/mail');
 
     const sendgridApiKey = '';
@@ -95,7 +101,7 @@ blockquote {
 <p>we could create HTML in the text field for formatting if required.</p>
 <p>In the long term, you'll want to purchase a custom domain and register it with SendGrid. This will increase your sending reliability.</p>
 <p>Send a welcome email to a newly created user.</p>
-<h5 id="srcroutersuserjs">src/routers/user.js</h5>
+<h4 id="srcroutersuserjs">src/routers/user.js</h4>
 <pre class="prettyprint">    const { sendWelcomeEmail, sendCancelationEmail } = require('../emails/account');
 
     // POST /users/user details
@@ -114,7 +120,7 @@ blockquote {
     });
 </pre>
 <p>Send an email to a user who is unsubscribing.</p>
-<h5 id="srcroutersuserjs">src/routers/user.js</h5>
+<h4 id="srcroutersuserjs">src/routers/user.js</h4>
 <pre class="prettyprint">    // DELETE /users/me
     router.delete('/users/me', auth, async (req, res) =&gt; {
         try {
@@ -126,7 +132,7 @@ blockquote {
         }
     });
 </pre>
-<h3 id="environment-variables">Environment Variables</h3>
+<h2 id="environment-variables">Environment Variables</h2>
 <p>We need to learn how to use environment variables to securely store API keys and other credentials. This will reduce the chance your private keys fall into the wrong hands.</p>
 <p>First up, install the npm module. We will only need this on our dev environment and not when we deploy to Heroku.</p>
 <pre class="prettyprint">    npm i env-cmd --save-dev
@@ -136,14 +142,14 @@ blockquote {
     ANOTHER_KEY=some other value
 </pre>
 <p>Next, update the <strong>dev</strong> script to use env-cmd to load in those environment variables when it starts up. That would be <strong>env-cmd -f ./config/dev.env nodemon src/index.js</strong>.</p>
-<h5 id="devenv">dev.env</h5>
+<h4 id="devenv">dev.env</h4>
 <pre class="prettyprint">    PORT=3000
     SENDGRID_API_KEY=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
     MONGODB_URL=mongodb://127.0.0.1:27017/task-manager-api
     JWT_SECRET=thisismynodecourse
 </pre>
 <p>Now, you can remove API keys and database credentials from the application itself. For example, you can create <strong>MONGODB_URL</strong> in the development environment file. The application code shown below can then reference that environment variable to get its value. This can be done with the SendGrid API key and the JWT secret used to generate and verify authentication tokens.</p>
-<h5 id="srcdbmongoosejs">src/db/mongoose.js</h5>
+<h4 id="srcdbmongoosejs">src/db/mongoose.js</h4>
 <pre class="prettyprint">    mongoose.connect(process.env.MONGODB_URL, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -151,7 +157,7 @@ blockquote {
         useFindAndModify: false
     });
 </pre>
-<h5 id="srcmiddlewareauthjs">src/middleware/auth.js</h5>
+<h4 id="srcmiddlewareauthjs">src/middleware/auth.js</h4>
 <pre class="prettyprint">    const auth = async (req, res, next) =&gt; {
        try {
         const token = req.header('Authorization').replace('Bearer ', '');
@@ -171,13 +177,13 @@ blockquote {
        }
     };
 </pre>
-<h5 id="srcindexjs">src/index.js</h5>
+<h4 id="srcindexjs">src/index.js</h4>
 <pre class="prettyprint">    const port = process.env.PORT;
 </pre>
-<h5 id="srcemailsaccountjs">src/emails/account.js</h5>
+<h4 id="srcemailsaccountjs">src/emails/account.js</h4>
 <pre class="prettyprint">    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 </pre>
-<h3 id="creating-a-production-mongodb-database">Creating a Production MongoDB Database</h3>
+<h2 id="creating-a-production-mongodb-database">Creating a Production MongoDB Database</h2>
 <p>We need to set up a production MongoDB database using MongoDB Atlas. Atlas is the official MongoDB hosting platform released by the MongoDB organization.</p>
 <p>We create a free cluster for our <strong>Production</strong> database.</p>
 <p>Use AWS to serve our Database.</p>
@@ -197,7 +203,7 @@ blockquote {
 <p>In the string above <strong>test</strong> is the database name and we have to change this to <strong>task-manager-api</strong>.</p>
 <p>I have saved this as a favourite <strong>Production Mongo DB</strong> so I can open it quickly.</p>
 <p>I have also created a localhost connection and that shows the Task App database. I have saved this as a favourite, <strong>localhost Mongo DB</strong>.</p>
-<h3 id="heroku-deployment">Heroku Deployment</h3>
+<h2 id="heroku-deployment">Heroku Deployment</h2>
 <p>We are now ready to deploy the Task manager API to Heroku.</p>
 <p>We need to do some tasks on our application so we can deploy it.</p>
 <p>Add the Task manager to Git.</p>

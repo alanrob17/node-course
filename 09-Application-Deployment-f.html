@@ -38,6 +38,12 @@ blockquote {
     padding-left: 1rem;
     page-break-inside: avoid;
 }
+:target:before {
+  content: "";
+  display: block;
+  height: 80px; /* adjust this value to your needs */
+  margin: -80px 0 0; /* this should be a negative value of the height above */
+}
 </style>
 </head>
 <body>
@@ -68,54 +74,55 @@ blockquote {
 <div class="container">
     <div class="starter-template">
 
-<h2 class="code-line" data-line-start=0 data-line-end=1><a id="App"></a>Application Deployment</h2>
-<h3 class="code-line" data-line-start=0 data-line-end=1><a id="Setting_up_SSH_Keys_0"></a>Setting up SSH Keys</h3>
-<p class="has-line-data" data-line-start="2" data-line-end="3">We need to set up SSH on our machine. SSH is the protocol used to securely transfer code between your machine and GitHub/Heroku.</p>
-<h3 class="code-line" data-line-start=4 data-line-end=5><a id="Creating_SSH_Keys_4"></a>Creating SSH Keys</h3>
-<p class="has-line-data" data-line-start="6" data-line-end="7">Windows users won’t have access to the necessary SSH commands from the command prompt. Make sure to use Git Bash for the following commands.</p>
-<p class="has-line-data" data-line-start="8" data-line-end="9">SSH uses an SSH key pair to secure the connection between your machine and the machine you’re communicating with. You can check if you already have an SSH key pair with the following command. You have a key pair if you see id_rsa and id_rsa.pub in the output.</p>
-<pre class="prettyprint">    ls -a -l ~/.ssh
-</pre>
-<p class="has-line-data" data-line-start="14" data-line-end="15">You can create a new key pair using the following command. Make sure to swap out the email for your email address.</p>
-<pre class="prettyprint">[ssh-keygen -t rsa -b 4096 -C "youremail@domain.com"
-</pre>
-<p class="has-line-data" data-line-start="20" data-line-end="21">The SSH key needs to be configured to be used for new SSH connections. First, ensure that the SSH agent is running. You can do that using the command below.</p>
-<pre class="prettyprint">    eval &quot;$(ssh-agent -s)&quot;
-</pre>
-<p class="has-line-data" data-line-start="26" data-line-end="27">The command below is for Linux users and Windows users.</p>
-<pre class="prettyprint">    ssh-add ~/.ssh/id_rsa
-</pre>
-<h3 class="code-line" data-line-start=32 data-line-end=33><a id="Adding_the_ssh_key_to_GitHub_32"></a>Adding the ssh key to GitHub</h3>
-<p class="has-line-data" data-line-start="34" data-line-end="35">You need to copy the ssh key to GitHub.</p>
-<pre class="prettyprint">    cat ~/.ssh/id_rsa.pub
-</pre>
-<p class="has-line-data" data-line-start="40" data-line-end="41">Will print out the key for you. Copy the key from <strong>ssh-rsa</strong> to the end of the email address you created for the key.</p>
-<p class="has-line-data" data-line-start="42" data-line-end="43">Go up to your GitHub site and click on the profile button on the top-right hand corner.</p>
-<p class="has-line-data" data-line-start="44" data-line-end="45">Select the <strong>SSH and GPG Keys</strong> tab. Click on the <strong>ssh keys</strong> section to add a new key.</p>
-<p class="has-line-data" data-line-start="46" data-line-end="47"><img src="assets/images/profile.jpg" alt="Set your ssh key." title="Set your ssh key."></p>
-<p class="has-line-data" data-line-start="48" data-line-end="49">Add a name for the machine the key was created on (e.g. Home Desktop) and paste the key that you copied from your ~/.ssh key, id_rsa.pub. This should add the ssh key to GitHub.</p>
-<h2 class="code-line" data-line-start=50 data-line-end=51><a id="Using_Heroku_50"></a>Using Heroku</h2>
-<p class="has-line-data" data-line-start="52" data-line-end="53">Install command line tools.</p>
-<pre class="prettyprint">    heroku --version
-</pre>
-<p class="has-line-data" data-line-start="58" data-line-end="59">To get the version number. This tells you that you have successfully installed Heroku.</p>
-<p class="has-line-data" data-line-start="60" data-line-end="61">To login.</p>
-<pre class="prettyprint">    heroku login
-</pre>
-<p class="has-line-data" data-line-start="66" data-line-end="67">To add your ssh key.</p>
-<pre class="prettyprint">    heroku keys:add
-</pre>
-<p class="has-line-data" data-line-start="72" data-line-end="73">This will search for your key and pick our only key, id_rsa.pub.</p>
-<p class="has-line-data" data-line-start="74" data-line-end="75">To create a Heroku app.</p>
-<p class="has-line-data" data-line-start="76" data-line-end="77">We need to run this from the <strong>root</strong> of our app. <em>/D/WebDev/Node/node-course/web-server</em></p>
-<pre class="prettyprint">    heroku create ar-weather
-</pre>
-<p class="has-line-data" data-line-start="82" data-line-end="83">If the name is unique it will create the url for you. It will also create the place to push your app.</p>
+
+<h1 id="application-deployment">Application Deployment</h1>
+<h2 id="setting-up-ssh-keys">Setting up SSH Keys</h2>
+<p>We need to set up SSH on our machine. SSH is the protocol used to securely transfer code between your machine and GitHub/Heroku.</p>
+<h2 id="creating-ssh-keys">Creating SSH Keys</h2>
+<p>Windows users won't have access to the necessary SSH commands from the command prompt. Make sure to use Git Bash for the following commands.</p>
+<p>SSH uses an SSH key pair to secure the connection between your machine and the machine you're communicating with. You can check if you already have an SSH key pair with the following command. You have a key pair if you see id_rsa and id_rsa.pub in the output.</p>
+<pre class="prettyprint"><code><div>    ls -a -l ~/.ssh
+</div></code></pre>
+<p>You can create a new key pair using the following command. Make sure to swap out the email for your email address.</p>
+<pre class="prettyprint"><code><div>    ssh-keygen -t rsa -b 4096 -C &quot;youremail@domain.com&quot;
+</div></code></pre>
+<p>The SSH key needs to be configured to be used for new SSH connections. First, ensure that the SSH agent is running. You can do that using the command below.</p>
+<pre class="prettyprint"><code><div>    eval &quot;$(ssh-agent -s)&quot;
+</div></code></pre>
+<p>The command below is for Linux users and Windows users.</p>
+<pre class="prettyprint"><code><div>    ssh-add ~/.ssh/id_rsa
+</div></code></pre>
+<h2 id="adding-the-ssh-key-to-github">Adding the ssh key to GitHub</h2>
+<p>You need to copy the ssh key to GitHub.</p>
+<pre class="prettyprint"><code><div>    cat ~/.ssh/id_rsa.pub
+</div></code></pre>
+<p>Will print out the key for you. Copy the key from <strong>ssh-rsa</strong> to the end of the email address you created for the key.</p>
+<p>Go up to your GitHub site and click on the profile button on the top-right hand corner.</p>
+<p>Select the <strong>SSH and GPG Keys</strong> tab. Click on the <strong>ssh keys</strong> section to add a new key.</p>
+<p><img src="assets/images/profile.jpg" alt="Set your ssh key." title="Set your ssh key."></p>
+<p>Add a name for the machine the key was created on (e.g. Home Desktop) and paste the key that you copied from your ~/.ssh key, id_rsa.pub. This should add the ssh key to GitHub.</p>
+<h1 id="using-heroku">Using Heroku</h1>
+<p>Install command line tools.</p>
+<pre class="prettyprint"><code><div>    heroku --version
+</div></code></pre>
+<p>To get the version number. This tells you that you have successfully installed Heroku.</p>
+<p>To login.</p>
+<pre class="prettyprint"><code><div>    heroku login
+</div></code></pre>
+<p>To add your ssh key.</p>
+<pre class="prettyprint"><code><div>    heroku keys:add
+</div></code></pre>
+<p>This will search for your key and pick our only key, id_rsa.pub.</p>
+<p>To create a Heroku app.</p>
+<p>We need to run this from the <strong>root</strong> of our app. <em>/D/WebDev/Node/node-course/web-server</em></p>
+<pre class="prettyprint"><code><div>    heroku create ar-weather
+</div></code></pre>
+<p>If the name is unique it will create the url for you. It will also create the place to push your app.</p>
 <blockquote>
-<p class="has-line-data" data-line-start="84" data-line-end="85"><a href="https://ar-weather.herokuapp.com/">https://ar-weather.herokuapp.com/</a> | <a href="https://git.heroku.com/ar-weather.git">https://git.heroku.com/ar-weather.git</a></p>
+<p>https://ar-weather.herokuapp.com/ | https://git.heroku.com/ar-weather.git</p>
 </blockquote>
-<p class="has-line-data" data-line-start="86" data-line-end="87">In order to run our application we have to tell Heroku which application to run. We can add this to our <strong>package.json</strong> file.</p>
-<pre class="prettyprint">    {
+<p>In order to run our application we have to tell Heroku which application to run. We can add this to our <strong>package.json</strong> file.</p>
+<pre class="prettyprint"><code><div>    {
       &quot;name&quot;: &quot;web-server&quot;,
       &quot;version&quot;: &quot;1.0.0&quot;,
       &quot;description&quot;: &quot;&quot;,
@@ -132,42 +139,42 @@ blockquote {
         &quot;postman-request&quot;: &quot;^2.88.1-postman.23&quot;
       }
     }
-</pre>
-<p class="has-line-data" data-line-start="108" data-line-end="109">The following section tells Heroku how to run our application.</p>
-<pre class="prettyprint">    &quot;scripts&quot;: {
+</div></code></pre>
+<p>The following section tells Heroku how to run our application.</p>
+<pre class="prettyprint"><code><div>    &quot;scripts&quot;: {
             &quot;start&quot;: &quot;node src/app.js&quot;
           },
-</pre>
-<p class="has-line-data" data-line-start="116" data-line-end="117">We could also run our application using this command, <code>node src/app.js</code></p>
-<p class="has-line-data" data-line-start="118" data-line-end="119">In development we hardcoded the <code>localhost:3000</code> url. We have to remove these from our code.</p>
-<h5 class="code-line" data-line-start=120 data-line-end=121><a id="in_appjs_120"></a>in app.js</h5>
-<pre class="prettyprint">    const app = express();
+</div></code></pre>
+<p>We could also run our application using this command, <code>node src/app.js</code></p>
+<p>In development we hardcoded the <code>localhost:3000</code> url. We have to remove these from our code.</p>
+<h5 id="in-appjs">in app.js</h5>
+<pre class="prettyprint"><code><div>    const app = express();
     const port = process.env.PORT || 3000;
-</pre>
-<p class="has-line-data" data-line-start="127" data-line-end="128">Adds the <code>port</code> reference.</p>
-<p class="has-line-data" data-line-start="129" data-line-end="130">Change the <code>listen</code> reference.</p>
-<pre class="prettyprint">    app.listen(port, () =&gt; {
+</div></code></pre>
+<p>Adds the <code>port</code> reference.</p>
+<p>Change the <code>listen</code> reference.</p>
+<pre class="prettyprint"><code><div>    app.listen(port, () =&gt; {
         console.log('Server is up on port ' + port);
     });
-</pre>
-<p class="has-line-data" data-line-start="137" data-line-end="138">You need to change the <code>public\src\app.js</code> file.</p>
-<pre class="prettyprint">    const url = '/weather?address=' + location;
-</pre>
-<p class="has-line-data" data-line-start="143" data-line-end="144">Now, we can push our changes to GitHub and then push our changes to Heroku.</p>
-<pre class="prettyprint">    git push heroku master
-</pre>
-<h3 class="code-line" data-line-start=149 data-line-end=150><a id="New_Feature_Deployment_Workflow_149"></a>New Feature Deployment Workflow</h3>
-<p class="has-line-data" data-line-start="151" data-line-end="152">We’ll go through the process of adding a new feature to the application. This includes committing the changes, pushing them to GitHub, and deploying them to Heroku.</p>
-<h5 class="code-line" data-line-start=153 data-line-end=154><a id="Challenge_153"></a>Challenge</h5>
-<p class="has-line-data" data-line-start="155" data-line-end="156">Add new data to forecast</p>
+</div></code></pre>
+<p>You need to change the <code>public\src\app.js</code> file.</p>
+<pre class="prettyprint"><code><div>    const url = '/weather?address=' + location;
+</div></code></pre>
+<p>Now, we can push our changes to GitHub and then push our changes to Heroku.</p>
+<pre class="prettyprint"><code><div>    git push heroku master
+</div></code></pre>
+<h2 id="new-feature-deployment-workflow">New Feature Deployment Workflow</h2>
+<p>We'll go through the process of adding a new feature to the application. This includes committing the changes, pushing them to GitHub, and deploying them to Heroku.</p>
+<h5 id="challenge">Challenge</h5>
+<p>Add new data to forecast</p>
 <ol>
-<li class="has-line-data" data-line-start="157" data-line-end="158">Update your forecast data by adding new information.</li>
-<li class="has-line-data" data-line-start="158" data-line-end="159">Commit your changes.</li>
-<li class="has-line-data" data-line-start="159" data-line-end="160">Push your changes to GitHub and deploy to Heroku.</li>
-<li class="has-line-data" data-line-start="160" data-line-end="162">Test your work in the live application.</li>
+<li>Update your forecast data by adding new information.</li>
+<li>Commit your changes.</li>
+<li>Push your changes to GitHub and deploy to Heroku.</li>
+<li>Test your work in the live application.</li>
 </ol>
-<h5 class="code-line" data-line-start=162 data-line-end=163><a id="forecastjs_162"></a>forecast.js</h5>
-<pre class="prettyprint">    const request = require('postman-request');
+<h5 id="forecastjs">forecast.js</h5>
+<pre class="prettyprint"><code><div>    const request = require('postman-request');
 
     const forecast = (latitude, longitude, callback) =&gt;  {
         const url = 'http://api.weatherstack.com/current?access_key=f41e35407998bf659423ffd2ac284503&amp;query=' + latitude + ','   + longitude + '&amp;units=m';
@@ -193,9 +200,9 @@ blockquote {
     }
 
     module.exports = forecast;
-</pre>
-<p class="has-line-data" data-line-start="193" data-line-end="194">To deploy, the workflow is:</p>
-<pre class="prettyprint">    git status
+</div></code></pre>
+<p>To deploy, the workflow is:</p>
+<pre class="prettyprint"><code><div>    git status
 
     git add .
 
@@ -206,21 +213,21 @@ blockquote {
     git status
 
     git push heroku master
-</pre>
-<h3 class="code-line" data-line-start=209 data-line-end=210><a id="Avoiding_Global_Modules_209"></a>Avoiding Global Modules</h3>
-<p class="has-line-data" data-line-start="211" data-line-end="212">Now, we are going to refactor our application to remove the use of global modules. This ensures that your application installs all the dependencies you need to run.</p>
-<h4 class="code-line" data-line-start=213 data-line-end=214><a id="Replacing_Global_Modules_with_Local_Modules_213"></a>Replacing Global Modules with Local Modules</h4>
-<p class="has-line-data" data-line-start="215" data-line-end="216">Sick of typing out that long nodemon command? Let’s turn it into a script.</p>
-<p class="has-line-data" data-line-start="217" data-line-end="218">You can create a <strong>dev</strong> script with the value <strong>nodemon src/app.js -e js,hbs</strong>. This will start up the dev server anytime you run <strong>npm run dev</strong>.</p>
-<p class="has-line-data" data-line-start="219" data-line-end="220">The dev script needs <strong>nodemon</strong> to be installed. The issue is that <strong>nodemon</strong> isn’t listed as a dependency in <strong>package.json</strong>. However, this can be fixed by uninstalling nodemon globally.</p>
-<pre class="prettyprint">    npm uninstall -g nodemon
-</pre>
-<p class="has-line-data" data-line-start="225" data-line-end="226">Now, install it as a local dependency.</p>
-<pre class="prettyprint">    npm install nodemon --save-dev
-</pre>
-<p class="has-line-data" data-line-start="231" data-line-end="232">Now, <strong>npm install</strong> will be able to install all your application dependencies, including nodemon!</p>
-<h5 class="code-line" data-line-start=233 data-line-end=234><a id="packagejson_233"></a>package.json</h5>
-<pre class="prettyprint">    {
+</div></code></pre>
+<h2 id="avoiding-global-modules">Avoiding Global Modules</h2>
+<p>Now, we are going to refactor our application to remove the use of global modules. This ensures that your application installs all the dependencies you need to run.</p>
+<h4 id="replacing-global-modules-with-local-modules">Replacing Global Modules with Local Modules</h4>
+<p>Sick of typing out that long nodemon command? Let's turn it into a script.</p>
+<p>You can create a <strong>dev</strong> script with the value <strong>nodemon src/app.js -e js,hbs</strong>. This will start up the dev server anytime you run <strong>npm run dev</strong>.</p>
+<p>The dev script needs <strong>nodemon</strong> to be installed. The issue is that <strong>nodemon</strong> isn't listed as a dependency in <strong>package.json</strong>. However, this can be fixed by uninstalling nodemon globally.</p>
+<pre class="prettyprint"><code><div>    npm uninstall -g nodemon
+</div></code></pre>
+<p>Now, install it as a local dependency.</p>
+<pre class="prettyprint"><code><div>    npm install nodemon --save-dev
+</div></code></pre>
+<p>Now, <strong>npm install</strong> will be able to install all your application dependencies, including nodemon!</p>
+<h5 id="packagejson">package.json</h5>
+<pre class="prettyprint"><code><div>    {
       &quot;name&quot;: &quot;web-server&quot;,
       &quot;version&quot;: &quot;1.0.0&quot;,
       &quot;description&quot;: &quot;&quot;,
@@ -241,12 +248,11 @@ blockquote {
         &quot;nodemon&quot;: &quot;^2.0.4&quot;
       }
     }
-</pre>
-<p class="has-line-data" data-line-start="259" data-line-end="260">The script above shows <strong>nodemon</strong> as a dev dependency.</p>
-<p class="has-line-data" data-line-start="261" data-line-end="262">To run the dev script.</p>
-<pre class="prettyprint">    npm run dev
-</pre>
-
+</div></code></pre>
+<p>The script above shows <strong>nodemon</strong> as a dev dependency.</p>
+<p>To run the dev script.</p>
+<pre class="prettyprint"><code><div>    npm run dev
+</div></code></pre>
 
 
 
